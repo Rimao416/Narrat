@@ -1,0 +1,62 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.eslintcache
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build
+dist/
+build/
+bin/
+out/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Prisma
+/prisma/migrations/
+# (Optional: Keep migrations in Git but ignore local sqlite dev DB if used)
+*.db
+*.db-journal
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Mobile (React Native / Flutter / Expo)
+ios/Pods/
+ios/.xcode.env.local
+android/.gradle/
+android/app/build/
+android/.cxx/
+android/*.keystore
+!android/debug.keystore
+.expo/
+*.jks
+*.p12
+*.key
+*.mobileprovision
+
+# Temporary files
+tmp/
+temp/
+logs/
+*.log
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
