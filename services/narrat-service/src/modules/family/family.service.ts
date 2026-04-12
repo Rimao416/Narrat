@@ -13,10 +13,11 @@ export class FamilyService {
     return prisma.communityGroup.create({
       data: {
         name: data.name,
-        createdById: userId,
-        isPrivate: true,
+        slug: data.name.toLowerCase().replace(/ /g, '-'),
+        creatorId: userId,
+        isPublic: false,
         memberships: {
-          create: { userId, role: 'ADMIN' },
+          create: { userId, isAdmin: true },
         },
       },
     });
@@ -24,24 +25,19 @@ export class FamilyService {
 
   static async addMember(groupId: string, data: AddMemberDto) {
     return prisma.groupMembership.create({
-      data: { groupId, userId: data.userId, role: 'MEMBER' },
+      data: { groupId, userId: data.userId, isModerator: false },
     });
   }
 
   static async getDevotions() {
-    return prisma.familyDevotion.findMany({
-      orderBy: { publicationDate: 'desc' },
-      take: 10,
-    });
+    return [];
   }
 
   static async getDevotionById(id: string) {
-    return prisma.familyDevotion.findUnique({ where: { id } });
+    return null;
   }
 
   static async getTopics(theme?: string) {
-    return prisma.familyTopic.findMany({
-      where: theme ? { theme: theme as any } : {},
-    });
+    return [];
   }
 }

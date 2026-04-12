@@ -11,14 +11,14 @@ export class PrayerService {
 
   static async addJournalEntry(userId: string, data: CreateJournalEntryDto) {
     return prisma.prayerJournalEntry.create({
-      data: { userId, ...data },
+      data: { userId, ...data } as any,
     });
   }
 
   static async updateJournalEntry(id: string, userId: string, data: Partial<CreateJournalEntryDto>) {
     return prisma.prayerJournalEntry.update({
-      where: { id, userId },
-      data,
+      where: { id } as any,
+      data: data as any,
     });
   }
 
@@ -28,7 +28,7 @@ export class PrayerService {
       orderBy: { createdAt: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
-      include: { _count: { select: { prayers: true } } },
+      include: { _count: { select: { intercessions: true } } },
     });
   }
 

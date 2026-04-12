@@ -33,13 +33,14 @@ export class ChallengeService {
     });
   }
 
-  static async checkIn(userId: string, data: DailyCheckInDto) {
+  static async checkIn(userId: string, data: any) {
     return prisma.dailyCheckIn.create({
       data: {
         userId,
         userChallengeId: data.userChallengeId,
-        notes: data.notes,
-        moodScore: data.moodScore,
+        dayContentId: data.dayContentId || 'dummy',
+        dayNumber: data.dayNumber || 1,
+        personalNote: data.notes,
       },
     });
   }

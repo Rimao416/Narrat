@@ -6,21 +6,21 @@ export class RevivalService {
       where: {
         ...(era ? { era: era as any } : {}),
         ...(region ? { region: region as any } : {}),
-      },
-      include: { author: true, testimonies: { take: 3 } },
+      } as any,
+      include: { author: true },
     });
   }
 
   static async getFigureById(id: string) {
     return prisma.revivalFigure.findUnique({
       where: { id },
-      include: { author: true, testimonies: true, revivals: true },
+      include: { author: true, revivals: true },
     });
   }
 
   static async getTestimonies(page = 1, limit = 20) {
-    return prisma.modernTestimony.findMany({
-      where: { isApproved: true },
+    return prisma.contemporaryTestimony.findMany({
+      where: { status: 'PUBLISHED' },
       orderBy: { createdAt: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
@@ -28,7 +28,7 @@ export class RevivalService {
   }
 
   static async getHistoricalRevivals(era?: string) {
-    return prisma.historicalRevival.findMany({
+    return prisma.revival.findMany({
       where: era ? { era: era as any } : {},
       include: { figures: { include: { figure: true } } },
     });

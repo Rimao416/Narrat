@@ -5,7 +5,7 @@ export class HealthService {
   static async getBilanHistory(userId: string) {
     return prisma.spiritualHealthLog.findMany({
       where: { userId },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { id: 'desc' },
       take: 12,
     });
   }
@@ -19,29 +19,21 @@ export class HealthService {
     return prisma.spiritualHealthLog.create({
       data: {
         userId,
-        wordScore: data.wordScore,
-        prayerScore: data.prayerScore,
-        communityScore: data.communityScore,
-        integrityScore: data.integrityScore,
-        generosityScore: data.generosityScore,
-        growthScore: data.growthScore,
-        globalScore,
-        notes: data.notes,
-      },
+        ...data,
+      } as any,
     });
   }
 
   static async getGrowthPlans(userId: string) {
     return prisma.growthPlan.findMany({
-      where: { userId, isActive: true },
-      include: { steps: true },
+      where: { userId, isActive: true } as any,
     });
   }
 
   static async getLatestBilan(userId: string) {
     return prisma.spiritualHealthLog.findFirst({
       where: { userId },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { id: 'desc' },
     });
   }
 }

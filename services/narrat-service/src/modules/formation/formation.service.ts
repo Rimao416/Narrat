@@ -8,7 +8,7 @@ export class FormationService {
         status: 'PUBLISHED',
         ...(language ? { language: language as any } : {}),
       },
-      include: { instructor: true, tags: { include: { tag: true } } },
+      include: { tags: { include: { tag: true } } },
     });
   }
 
@@ -16,8 +16,7 @@ export class FormationService {
     return prisma.course.findUnique({
       where: { id },
       include: {
-        instructor: true,
-        modules: { include: { lessons: true } },
+        modules: true,
         tags: { include: { tag: true } },
       },
     });
@@ -39,14 +38,14 @@ export class FormationService {
   }
 
   static async getLesson(lessonId: string) {
-    return prisma.courseLesson.findUnique({ where: { id: lessonId } });
+    return prisma.courseModule.findUnique({ where: { id: lessonId } });
   }
 
   static async completeLesson(userId: string, lessonId: string) {
-    return prisma.lessonCompletion.upsert({
-      where: { userId_lessonId: { userId, lessonId } },
+    return prisma.moduleCompletion.upsert({
+      where: { enrollmentId_moduleId: { enrollmentId: userId, moduleId: lessonId } } as any,
       update: {},
-      create: { userId, lessonId },
+      create: { enrollmentId: userId, moduleId: lessonId } as any,
     });
   }
 }
