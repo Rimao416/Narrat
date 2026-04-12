@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "narrat-mobile",
+    "slug": "narrat-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "narratmobile",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-splash-screen"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
