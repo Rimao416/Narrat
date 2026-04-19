@@ -1,64 +1,100 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
+import { Platform, View, StyleSheet } from 'react-native';
 import { Home, BookOpen, Users, Compass, User } from 'lucide-react-native';
+import { COLORS } from '../../constants/Colors';
+import { RADIUS } from '../../constants/theme';
 
-import { useThemeStore } from '../../store/themeStore';
-import { getThemeColors, COLORS } from '../../constants/Colors';
+const C = COLORS.dark;
 
 export default function TabLayout() {
-  const { isDarkMode } = useThemeStore();
-  const themeColors = getThemeColors(isDarkMode);
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: COLORS.primaryLight,
-        tabBarInactiveTintColor: themeColors.textMuted,
+        headerShown: false,
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: C.textHint,
         tabBarStyle: {
-          backgroundColor: themeColors.surface,
-          borderTopColor: themeColors.border,
+          backgroundColor: C.surface,
+          borderTopWidth: 1,
+          borderTopColor: C.border,
+          height: Platform.OS === 'ios' ? 84 : 64,
+          paddingBottom: Platform.OS === 'ios' ? 24 : 8,
+          paddingTop: 8,
         },
-        headerStyle: {
-          backgroundColor: themeColors.surface,
-          borderBottomColor: themeColors.border,
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontWeight: '600',
+          letterSpacing: 0.2,
+          marginTop: 2,
         },
-        headerTintColor: themeColors.textMain,
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Accueil',
-          tabBarIcon: ({ color }) => <Home size={24} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon Icon={Home} color={color} focused={focused} />
+          ),
         }}
       />
       <Tabs.Screen
         name="library"
         options={{
-          title: 'Bibliothèque',
-          tabBarIcon: ({ color }) => <BookOpen size={24} color={color} />,
+          title: 'Bibliotheque',
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon Icon={BookOpen} color={color} focused={focused} />
+          ),
         }}
       />
       <Tabs.Screen
         name="community"
         options={{
-          title: 'Communauté',
-          tabBarIcon: ({ color }) => <Users size={24} color={color} />,
+          title: 'Communaute',
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon Icon={Users} color={color} focused={focused} />
+          ),
         }}
       />
       <Tabs.Screen
         name="discover"
         options={{
-          title: 'Découvrir',
-          tabBarIcon: ({ color }) => <Compass size={24} color={color} />,
+          title: 'Decouvrir',
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon Icon={Compass} color={color} focused={focused} />
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profil',
-          tabBarIcon: ({ color }) => <User size={24} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon Icon={User} color={color} focused={focused} />
+          ),
         }}
       />
     </Tabs>
   );
 }
+
+function TabIcon({ Icon, color, focused }: { Icon: any; color: string; focused: boolean }) {
+  return (
+    <View style={[styles.iconWrap, focused && styles.iconWrapActive]}>
+      <Icon size={20} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  iconWrap: {
+    width: 36,
+    height: 28,
+    borderRadius: RADIUS.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconWrapActive: {
+    backgroundColor: COLORS.primaryMuted,
+  },
+});
