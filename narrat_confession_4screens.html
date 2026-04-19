@@ -1,0 +1,695 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --red:#C0392B;--red-deep:#922B21;--red-light:#E74C3C;
+  --red-m:rgba(192,57,43,0.14);--red-b:rgba(192,57,43,0.28);
+  --bg:#0D0D0D;--bg2:#141414;--bg3:#1A1A1A;--bg4:#222;--bg5:#2A2A2A;
+  --brd:rgba(255,255,255,0.07);--brd2:rgba(255,255,255,0.12);
+  --t:#F0F0F0;--t2:#909090;--t3:#555;
+  --gold:#D4AF37;--goldf:#F0D060;
+  --blue-b:rgba(52,100,180,0.12);--blue-f:#6B9FEA;
+  --green-b:rgba(39,120,75,0.12);--green-f:#5ACD8A;
+  --purple-b:rgba(120,60,180,0.12);--purple-f:#B07EEA;
+}
+body{background:transparent;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;}
+.outer{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;padding:24px 12px 36px;}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.lbl{font-size:10px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;}
+
+.phone{
+  width:375px;background:var(--bg);
+  border-radius:50px;border:1.5px solid rgba(255,255,255,0.1);
+  overflow:hidden;
+  box-shadow:0 0 0 7px #0A0A0A,0 0 0 8.5px rgba(255,255,255,0.05);
+}
+.notch{width:110px;height:28px;background:#000;border-radius:0 0 18px 18px;margin:0 auto;}
+.sb{display:flex;justify-content:space-between;padding:8px 24px 4px;font-size:12px;font-weight:600;color:var(--t);}
+.sc{padding-bottom:76px;}
+
+.nav{
+  background:rgba(13,13,13,.97);border-top:1px solid var(--brd2);
+  display:flex;justify-content:space-around;padding:10px 0 20px;
+}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+.ni-ico{font-size:20px;color:var(--t3);}
+.ni-ico.on{color:var(--red-light);}
+.ni-bar{width:18px;height:2px;border-radius:1px;background:transparent;}
+.ni-bar.on{background:var(--red);}
+.ni-lbl{font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;}
+.ni-lbl.on{color:var(--red-light);}
+
+.sh{display:flex;justify-content:space-between;align-items:center;padding:0 20px;margin-bottom:11px;}
+.st{font-size:13px;font-weight:700;color:var(--t);}
+.sl{font-size:12px;color:var(--red-light);font-weight:500;cursor:pointer;}
+
+.tag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;}
+.tr{background:var(--red-m);color:var(--red-light);}
+.tb{background:var(--blue-b);color:var(--blue-f);}
+.tg{background:var(--green-b);color:var(--green-f);}
+.tgo{background:rgba(212,175,55,.1);color:var(--goldf);}
+.tp{background:var(--purple-b);color:var(--purple-f);}
+
+/* ── SHARED POST CARD ── */
+.post{
+  margin:0 16px 12px;
+  background:var(--bg3);border-radius:18px;
+  border:1px solid var(--brd);overflow:hidden;
+}
+.post-head{padding:14px 16px 0;display:flex;align-items:center;gap:10px;}
+.av{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--bg4);border:1px solid var(--brd2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;
+}
+.pm{flex:1;}
+.pn{font-size:13px;font-weight:700;color:var(--t);}
+.pt{font-size:11px;color:var(--t3);}
+.pb{padding:10px 16px;font-size:13px;color:var(--t2);line-height:1.6;}
+.pv{
+  margin:0 16px 10px;padding:9px 12px;
+  background:var(--red-m);border-left:3px solid var(--red);
+  border-radius:0 8px 8px 0;
+  font-size:12px;color:rgba(240,210,210,.9);font-style:italic;line-height:1.5;
+}
+.pv-ref{font-size:10px;color:var(--t3);font-style:normal;margin-top:4px;font-weight:600;}
+.pa{
+  display:flex;gap:12px;padding:10px 16px;
+  border-top:1px solid var(--brd);align-items:center;
+}
+.pa-btn{
+  display:flex;align-items:center;gap:5px;
+  font-size:12px;color:var(--t3);cursor:pointer;
+}
+.pa-btn.red{color:var(--red-light);}
+.pa-btn.green{color:var(--green-f);}
+.pa-pray{
+  margin-left:auto;font-size:12px;font-weight:700;
+  color:var(--red-light);background:var(--red-m);
+  padding:5px 12px;border-radius:20px;cursor:pointer;
+}
+.pa-amen{
+  margin-left:auto;font-size:12px;font-weight:700;
+  color:var(--green-f);background:var(--green-b);
+  padding:5px 12px;border-radius:20px;cursor:pointer;
+}
+
+/* SCREEN 1 — FEED */
+.feed-header{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:18px 20px 12px;
+}
+.fh-title{font-size:26px;font-weight:700;color:var(--t);letter-spacing:-.4px;}
+.fh-sub{font-size:13px;color:var(--t2);margin-top:3px;}
+.fh-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.anon-pill{
+  display:flex;align-items:center;gap:6px;
+  background:var(--red-m);border:1px solid var(--red-b);
+  border-radius:20px;padding:5px 12px;cursor:pointer;
+}
+.anon-dot{width:7px;height:7px;border-radius:50%;background:var(--red-light);}
+.anon-lbl{font-size:11px;font-weight:700;color:var(--red-light);}
+
+.filter-tabs{
+  display:flex;gap:8px;padding:0 16px 14px;overflow-x:auto;
+}
+.ftab{
+  flex-shrink:0;padding:6px 14px;border-radius:20px;
+  font-size:12px;font-weight:500;
+  background:var(--bg3);color:var(--t2);border:1px solid var(--brd);
+  cursor:pointer;
+}
+.ftab.on{background:var(--red-m);color:var(--red-light);border-color:var(--red-b);}
+
+.groups-row{
+  display:flex;gap:10px;padding:0 16px 16px;overflow-x:auto;
+}
+.gcard{
+  flex-shrink:0;width:110px;
+  background:var(--bg3);border:1px solid var(--brd);
+  border-radius:14px;padding:12px 10px;cursor:pointer;text-align:center;
+}
+.gcard.on{border-color:var(--red-b);}
+.gc-ico{font-size:22px;margin-bottom:6px;}
+.gc-name{font-size:11px;font-weight:700;color:var(--t);line-height:1.3;}
+.gc-count{font-size:10px;color:var(--t3);margin-top:3px;}
+
+.fab{
+  position:absolute;bottom:84px;right:16px;
+  width:52px;height:52px;border-radius:50%;
+  background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;color:#fff;font-weight:300;cursor:pointer;
+}
+
+/* SCREEN 2 — CRÉER UNE CONFESSION */
+.create-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:46px 20px 16px;
+}
+.ch-back{font-size:14px;color:var(--t2);cursor:pointer;}
+.ch-title{font-size:17px;font-weight:700;color:var(--t);}
+.ch-post{
+  font-size:14px;font-weight:700;color:#fff;
+  background:var(--red);padding:7px 18px;border-radius:20px;cursor:pointer;
+}
+
+.type-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:8px;padding:0 16px 16px;
+}
+.tcard{
+  background:var(--bg3);border:1px solid var(--brd);
+  border-radius:14px;padding:13px;cursor:pointer;
+  display:flex;align-items:center;gap:10px;
+}
+.tcard.on{border-color:var(--red-b);background:var(--red-m);}
+.tc-ico{font-size:20px;}
+.tc-name{font-size:12px;font-weight:700;color:var(--t);}
+.tc-sub{font-size:10px;color:var(--t2);margin-top:2px;}
+
+.anon-toggle{
+  margin:0 16px 14px;
+  background:var(--bg3);border-radius:14px;border:1px solid var(--brd);
+  padding:13px 16px;display:flex;align-items:center;justify-content:space-between;
+}
+.at-left{}
+.at-lbl{font-size:13px;font-weight:700;color:var(--t);}
+.at-sub{font-size:11px;color:var(--t2);margin-top:2px;}
+.toggle{
+  width:44px;height:26px;border-radius:13px;
+  background:var(--red);position:relative;flex-shrink:0;
+}
+.toggle-k{
+  width:22px;height:22px;border-radius:50%;background:#fff;
+  position:absolute;top:2px;right:2px;
+}
+.toggle.off{background:var(--bg5);}
+.toggle.off .toggle-k{right:auto;left:2px;}
+
+.textarea-block{margin:0 16px 14px;}
+.ta-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px;}
+.ta-box{
+  width:100%;background:var(--bg3);border:1px solid var(--brd2);
+  border-radius:14px;padding:14px;
+  font-size:13px;color:var(--t2);line-height:1.6;
+  min-height:110px;
+}
+.ta-cursor{display:inline-block;width:2px;height:14px;background:var(--red-light);animation:none;vertical-align:middle;}
+.char-count{font-size:11px;color:var(--t3);text-align:right;margin-top:5px;}
+
+.verse-picker{
+  margin:0 16px 14px;
+  background:var(--bg3);border:1px solid var(--brd);
+  border-radius:14px;padding:13px 16px;
+  display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+}
+.vp-left{display:flex;align-items:center;gap:10px;}
+.vp-ico{font-size:16px;}
+.vp-lbl{font-size:13px;color:var(--t2);}
+.vp-arrow{font-size:16px;color:var(--t3);}
+
+.visibility-row{
+  display:flex;gap:8px;padding:0 16px 14px;
+}
+.vis-btn{
+  flex:1;background:var(--bg3);border:1px solid var(--brd);
+  border-radius:12px;padding:10px 8px;text-align:center;cursor:pointer;
+}
+.vis-btn.on{border-color:var(--red-b);background:var(--red-m);}
+.vb-ico{font-size:16px;}
+.vb-lbl{font-size:10px;font-weight:600;color:var(--t2);margin-top:4px;}
+.vb-lbl.on{color:var(--red-light);}
+
+/* SCREEN 3 — DÉTAIL POST / RÉPONSES */
+.detail-header{
+  display:flex;align-items:center;gap:14px;
+  padding:46px 20px 14px;
+}
+.dh-back{font-size:14px;color:var(--t2);cursor:pointer;}
+.dh-title{font-size:17px;font-weight:700;color:var(--t);}
+
+.stat-pills{
+  display:flex;gap:8px;padding:0 16px 14px;
+}
+.sp{
+  display:flex;align-items:center;gap:5px;
+  background:var(--bg3);border:1px solid var(--brd);
+  border-radius:20px;padding:5px 12px;
+  font-size:12px;color:var(--t2);
+}
+.sp.red{background:var(--red-m);border-color:var(--red-b);color:var(--red-light);}
+.sp.green{background:var(--green-b);border-color:rgba(39,120,75,.3);color:var(--green-f);}
+
+.reply-list{padding:0 16px;}
+.reply-item{
+  display:flex;gap:10px;padding:12px 0;
+  border-bottom:1px solid var(--brd);
+}
+.reply-av{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--bg4);border:1px solid var(--brd2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;
+}
+.reply-body{flex:1;}
+.reply-name{font-size:12px;font-weight:700;color:var(--t);}
+.reply-text{font-size:12px;color:var(--t2);line-height:1.55;margin-top:3px;}
+.reply-verse{
+  margin-top:7px;padding:7px 10px;
+  background:var(--red-m);border-left:2px solid var(--red);
+  border-radius:0 7px 7px 0;
+  font-size:11px;color:rgba(240,210,210,.9);font-style:italic;
+}
+.reply-meta{font-size:10px;color:var(--t3);margin-top:5px;}
+.helpful-btn{
+  font-size:10px;font-weight:700;
+  color:var(--green-f);background:var(--green-b);
+  padding:3px 8px;border-radius:6px;margin-top:4px;display:inline-block;
+}
+
+.reply-input-bar{
+  margin:0 16px;
+  background:var(--bg3);border:1px solid var(--brd2);
+  border-radius:14px;padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+}
+.ri-av{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--red-deep);display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.ri-input{flex:1;font-size:13px;color:var(--t2);}
+.ri-send{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--red);display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:#fff;cursor:pointer;flex-shrink:0;
+}
+
+/* SCREEN 4 — GROUPES THÉMATIQUES */
+.groups-header{padding:18px 20px 14px;}
+.gh-title{font-size:26px;font-weight:700;color:var(--t);letter-spacing:-.4px;}
+.gh-sub{font-size:13px;color:var(--t2);margin-top:3px;}
+
+.group-card{
+  margin:0 16px 10px;
+  background:var(--bg3);border:1px solid var(--brd);
+  border-radius:18px;padding:16px;
+  display:flex;gap:14px;align-items:center;cursor:pointer;
+}
+.group-card.active{border-color:var(--red-b);}
+.gc-avatar{
+  width:50px;height:50px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;
+}
+.gc-info{flex:1;}
+.gc-title{font-size:14px;font-weight:700;color:var(--t);line-height:1.3;}
+.gc-desc{font-size:11px;color:var(--t2);margin-top:3px;line-height:1.4;}
+.gc-meta{display:flex;gap:8px;margin-top:8px;align-items:center;}
+.gc-members{font-size:11px;color:var(--t3);}
+.gc-join{
+  margin-left:auto;font-size:11px;font-weight:700;
+  padding:5px 14px;border-radius:20px;cursor:pointer;
+}
+.gc-join.red{background:var(--red);color:#fff;}
+.gc-join.joined{background:var(--green-b);color:var(--green-f);}
+</style>
+
+<div class="outer">
+
+  <!-- ══ SCREEN 1 : FEED ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc" style="position:relative;">
+
+        <div class="feed-header">
+          <div>
+            <div class="fh-title">Communauté</div>
+            <div class="fh-sub">Priez les uns pour les autres</div>
+          </div>
+          <div class="fh-right">
+            <div class="anon-pill">
+              <div class="anon-dot"></div>
+              <div class="anon-lbl">Anonyme ON</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-tabs">
+          <div class="ftab on">Tout</div>
+          <div class="ftab">Prières</div>
+          <div class="ftab">Témoignages</div>
+          <div class="ftab">Questions</div>
+          <div class="ftab">Encouragements</div>
+        </div>
+
+        <div class="sh"><div class="st">Groupes actifs</div><div class="sl">Tous</div></div>
+        <div class="groups-row">
+          <div class="gcard on">
+            <div class="gc-ico">💔</div>
+            <div class="gc-name">Deuil & Perte</div>
+            <div class="gc-count">234 membres</div>
+          </div>
+          <div class="gcard">
+            <div class="gc-ico">🔥</div>
+            <div class="gc-name">Pureté</div>
+            <div class="gc-count">512 membres</div>
+          </div>
+          <div class="gcard">
+            <div class="gc-ico">🌧</div>
+            <div class="gc-name">Dépression</div>
+            <div class="gc-count">389 membres</div>
+          </div>
+          <div class="gcard">
+            <div class="gc-ico">💑</div>
+            <div class="gc-name">Célibat</div>
+            <div class="gc-count">178 membres</div>
+          </div>
+        </div>
+
+        <div class="sh"><div class="st">Fil récent</div></div>
+
+        <div class="post">
+          <div class="post-head">
+            <div class="av">👤</div>
+            <div class="pm">
+              <div class="pn">Frère anonyme</div>
+              <div class="pt">il y a 8 min · Prière publique</div>
+            </div>
+            <span class="tag tb">Prière</span>
+          </div>
+          <div class="pb">Je traverse une période sombre depuis 3 semaines. J'ai du mal à prier et à lire ma Bible. Priez pour moi, frères et sœurs.</div>
+          <div class="pv">
+            « L'Éternel est proche de ceux qui ont le cœur brisé »
+            <div class="pv-ref">Psaumes 34:18</div>
+          </div>
+          <div class="pa">
+            <div class="pa-btn red">🙏 47 prières</div>
+            <div class="pa-btn">💬 12</div>
+            <div class="pa-pray">Prier</div>
+          </div>
+        </div>
+
+        <div class="post">
+          <div class="post-head">
+            <div class="av" style="background:rgba(212,175,55,.08);font-size:16px;">✦</div>
+            <div class="pm">
+              <div class="pn">Sœur Marie K.</div>
+              <div class="pt">il y a 1h · Témoignage</div>
+            </div>
+            <span class="tag tg">Témoignage</span>
+          </div>
+          <div class="pb">Dieu a répondu à ma prière de 2 ans. Mon frère s'est converti hier soir lors d'une veillée. Gloire à Dieu !</div>
+          <div class="pa">
+            <div class="pa-btn green">✦ 128 amens</div>
+            <div class="pa-btn">💬 34</div>
+            <div class="pa-amen">Amen !</div>
+          </div>
+        </div>
+
+        <div class="fab">+</div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico on">🤝</div><div class="ni-bar on"></div><div class="ni-lbl on">Communauté</div></div>
+        <div class="ni"><div class="ni-ico">✦</div><div class="ni-bar"></div><div class="ni-lbl">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">01 · Feed communauté</div>
+  </div>
+
+  <!-- ══ SCREEN 2 : CRÉER ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="create-header">
+          <div class="ch-back">✕ Annuler</div>
+          <div class="ch-title">Nouveau partage</div>
+          <div class="ch-post">Publier</div>
+        </div>
+
+        <div class="sh"><div class="st">Type de partage</div></div>
+        <div class="type-grid">
+          <div class="tcard on">
+            <div class="tc-ico">🙏</div>
+            <div>
+              <div class="tc-name">Demande de prière</div>
+              <div class="tc-sub">Soumettre un besoin</div>
+            </div>
+          </div>
+          <div class="tcard">
+            <div class="tc-ico">✦</div>
+            <div>
+              <div class="tc-name">Témoignage</div>
+              <div class="tc-sub">Partager une victoire</div>
+            </div>
+          </div>
+          <div class="tcard">
+            <div class="tc-ico">💬</div>
+            <div>
+              <div class="tc-name">Question spirituelle</div>
+              <div class="tc-sub">Chercher conseil</div>
+            </div>
+          </div>
+          <div class="tcard">
+            <div class="tc-ico">💛</div>
+            <div>
+              <div class="tc-name">Encouragement</div>
+              <div class="tc-sub">Édifier la communauté</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="anon-toggle">
+          <div class="at-left">
+            <div class="at-lbl">Mode anonyme</div>
+            <div class="at-sub">Ton nom reste masqué</div>
+          </div>
+          <div class="toggle"><div class="toggle-k"></div></div>
+        </div>
+
+        <div class="textarea-block">
+          <div class="ta-label">Ton message</div>
+          <div class="ta-box">
+            Je traverse une période difficile depuis quelques semaines et j'ai besoin de vos prières...<span class="ta-cursor"></span>
+          </div>
+          <div class="char-count">87 / 1500</div>
+        </div>
+
+        <div class="verse-picker">
+          <div class="vp-left">
+            <div class="vp-ico">📖</div>
+            <div class="vp-lbl">Ajouter un verset biblique</div>
+          </div>
+          <div class="vp-arrow">›</div>
+        </div>
+
+        <div class="sh" style="margin-top:4px;"><div class="st">Visibilité</div></div>
+        <div class="visibility-row">
+          <div class="vis-btn on">
+            <div class="vb-ico">🌍</div>
+            <div class="vb-lbl on">Public</div>
+          </div>
+          <div class="vis-btn">
+            <div class="vb-ico">👥</div>
+            <div class="vb-lbl">Groupe</div>
+          </div>
+          <div class="vis-btn">
+            <div class="vb-ico">🔒</div>
+            <div class="vb-lbl">Privé</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico on">🤝</div><div class="ni-bar on"></div><div class="ni-lbl on">Communauté</div></div>
+        <div class="ni"><div class="ni-ico">✦</div><div class="ni-bar"></div><div class="ni-lbl">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">02 · Créer une confession</div>
+  </div>
+
+  <!-- ══ SCREEN 3 : DÉTAIL + RÉPONSES ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="detail-header">
+          <div class="dh-back">←</div>
+          <div class="dh-title">Demande de prière</div>
+        </div>
+
+        <div class="post" style="margin-bottom:0;">
+          <div class="post-head">
+            <div class="av">👤</div>
+            <div class="pm">
+              <div class="pn">Frère anonyme</div>
+              <div class="pt">il y a 8 min</div>
+            </div>
+            <span class="tag tb">Prière</span>
+          </div>
+          <div class="pb">Je traverse une période sombre depuis 3 semaines. J'ai du mal à prier et à lire ma Bible. Je me sens très seul dans cette épreuve. Priez pour moi, frères et sœurs, que Dieu ravive le feu en moi.</div>
+          <div class="pv">
+            « L'Éternel est proche de ceux qui ont le cœur brisé »
+            <div class="pv-ref">Psaumes 34:18</div>
+          </div>
+        </div>
+
+        <div class="stat-pills" style="padding-top:12px;">
+          <div class="sp red">🙏 47 prières</div>
+          <div class="sp">💬 12 réponses</div>
+          <div class="sp green">✓ Tu as prié</div>
+        </div>
+
+        <div class="sh"><div class="st">Réponses</div></div>
+
+        <div class="reply-list">
+          <div class="reply-item">
+            <div class="reply-av" style="background:rgba(52,100,180,.12);font-size:13px;">P</div>
+            <div class="reply-body">
+              <div class="reply-name">Pasteur Emmanuel</div>
+              <div class="reply-text">Frère, nous avons tous traversé ces déserts spirituels. Dieu n'est pas absent — il est souvent le plus présent dans ces moments-là.</div>
+              <div class="reply-verse">« Je ne te délaisserai point, et je ne t'abandonnerai point. » — Hébr. 13:5</div>
+              <div class="reply-meta">il y a 5 min · <span class="helpful-btn">Utile ✓</span></div>
+            </div>
+          </div>
+          <div class="reply-item">
+            <div class="reply-av">👤</div>
+            <div class="reply-body">
+              <div class="reply-name">Anonyme</div>
+              <div class="reply-text">J'ai vécu la même chose l'an dernier. Je prie pour toi en ce moment même. Tu n'es pas seul, frère.</div>
+              <div class="reply-meta">il y a 3 min</div>
+            </div>
+          </div>
+          <div class="reply-item">
+            <div class="reply-av" style="background:rgba(39,120,75,.1);font-size:13px;">S</div>
+            <div class="reply-body">
+              <div class="reply-name">Sœur Yvonne</div>
+              <div class="reply-text">Commence par 5 minutes de silence devant Dieu. Sans mots. Il voit ton cœur. Le désert précède toujours la floraison.</div>
+              <div class="reply-meta">il y a 1 min</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reply-input-bar" style="margin-bottom:12px;">
+          <div class="ri-av">JK</div>
+          <div class="ri-input">Écrire une réponse d'encouragement…</div>
+          <div class="ri-send">↑</div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico on">🤝</div><div class="ni-bar on"></div><div class="ni-lbl on">Communauté</div></div>
+        <div class="ni"><div class="ni-ico">✦</div><div class="ni-bar"></div><div class="ni-lbl">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">03 · Détail post & réponses</div>
+  </div>
+
+  <!-- ══ SCREEN 4 : GROUPES THÉMATIQUES ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="groups-header">
+          <div class="gh-title">Groupes</div>
+          <div class="gh-sub">Rejoins une communauté thématique</div>
+        </div>
+
+        <div class="sh" style="margin-bottom:8px;"><div class="st">Mes groupes</div></div>
+
+        <div class="group-card active">
+          <div class="gc-avatar" style="background:rgba(192,57,43,.1);">💔</div>
+          <div class="gc-info">
+            <div class="gc-title">Deuil & Perte</div>
+            <div class="gc-desc">Traverser la perte avec la communauté</div>
+            <div class="gc-meta">
+              <span class="tag tr">Rejoint</span>
+              <div class="gc-members">234 membres · 12 actifs</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sh" style="margin-top:6px;margin-bottom:8px;"><div class="st">Découvrir</div></div>
+
+        <div class="group-card">
+          <div class="gc-avatar" style="background:rgba(212,175,55,.08);">🔥</div>
+          <div class="gc-info">
+            <div class="gc-title">Pureté & Identité</div>
+            <div class="gc-desc">Vaincre ensemble, dans la discrétion</div>
+            <div class="gc-meta">
+              <div class="gc-members">512 membres</div>
+              <div class="gc-join red">Rejoindre</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="group-card">
+          <div class="gc-avatar" style="background:rgba(52,100,180,.08);">🌧</div>
+          <div class="gc-info">
+            <div class="gc-title">Dépression & Espoir</div>
+            <div class="gc-desc">Accompagnement spirituel et bienveillant</div>
+            <div class="gc-meta">
+              <div class="gc-members">389 membres</div>
+              <div class="gc-join red">Rejoindre</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="group-card">
+          <div class="gc-avatar" style="background:rgba(120,60,180,.08);">💑</div>
+          <div class="gc-info">
+            <div class="gc-title">Célibat consacré</div>
+            <div class="gc-desc">Vivre sainement l'attente de Dieu</div>
+            <div class="gc-meta">
+              <div class="gc-members">178 membres</div>
+              <div class="gc-join red">Rejoindre</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="group-card">
+          <div class="gc-avatar" style="background:rgba(39,120,75,.08);">💒</div>
+          <div class="gc-info">
+            <div class="gc-title">Mariage & Couple</div>
+            <div class="gc-desc">Construire ensemble sur le roc</div>
+            <div class="gc-meta">
+              <div class="gc-members">291 membres</div>
+              <div class="gc-join joined">Rejoint ✓</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico on">🤝</div><div class="ni-bar on"></div><div class="ni-lbl on">Communauté</div></div>
+        <div class="ni"><div class="ni-ico">✦</div><div class="ni-bar"></div><div class="ni-lbl">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">04 · Groupes thématiques</div>
+  </div>
+
+</div>

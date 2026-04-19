@@ -1,0 +1,369 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.cal { padding: 1rem 0; }
+.week-block { margin-bottom: 2rem; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+.week-header { padding: 12px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); }
+.week-num { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.week-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.week-book { font-size: 11px; color: var(--color-text-tertiary); margin-left: auto; }
+.headers-row { display: grid; grid-template-columns: 76px 1fr 1fr 1fr; border-bottom: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); }
+.h-empty { border-right: 0.5px solid var(--color-border-tertiary); padding: 7px 0; }
+.h-col { padding: 7px 8px; font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); text-align: center; border-right: 0.5px solid var(--color-border-tertiary); }
+.h-col:last-child { border-right: none; }
+.day-row { display: grid; grid-template-columns: 76px 1fr 1fr 1fr; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.day-row:last-child { border-bottom: none; }
+.day-label { padding: 10px 8px; font-size: 11px; font-weight: 500; color: var(--color-text-secondary); display: flex; align-items: center; border-right: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); }
+.cell { padding: 9px 9px; font-size: 11.5px; color: var(--color-text-secondary); line-height: 1.5; border-right: 0.5px solid var(--color-border-tertiary); display: flex; flex-direction: column; gap: 4px; }
+.cell:last-child { border-right: none; }
+.tag { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 10px; width: fit-content; }
+.t-matin { background: #FAEEDA; color: #633806; }
+.t-midi { background: #E6F1FB; color: #0C447C; }
+.t-soir { background: #EAF3DE; color: #27500A; }
+.w1 { background: #EEEDFE; color: #3C3489; }
+.w2 { background: #FAECE7; color: #712B13; }
+.w3 { background: #E1F5EE; color: #085041; }
+.w4 { background: #FBEAF0; color: #72243E; }
+.w5 { background: #FAEEDA; color: #633806; }
+.w6 { background: #E6F1FB; color: #0C447C; }
+</style>
+
+<div class="cal">
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num w1">Semaine 1</span>
+    <span class="week-title">La dépression — Dieu est-il là dans le noir ?</span>
+    <span class="week-book">📖 Spiritual Depression — D. Martyn Lloyd-Jones</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty"></div>
+    <div class="h-col">☀️ Matin — Citation</div>
+    <div class="h-col">🌤 Midi — Carrousel</div>
+    <div class="h-col">🌙 Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"La dépression n'est pas un manque de foi. Élie en a souffert. Et Dieu lui a apporté de la nourriture." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Peut-on être déprimé et chrétien ? La vraie réponse + livre</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>1 Rois 19:5 — "Lève-toi et mange, car le chemin est trop long pour toi."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Sourire à l'église le dimanche et pleurer seul le lundi — combien sont dans cette situation ?" — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Le masque du chrétien heureux — pourquoi on n'ose pas dire qu'on va mal</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Psaume 34:19 — "Le Seigneur est proche de ceux qui ont le cœur brisé."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Dieu ne te demande pas de faire semblant d'aller bien. Les Psaumes sont remplis de cris." — Tim Keller</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>La dépression est-elle une punition divine ? Ce que la Bible dit vraiment</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Psaume 22:1 — "Mon Dieu, mon Dieu, pourquoi m'as-tu abandonné ?"</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"La sécheresse intérieure n'est pas l'absence de Dieu — c'est parfois son invitation à aller plus profond." — Thomas Merton</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Quand prier ne change rien — comment tenir quand tout s'effondre ?</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Lamentations 3:22-23 — "Les compassions du Seigneur ne sont pas à leur fin."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Aller chez un psychologue n'est pas un manque de foi. Luc était médecin et compagnon de Paul." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Foi et santé mentale — peut-on consulter un psy en étant chrétien ?</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Colossiens 4:14 — Luc, le médecin bien-aimé</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"L'anxiété n'est pas un péché. C'est un signal. Et Dieu l'entend." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>L'anxiété et la peur — comment la foi peut vraiment aider (sans formules vides)</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Philippiens 4:6-7 — "Ne vous inquiétez de rien..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Le burn-out spirituel — quand servir Dieu t'a épuisé de Dieu lui-même." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Le burn-out spirituel — quand tu n'en peux plus de l'église et de tout</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Matthieu 11:28 — "Venez à moi, vous tous qui êtes fatigués..."</div>
+  </div>
+</div>
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num w2">Semaine 2</span>
+    <span class="week-title">La masturbation — le combat dont personne ne parle</span>
+    <span class="week-book">📖 Finally Free — Heath Lambert</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty"></div>
+    <div class="h-col">☀️ Matin — Citation</div>
+    <div class="h-col">🌤 Midi — Carrousel</div>
+    <div class="h-col">Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Combien de chrétiens portent ce combat seuls depuis des années, trop honteux pour en parler ?" — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>La masturbation — le sujet le plus tabou de l'église. On en parle enfin. + livre</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>1 Corinthiens 6:18 — "Fuyez l'impudicité."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"La honte ne libère personne. La grâce, si." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Honte vs culpabilité — comprendre la différence pour vraiment s'en sortir</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Romains 8:1 — "Il n'y a donc maintenant aucune condamnation..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"La pornographie promet ce qu'elle ne peut pas tenir et vole ce qu'elle ne peut pas remplacer." — Tim Chester</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Pornographie et masturbation — pourquoi les deux sont souvent liés et comment briser le cycle</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Job 31:1 — "J'avais fait un pacte avec mes yeux..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Tomber ne définit pas qui tu es. Se relever, oui." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Rechuter après avoir promis à Dieu — comment ne pas abandonner la foi</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Michée 7:8 — "Ne te réjouis pas à mon sujet, mon ennemie ! Si je suis tombé, je me relèverai."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"La pureté n'est pas l'absence de tentation. C'est le choix de se retourner vers Dieu." — C.S. Lewis</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>La pureté sexuelle aujourd'hui — réaliste ou utopique pour les jeunes ?</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>1 Thessaloniciens 4:3 — "La volonté de Dieu c'est votre sanctification..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"En parler à quelqu'un de confiance, c'est souvent le premier pas vers la liberté." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>L'accountability — pourquoi tu ne peux pas gagner ce combat tout seul</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Jacques 5:16 — "Confessez donc vos péchés les uns aux autres..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Dieu ne t'a pas créé pour vivre dans la honte. Il t'a créé pour vivre dans la liberté." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Ce que Dieu pense vraiment de toi dans ce combat — pas de condamnation</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Jean 8:36 — "Si le Fils vous affranchit, vous serez réellement libres."</div>
+  </div>
+</div>
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num w3">Semaine 3</span>
+    <span class="week-title">Relations toxiques — amour ou prison ?</span>
+    <span class="week-book">📖 Boundaries — Henry Cloud & John Townsend</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty"></div>
+    <div class="h-col">☀️ Matin — Citation</div>
+    <div class="h-col">🌤 Midi — Carrousel</div>
+    <div class="h-col">🌙 Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Une relation toxique ne crie pas toujours. Parfois elle chuchote juste assez pour que tu restes." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Comment reconnaître une relation toxique — 6 signes concrets + livre</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Proverbes 4:23 — "Garde ton cœur plus que toute autre chose..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Rester dans une relation toxique par peur de la solitude, c'est choisir une prison contre une chambre vide." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Pourquoi on reste dans une relation qui nous détruit — la psychologie honnête</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>2 Corinthiens 6:14 — "Ne vous mettez pas avec les infidèles sous un joug étranger..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Les limites ne sont pas des murs pour tenir les gens dehors. Ce sont des portes dont tu tiens la clé." — Henry Cloud</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Les limites dans les relations — est-ce biblique de dire non ?</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Matthieu 5:37 — "Que votre parole soit oui, oui, non, non."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"L'amour sain élève. L'amour toxique épuise. Les deux peuvent dire 'je t'aime'." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Amour sain vs amour toxique — les vraies différences</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>1 Corinthiens 13:4-7 — "L'amour est patient, il est plein de bonté..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Pardonner ne veut pas dire rester. Tu peux pardonner à distance." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Pardonner une relation toxique sans y retourner — est-ce possible ?</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Colossiens 3:13 — "Supportez-vous les uns les autres et pardonnez-vous..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Le soul tie — quand tu as rompu depuis longtemps mais que l'autre est encore dans ta tête." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Les liens spirituels après une relation — comment vraiment tourner la page</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Ésaïe 43:18 — "Ne vous souvenez plus des choses passées..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Guérir après une relation toxique prend du temps. Et c'est normal." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Reconstruire sa confiance après une relation toxique — les étapes concrètes</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Psaume 147:3 — "Il guérit ceux qui ont le cœur brisé..."</div>
+  </div>
+</div>
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num w4">Semaine 4</span>
+    <span class="week-title">Manipulation à l'église — quand la foi devient un piège</span>
+    <span class="week-book">📖 The Subtle Power of Spiritual Abuse — David Johnson</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty"></div>
+    <div class="h-col">☀️ Matin — Citation</div>
+    <div class="h-col">🌤 Midi — Carrousel</div>
+    <div class="h-col">🌙 Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"L'abus spirituel est d'autant plus dévastateur qu'il arrive au nom de Dieu." — Jeff VanVonderen</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>La manipulation à l'église — ça existe vraiment et voilà comment la reconnaître + livre</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Ézéchiel 34:4 — "Vous n'avez pas fortifié les brebis malades..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Quand 'Dieu t'a dit' devient une arme pour contrôler ta vie — c'est une alerte." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>"Dieu m'a dit que tu dois..." — comment reconnaître la fausse prophétie manipulatrice</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Jérémie 23:16 — "N'écoutez pas les paroles des prophètes qui vous prophétisent..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Le pasteur intouchable n'est pas un homme de Dieu — c'est une idole déguisée." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Pourquoi on n'ose pas remettre en question son pasteur — la psychologie de la soumission</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>1 Thessaloniciens 5:21 — "Examinez toutes choses ; retenez ce qui est bon."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Donner par culpabilité n'est pas de la générosité. C'est de la manipulation." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Les offrandes sous pression — la ligne entre foi et manipulation financière</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>2 Corinthiens 9:7 — "Que chacun donne comme il l'a résolu en son cœur, sans tristesse ni contrainte..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Une église saine te pousse vers Dieu. Une église toxique te rend dépendant d'elle." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Église saine vs église toxique — les 7 différences concrètes</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Actes 17:11 — "Ils examinaient chaque jour les Écritures pour voir si ce qu'on leur disait était exact."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Quitter une église toxique n'est pas fuir Dieu. C'est parfois lui obéir." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Comment partir d'une église toxique sans perdre la foi</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Apocalypse 2:2 — "Je sais que tu ne peux pas supporter les méchants..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Avoir été blessé par l'église ne veut pas dire que Dieu t'a abandonné." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Reconstruire sa foi après une blessure d'église — c'est possible</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Psaume 27:10 — "Quand mon père et ma mère m'abandonneraient, l'Éternel me recueillerait."</div>
+  </div>
+</div>
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num w5">Semaine 5</span>
+    <span class="week-title">La solitude, le rejet & la valeur personnelle</span>
+    <span class="week-book">📖 The Ragamuffin Gospel — Brennan Manning</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty"></div>
+    <div class="h-col">☀️ Matin — Citation</div>
+    <div class="h-col">🌤 Midi — Carrousel</div>
+    <div class="h-col">🌙 Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Tu peux être entouré de monde et te sentir complètement seul. C'est la solitude la plus dure." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>La solitude du jeune chrétien — pourquoi tu te sens seul même à l'église + livre</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Jean 16:32 — "Je ne suis pas seul, car le Père est avec moi."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Le rejet fait mal parce que tu es fait pour être aimé. C'est ta nature, pas ta faiblesse." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>La peur du rejet — comment elle contrôle ta vie sans que tu t'en rendes compte</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Ésaïe 53:3 — "Il était méprisé et rejeté des hommes..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Dieu ne t'aime pas parce que tu es bien. Il t'aime parce qu'il est bon." — Brennan Manning</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Ta valeur ne dépend pas de tes performances spirituelles — voici pourquoi</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Romains 5:8 — "Dieu prouve son amour envers nous en ce que Christ est mort pour nous..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Le syndrome de l'imposteur existe aussi dans la foi — 'je ne suis pas assez bien pour Dieu'." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Je ne me sens pas à la hauteur devant Dieu — tu n'es pas seul</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Psaume 139:14 — "Je te loue de ce que je suis une créature si merveilleuse..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Comparer ta vie spirituelle à celle des autres sur Instagram est le chemin le plus court vers le découragement." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Les réseaux sociaux et la foi — pourquoi ça détruit l'image de soi</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Galates 6:4 — "Que chacun examine sa propre œuvre..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Être différent parce que tu es chrétien peut faire mal. Jésus a été rejeté aussi." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Être chrétien dans un monde qui se moque — comment tenir</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>1 Pierre 4:14 — "Si vous êtes outragés pour le nom de Christ, vous êtes heureux..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Tu n'as pas besoin que tout le monde t'approuve. Tu as déjà l'approbation de Dieu." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Arrêter de chercher l'approbation des hommes — le chemin vers la liberté</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Galates 1:10 — "Est-ce la faveur des hommes que je recherche, ou celle de Dieu ?"</div>
+  </div>
+</div>
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num w6">Semaine 6</span>
+    <span class="week-title">Le doute, la colère contre Dieu & la foi qui vacille</span>
+    <span class="week-book">📖 La Foi dans les ténèbres — Philip Yancey</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty"></div>
+    <div class="h-col">☀️ Matin — Citation</div>
+    <div class="h-col">🌤 Midi — Carrousel</div>
+    <div class="h-col">🌙 Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Le doute n'est pas l'opposé de la foi. L'indifférence l'est." — Paul Tillich</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Douter de Dieu — est-ce un péché ? La réponse honnête + livre</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Marc 9:24 — "Je crois ! Viens au secours de mon incrédulité !"</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Peut-on en vouloir à Dieu ? Job l'a fait. Et Dieu lui a répondu sans le condamner." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>La colère contre Dieu — tu as le droit de lui dire que tu n'en peux plus</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Job 3:1 — "Après cela, Job ouvrit la bouche et maudit le jour de sa naissance."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Si Dieu est bon, pourquoi autant de souffrance ? La question la plus honnête qui soit." — C.S. Lewis</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Pourquoi Dieu laisse souffrir — pas une réponse facile mais une réponse vraie</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Romains 8:28 — "Toutes choses concourent au bien de ceux qui aiment Dieu..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Quand tu ne ressens plus rien pour Dieu, ce n'est pas toujours toi qui as bougé." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>La foi sans sensation — comment continuer quand tu ne ressens plus rien</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Hébreux 11:1 — "La foi est une ferme assurance des choses qu'on espère..."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Poser des questions difficiles sur la foi ne te rend pas moins chrétien. Ça te rend plus honnête." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Les questions que tu n'oses pas poser à l'église — on y répond</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Jérémie 29:13 — "Vous me chercherez et vous me trouverez si vous me cherchez de tout votre cœur."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Une foi qui ne peut pas être questionnée ne mérite pas d'être gardée." — Ravi Zacharias</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Déconstruire sa foi — danger ou nécessité pour grandir ?</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>1 Pierre 3:15 — "Soyez toujours prêts à vous défendre... de l'espérance qui est en vous."</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><span class="tag t-matin">Citation</span>"Dieu n'a pas peur de tes questions. Il t'a créé avec une intelligence pour t'en servir." — Narrat</div>
+    <div class="cell"><span class="tag t-midi">Carrousel</span>Foi et intelligence — les deux ne sont pas ennemis</div>
+    <div class="cell"><span class="tag t-soir">Verset</span>Matthieu 22:37 — "Tu aimeras le Seigneur ton Dieu... de toute ta pensée."</div>
+  </div>
+</div>
+
+</div>

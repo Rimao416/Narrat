@@ -1,0 +1,487 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.cal { padding: 1rem 0; }
+.week-block { margin-bottom: 2rem; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+.week-header { padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); }
+.week-num { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 20px; }
+.week-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+.week-book { font-size: 12px; color: var(--color-text-tertiary); margin-left: auto; }
+.day-row { display: grid; grid-template-columns: 80px 1fr 1fr 1fr; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.day-row:last-child { border-bottom: none; }
+.day-label { padding: 10px 12px; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); display: flex; align-items: center; border-right: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); }
+.col-header { padding: 8px 10px; font-size: 11px; font-weight: 500; text-align: center; border-right: 0.5px solid var(--color-border-tertiary); }
+.col-header:last-child { border-right: none; }
+.cell { padding: 10px 10px; font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; border-right: 0.5px solid var(--color-border-tertiary); vertical-align: top; display: flex; align-items: flex-start; }
+.cell:last-child { border-right: none; }
+.cell-tag { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 10px; margin-bottom: 4px; }
+.cell-inner { display: flex; flex-direction: column; gap: 3px; width: 100%; }
+.matin { background: #FAEEDA; color: #633806; }
+.midi { background: #E6F1FB; color: #0C447C; }
+.soir { background: #EAF3DE; color: #27500A; }
+.headers-row { display: grid; grid-template-columns: 80px 1fr 1fr 1fr; border-bottom: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); }
+.h-empty { border-right: 0.5px solid var(--color-border-tertiary); }
+.h-col { padding: 7px 10px; font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); text-align: center; border-right: 0.5px solid var(--color-border-tertiary); }
+.h-col:last-child { border-right: none; }
+.wk-badge-1 { background: #EEEDFE; color: #3C3489; }
+.wk-badge-2 { background: #FAECE7; color: #712B13; }
+.wk-badge-3 { background: #E1F5EE; color: #085041; }
+.wk-badge-4 { background: #FBEAF0; color: #72243E; }
+.wk-badge-5 { background: #FAEEDA; color: #633806; }
+.wk-badge-6 { background: #E6F1FB; color: #0C447C; }
+.wk-badge-7 { background: #EAF3DE; color: #27500A; }
+.wk-badge-8 { background: #F1EFE8; color: #444441; }
+</style>
+
+<div class="cal">
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num wk-badge-1">Semaine 1</span>
+    <span class="week-title">Les rêves — que nous disent-ils ?</span>
+    <span class="week-book">📖 "Rêves et visions" — Marc Dupont</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty" style="border-right:0.5px solid var(--color-border-tertiary)"></div>
+    <div class="h-col">Matin — Citation</div>
+    <div class="h-col">Midi — Carrousel</div>
+    <div class="h-col">Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Dieu parle une fois, deux fois, mais on n'y prend pas garde." — Job 33:14</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Dieu parle-t-il encore en rêve ? + livre</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Nombres 12:6</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Le rêve est la voix de l'âme que le corps n'a pas encore entendue." — Carl Jung</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Rêver de son école — que signifie vraiment ce rêve ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Joël 2:28</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Les songes des justes sont des avertissements célestes." — Augustin</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Rêver de serpents — attaque ou simple rêve ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Genèse 37:5</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Ce que tu vois en dormant peut changer ta vie éveillée." — Watchman Nee</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Rêver de manger — pourquoi c'est sérieux spirituellement</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Daniel 2:19</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Dieu nous parle souvent quand nous n'avons plus la force de lui résister." — C.S. Lewis</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Comment discerner un rêve de Dieu d'un simple rêve ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Actes 2:17</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Écoute la nuit, car c'est souvent là que Dieu chuchote." — auteur inconnu</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Rêver de personnes décédées — la vraie réponse biblique</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>1 Samuel 3:9</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Le prophète prophétique rêve." — Jérémie 23:28</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les cauchemars répétitifs — combat spirituel ou traumatisme ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Matthieu 1:20</div></div>
+  </div>
+</div>
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num wk-badge-2">Semaine 2</span>
+    <span class="week-title">Mami Wata & esprits des eaux</span>
+    <span class="week-book">📖 "Spiritual Warfare in Africa" — Emmanuel Eni</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty" style="border-right:0.5px solid var(--color-border-tertiary)"></div>
+    <div class="h-col">Matin — Citation</div>
+    <div class="h-col">Midi — Carrousel</div>
+    <div class="h-col">Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Il n'y a pas de puissance dans les cieux ou sur la terre qui tienne face au nom de Jésus." — Derek Prince</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Mami Wata — mythe africain ou réalité spirituelle ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Ésaïe 27:1</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Notre combat n'est pas contre la chair et le sang." — Éphésiens 6:12</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les esprits de marine — ce que la Bible dit vraiment</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Apocalypse 12:9</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"La connaissance de l'ennemi n'est pas une obsession, c'est une arme." — Watchman Nee</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Peut-on être chrétien et encore avoir peur d'un fétiche ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>1 Jean 4:4</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Résistez au diable et il fuira loin de vous." — Jacques 4:7</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les lieux maléfiques — certains endroits sont-ils vraiment habités ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Marc 5:8</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Christ a désarmé les principautés et les puissances." — Colossiens 2:15</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les marabouts — pourquoi des chrétiens y vont encore en secret</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Deutéronome 18:10-12</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"La lumière n'a pas à combattre l'obscurité — elle se contente d'entrer." — D.L. Moody</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les fétiches et gris-gris — comment s'en libérer définitivement</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Actes 19:19</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Plus grand est celui qui est en vous que celui qui est dans le monde." — 1 Jean 4:4</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les sacrifices traditionnels — un chrétien peut-il y participer ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Lévitique 19:31</div></div>
+  </div>
+</div>
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num wk-badge-3">Semaine 3</span>
+    <span class="week-title">Malédictions & liens spirituels</span>
+    <span class="week-book">📖 "Blessing or Curse, You Can Choose" — Derek Prince</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty" style="border-right:0.5px solid var(--color-border-tertiary)"></div>
+    <div class="h-col">Matin — Citation</div>
+    <div class="h-col">Midi — Carrousel</div>
+    <div class="h-col">Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Christ nous a rachetés de la malédiction de la loi." — Galates 3:13</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les malédictions familiales — réelles ou superstition ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Galates 3:13</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Les péchés des pères visitent les enfants, mais la grâce de Dieu brise ces chaînes." — Derek Prince</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les pactes générationnels — sommes-nous vraiment liés aux péchés de nos ancêtres ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Exode 20:5-6</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Les paroles ont un poids éternel — bénissez et ne maudissez pas." — Romains 12:14</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les malédictions par les paroles — "tu ne réussiras jamais" a-t-il un effet réel ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Proverbes 18:21</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Le soul tie est la chaîne invisible que personne ne voit mais que tout le monde traîne." — auteur inconnu</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Le soul tie — les liens spirituels créés par les relations sexuelles</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>1 Corinthiens 6:16</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Ce que tu transmets à tes enfants va bien au-delà de tes gènes." — Neil Anderson</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>L'héritage spirituel — ce qu'on transmet à ses enfants sans le savoir</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Josué 24:15</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"La croix de Christ est la seule réponse à toute malédiction." — Derek Prince</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Comment rompre une malédiction — ce que la Bible dit vraiment</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Colossiens 2:14</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Peut-on signer un pacte spirituel sans le savoir ? La réponse va te surprendre." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les contrats spirituels — peut-on s'engager sans le savoir ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Ésaïe 28:15</div></div>
+  </div>
+</div>
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num wk-badge-4">Semaine 4</span>
+    <span class="week-title">La dîme & l'argent</span>
+    <span class="week-book">📖 "Money, Possessions and Eternity" — Randy Alcorn</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty" style="border-right:0.5px solid var(--color-border-tertiary)"></div>
+    <div class="h-col">Matin — Citation</div>
+    <div class="h-col">Midi — Carrousel</div>
+    <div class="h-col">Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Là où est ton trésor, là aussi sera ton cœur." — Matthieu 6:21</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>La dîme — obligation biblique ou liberté chrétienne ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Malachie 3:10</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"L'évangile de la prospérité a transformé la grâce en commerce." — John Piper</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>L'évangile de la prospérité — vrai ou faux ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>1 Timothée 6:6-10</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Dieu peut bénir un homme riche, mais l'argent ne prouve jamais la faveur divine." — Tim Keller</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Peut-on être riche et vraiment chrétien ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Luc 16:13</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Donner à Dieu ce qui lui revient, c'est lui rendre ce qui est déjà à lui." — Augustin</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les offrandes spéciales — vraie foi ou manipulation ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>2 Corinthiens 9:7</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Les pasteurs riches dans des pays pauvres — le silence complice de l'Église." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les pasteurs riches — scandale ou bénédiction ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Actes 20:33-35</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Un chrétien sans budget est un soldat sans armure." — Crown Financial</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Gérer son argent selon la Bible — les principes concrets</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Proverbes 21:5</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Peut-on négocier avec Dieu ? 'Si tu me bénis, je donne.' La réponse honnête." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Donner aux pauvres ou à l'église — lequel prime ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Matthieu 25:40</div></div>
+  </div>
+</div>
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num wk-badge-5">Semaine 5</span>
+    <span class="week-title">L'Église & ses dérives</span>
+    <span class="week-book">📖 "Toxic Church" — Bob Jamieson</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty" style="border-right:0.5px solid var(--color-border-tertiary)"></div>
+    <div class="h-col">Matin — Citation</div>
+    <div class="h-col">Midi — Carrousel</div>
+    <div class="h-col">Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"L'Église est le seul endroit où vous pouvez être blessé par ceux qui prient pour vous." — auteur inconnu</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les faux prophètes — 5 signes concrets pour les reconnaître</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Matthieu 7:15-16</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"L'abus spirituel est d'autant plus dévastateur qu'il vient au nom de Dieu." — Jeff VanVonderen</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>L'abus spirituel — quand le pasteur devient toxique</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Ézéchiel 34:2-4</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Changer d'église n'est pas une trahison — parfois c'est une survie." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Changer d'église — trahison ou nécessité ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Hébreux 10:25</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Une secte commence toujours par quelqu'un d'inspirant." — Steven Hassan</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les sectes — comment une église normale en devient une</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Actes 20:29-30</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Le prophète qui prie contre toi pour ton argent — c'est un mercenaire, pas un serviteur." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les prophètes qui demandent de l'argent pour prier</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Michée 3:11</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Le pasteur intouchable est une idole déguisée en homme de Dieu." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Le pasteur intouchable — pourquoi on n'ose pas le critiquer</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>1 Thessaloniciens 5:21</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Peut-on être chrétien sans aller à l'église ? La vraie réponse." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Peut-on être chrétien sans aller à l'église ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>1 Corinthiens 12:27</div></div>
+  </div>
+</div>
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num wk-badge-6">Semaine 6</span>
+    <span class="week-title">Sexualité & mariage</span>
+    <span class="week-book">📖 "La Pureté du cœur" — Joshua Harris</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty" style="border-right:0.5px solid var(--color-border-tertiary)"></div>
+    <div class="h-col">Matin — Citation</div>
+    <div class="h-col">Midi — Carrousel</div>
+    <div class="h-col">Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"La sexualité est un don de Dieu — c'est l'ennemi qui en a fait un tabou dans l'Église." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>La sexualité avant le mariage — la vraie position biblique</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>1 Corinthiens 6:18-20</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"La pornographie promet ce qu'elle ne peut pas tenir et vole ce qu'elle ne peut pas remplacer." — Tim Chester</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>La pornographie — le combat silencieux de milliers de chrétiens</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Job 31:1</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Attendre le mariage aujourd'hui — mission impossible ou acte de foi ?" — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Attendre le mariage — possible aujourd'hui ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>1 Thessaloniciens 4:3-5</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Épouser un non-croyant par amour — la Bible dit quoi vraiment ?" — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Épouser un non-croyant — la vraie réponse biblique</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>2 Corinthiens 6:14</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Le divorce n'est pas le péché impardonnable que l'Église a souvent présenté." — Gary Chapman</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Le divorce et le remariage — ce que la Bible dit vraiment</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Matthieu 19:8-9</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"La violence dans les couples chrétiens — le silence de l'Église est une complicité." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>La violence conjugale dans les couples chrétiens</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Éphésiens 5:25</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"La stérilité n'est pas une malédiction — mais la douleur est réelle." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>La stérilité — punition divine ou épreuve ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Psaume 113:9</div></div>
+  </div>
+</div>
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num wk-badge-7">Semaine 7</span>
+    <span class="week-title">Combats intérieurs & vie spirituelle</span>
+    <span class="week-book">📖 "Spiritual Depression" — D. Martyn Lloyd-Jones</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty" style="border-right:0.5px solid var(--color-border-tertiary)"></div>
+    <div class="h-col">Matin — Citation</div>
+    <div class="h-col">Midi — Carrousel</div>
+    <div class="h-col">Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Douter n'est pas l'opposé de la foi — c'est souvent le chemin vers une foi plus profonde." — Paul Tillich</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Le doute — est-ce vraiment un péché ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Marc 9:24</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Élie, David, Jérémie — les plus grands hommes de Dieu ont connu la dépression." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>La dépression spirituelle — peut-on être déprimé et chrétien ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>1 Rois 19:4</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"La sécheresse spirituelle n'est pas l'absence de Dieu — c'est parfois son invitation à aller plus loin." — Thomas Merton</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>La sécheresse spirituelle — quand tu ne ressens plus rien pour Dieu</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Psaume 22:1-2</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"La honte dit 'je suis mauvais'. La culpabilité dit 'j'ai fait quelque chose de mauvais'. Seule la grâce guérit les deux." — Brené Brown</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>La honte et la grâce — l'ennemi le plus silencieux</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Romains 8:1</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Ces pensées horribles qui t'envahissent pendant la prière — tu n'es pas fou, tu es en guerre." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les pensées blasphématoires — que faire quand elles arrivent ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>2 Corinthiens 10:5</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Peut-on en vouloir à Dieu ? Job l'a fait. Et Dieu lui a répondu." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>La colère contre Dieu — peut-on lui en vouloir ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Job 3:1-3</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Le burn-out spirituel — quand servir Dieu t'a épuisé de Dieu." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Le burn-out spirituel — quand servir Dieu t'épuise</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Matthieu 11:28</div></div>
+  </div>
+</div>
+
+<div class="week-block">
+  <div class="week-header">
+    <span class="week-num wk-badge-8">Semaine 8</span>
+    <span class="week-title">Prière, guérison & foi en action</span>
+    <span class="week-book">📖 "Quand Dieu se tait" — Philip Yancey</span>
+  </div>
+  <div class="headers-row">
+    <div class="h-empty" style="border-right:0.5px solid var(--color-border-tertiary)"></div>
+    <div class="h-col">Matin — Citation</div>
+    <div class="h-col">Midi — Carrousel</div>
+    <div class="h-col">Soir — Verset</div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Lundi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"La prière sans réponse n'est pas une prière ignorée — c'est une prière en attente." — Philip Yancey</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>La prière sans réponse — tu pries depuis des années, et le silence</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Luc 18:1</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mardi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Le jeûne n'est pas une grève de la faim contre Dieu. C'est une déclaration de dépendance." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Le jeûne — comment et pourquoi jeûner concrètement ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Ésaïe 58:6</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Mercredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Entendre la voix de Dieu n'est pas réservé aux prophètes — c'est promis à tous ses enfants." — Dallas Willard</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Entendre la voix de Dieu — comment savoir que c'est vraiment lui ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Jean 10:27</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Jeudi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Pourquoi certains chrétiens fidèles ne sont pas guéris ? La question que personne n'ose poser." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Pourquoi certains ne sont pas guéris malgré la prière ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>2 Corinthiens 12:9</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Vendredi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Aller chez le médecin n'est pas un manque de foi — Luc était médecin et apôtre." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>La médecine et la foi — manque de foi d'aller chez le médecin ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>Colossiens 4:14</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Samedi</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"Discerner le vrai miracle du faux — la vigilance n'est pas l'incrédulité." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>Les faux miracles — comment discerner le vrai du faux ?</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>1 Jean 4:1</div></div>
+  </div>
+  <div class="day-row">
+    <div class="day-label">Dimanche</div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag matin">Citation</span>"La louange n'est pas la récompense de la victoire — c'est l'arme qui mène à la victoire." — Narrat</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag midi">Carrousel</span>La louange comme arme spirituelle — pas juste de la musique</div></div>
+    <div class="cell"><div class="cell-inner"><span class="cell-tag soir">Verset</span>2 Chroniques 20:22</div></div>
+  </div>
+</div>
+
+</div>

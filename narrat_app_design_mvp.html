@@ -1,0 +1,1161 @@
+
+<style>
+  :root {
+    --red: #C0392B;
+    --red-deep: #922B21;
+    --red-light: #E74C3C;
+    --red-glow: #FF6B6B;
+    --red-soft: #2D1515;
+    --bg: #0D0D0D;
+    --bg2: #141414;
+    --bg3: #1A1A1A;
+    --bg4: #222222;
+    --bg5: #2A2A2A;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(192,57,43,0.3);
+    --text: #F5F5F5;
+    --text2: #A0A0A0;
+    --text3: #666;
+    --gold: #D4AF37;
+    --gold-soft: #F0D060;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: transparent; font-family: -apple-system, 'SF Pro Display', sans-serif; }
+
+  .screens-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 20px;
+    justify-content: center;
+  }
+
+  .screen-label {
+    font-size: 11px;
+    color: var(--text3);
+    text-align: center;
+    margin-top: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .phone {
+    width: 320px;
+    background: #0D0D0D;
+    border-radius: 44px;
+    border: 1.5px solid rgba(255,255,255,0.12);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 0 6px #111, 0 0 0 7px rgba(255,255,255,0.06);
+    flex-shrink: 0;
+  }
+
+  .phone-inner {
+    height: 680px;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg);
+  }
+
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .status-icons { display: flex; gap: 5px; align-items: center; }
+  .notch {
+    width: 90px; height: 24px;
+    background: #000;
+    border-radius: 0 0 16px 16px;
+    margin: 0 auto;
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    z-index: 10;
+  }
+
+  /* ---- SCREEN 1: SPLASH / ONBOARDING ---- */
+  .splash-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg, #1A0A0A 0%, #0D0D0D 50%, #0D0D0D 100%);
+  }
+  .splash-cross {
+    position: absolute;
+    top: 80px; left: 50%;
+    transform: translateX(-50%);
+    width: 64px; height: 64px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .splash-cross::before {
+    content: '';
+    position: absolute;
+    width: 8px; height: 64px;
+    background: var(--red);
+    border-radius: 4px;
+  }
+  .splash-cross::after {
+    content: '';
+    position: absolute;
+    width: 48px; height: 8px;
+    background: var(--red);
+    border-radius: 4px;
+    top: 16px;
+  }
+  .splash-ring {
+    position: absolute;
+    top: 56px; left: 50%;
+    transform: translateX(-50%);
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(192,57,43,0.25);
+  }
+  .splash-ring2 {
+    position: absolute;
+    top: 36px; left: 50%;
+    transform: translateX(-50%);
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    border: 1px solid rgba(192,57,43,0.1);
+  }
+  .splash-content {
+    position: absolute;
+    top: 200px;
+    width: 100%;
+    text-align: center;
+    padding: 0 28px;
+  }
+  .app-name {
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -1px;
+  }
+  .app-name span { color: var(--red-light); }
+  .app-tagline {
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+  .splash-verse {
+    margin-top: 28px;
+    padding: 14px 18px;
+    background: rgba(192,57,43,0.08);
+    border: 1px solid rgba(192,57,43,0.2);
+    border-radius: 12px;
+    font-size: 12px;
+    color: rgba(192,57,43,0.9);
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .splash-verse span { display: block; font-size: 10px; font-style: normal; color: var(--text3); margin-top: 4px; }
+  .splash-btns {
+    position: absolute;
+    bottom: 60px;
+    width: 100%;
+    padding: 0 24px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .btn-primary {
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 15px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 15px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  /* ---- SCREEN 2: HOME ---- */
+  .home-bg { background: var(--bg); position: absolute; inset: 0; }
+  .home-header {
+    padding: 40px 20px 12px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .home-greeting { font-size: 11px; color: var(--text2); }
+  .home-name { font-size: 20px; font-weight: 700; color: var(--text); margin-top: 2px; }
+  .home-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--red-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: #fff;
+    border: 2px solid var(--red);
+  }
+  .verse-card {
+    margin: 0 16px 16px;
+    background: linear-gradient(135deg, var(--red-deep) 0%, #4A0E0E 100%);
+    border-radius: 18px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .verse-card::before {
+    content: '\201C';
+    position: absolute;
+    top: -8px; left: 12px;
+    font-size: 80px;
+    color: rgba(255,255,255,0.06);
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+  .verse-card-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .verse-card-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.92);
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .verse-card-ref {
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text2);
+    padding: 0 20px;
+    margin-bottom: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .modules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 0 16px;
+    margin-bottom: 16px;
+  }
+  .module-card {
+    background: var(--bg3);
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .module-card.active { border-color: rgba(192,57,43,0.4); }
+  .module-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  .module-icon.red { background: rgba(192,57,43,0.15); }
+  .module-icon.gold { background: rgba(212,175,55,0.12); }
+  .module-icon.blue { background: rgba(52,100,180,0.15); }
+  .module-icon.green { background: rgba(39,120,75,0.15); }
+  .module-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .module-desc {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 4px;
+  }
+  .streak-bar {
+    margin: 0 16px 16px;
+    background: var(--bg3);
+    border-radius: 14px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .streak-num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--red-light);
+    line-height: 1;
+  }
+  .streak-label { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .streak-dots { display: flex; gap: 5px; margin-left: auto; }
+  .streak-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--bg5);
+  }
+  .streak-dot.on { background: var(--red); }
+
+  /* ---- SCREEN 3: BIBLIOTHÈQUE ---- */
+  .lib-header {
+    padding: 44px 20px 16px;
+  }
+  .lib-title { font-size: 24px; font-weight: 700; color: var(--text); }
+  .lib-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .search-bar {
+    margin: 0 16px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text3);
+    font-size: 14px;
+  }
+  .search-icon { font-size: 14px; opacity: 0.5; }
+  .filter-chips {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 14px;
+    overflow-x: auto;
+  }
+  .chip {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--bg3);
+    color: var(--text2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .chip.active {
+    background: rgba(192,57,43,0.15);
+    color: var(--red-light);
+    border-color: rgba(192,57,43,0.35);
+  }
+  .book-row {
+    display: flex;
+    gap: 12px;
+    padding: 0 16px 14px;
+    align-items: flex-start;
+  }
+  .book-cover {
+    width: 60px; height: 86px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .book-cover-inner {
+    width: 100%; height: 100%;
+    display: flex; align-items: flex-end;
+    padding: 6px;
+    border-radius: 8px;
+  }
+  .book-cover-title {
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.2;
+  }
+  .book-info { flex: 1; }
+  .book-title { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.3; }
+  .book-author { font-size: 11px; color: var(--text2); margin-top: 3px; }
+  .book-meta { display: flex; gap: 8px; margin-top: 7px; align-items: center; }
+  .book-tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    background: rgba(192,57,43,0.1);
+    color: var(--red-light);
+    border-radius: 6px;
+    font-weight: 500;
+  }
+  .book-audio {
+    font-size: 10px;
+    padding: 3px 8px;
+    background: rgba(212,175,55,0.1);
+    color: var(--gold-soft);
+    border-radius: 6px;
+    font-weight: 500;
+  }
+  .book-progress {
+    height: 3px;
+    background: var(--bg4);
+    border-radius: 2px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .book-progress-fill {
+    height: 100%;
+    background: var(--red);
+    border-radius: 2px;
+  }
+  .divider { height: 1px; background: var(--border); margin: 6px 16px 12px; }
+
+  /* ---- SCREEN 4: CONFESSION ---- */
+  .conf-header {
+    padding: 44px 20px 16px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .conf-title { font-size: 22px; font-weight: 700; color: var(--text); }
+  .conf-badge {
+    background: rgba(192,57,43,0.15);
+    color: var(--red-light);
+    border-radius: 8px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .conf-anon-toggle {
+    margin: 0 16px 14px;
+    background: var(--bg3);
+    border-radius: 14px;
+    padding: 14px 16px;
+    border: 1px solid rgba(192,57,43,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .toggle-label { font-size: 13px; color: var(--text); font-weight: 500; }
+  .toggle-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .toggle-switch {
+    width: 42px; height: 24px;
+    background: var(--red);
+    border-radius: 12px;
+    position: relative;
+  }
+  .toggle-knob {
+    width: 20px; height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px; right: 2px;
+  }
+  .conf-post {
+    margin: 0 16px 14px;
+    background: var(--bg3);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .conf-post-header {
+    padding: 14px 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .anon-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--bg4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--text2);
+    border: 1px solid var(--border);
+  }
+  .conf-post-meta { flex: 1; }
+  .conf-post-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .conf-post-time { font-size: 11px; color: var(--text3); }
+  .conf-post-type {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    background: rgba(52,100,180,0.15);
+    color: #6B9FEA;
+  }
+  .conf-post-body {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+  .conf-post-verse {
+    margin: 0 16px;
+    font-size: 11px;
+    color: var(--red-light);
+    font-style: italic;
+    padding: 8px 12px;
+    background: rgba(192,57,43,0.06);
+    border-radius: 8px;
+    border-left: 2px solid var(--red);
+  }
+  .conf-post-actions {
+    display: flex;
+    gap: 16px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    margin-top: 10px;
+  }
+  .conf-action {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text3);
+  }
+  .conf-action.active { color: var(--red-light); }
+
+  /* ---- SCREEN 5: MODULE DETAIL ---- */
+  .mod-hero {
+    height: 200px;
+    background: linear-gradient(160deg, #2A0A0A, #1A0A0A);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+  }
+  .mod-hero-icon {
+    font-size: 40px;
+    position: absolute;
+    top: 50px; right: 24px;
+    opacity: 0.12;
+  }
+  .mod-hero-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--red-light);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .mod-hero-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .mod-hero-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 5px;
+  }
+  .back-btn {
+    position: absolute;
+    top: 48px; left: 16px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text); font-size: 14px;
+  }
+  .mod-progress-bar {
+    height: 3px;
+    background: var(--bg3);
+    margin: 0 16px 16px;
+  }
+  .mod-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red-deep), var(--red-light));
+    width: 35%;
+  }
+  .lessons-list { padding: 0 16px; }
+  .lesson-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .lesson-num {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .lesson-num.done { background: var(--red); color: #fff; }
+  .lesson-num.active { background: rgba(192,57,43,0.2); color: var(--red-light); border: 1.5px solid var(--red); }
+  .lesson-num.locked { background: var(--bg4); color: var(--text3); }
+  .lesson-info { flex: 1; }
+  .lesson-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .lesson-meta { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .lesson-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+  .lesson-badge.done { background: rgba(39,120,75,0.15); color: #5ACD8A; }
+  .lesson-badge.active { background: rgba(192,57,43,0.15); color: var(--red-light); }
+  .lesson-badge.locked { background: var(--bg4); color: var(--text3); }
+
+  /* ---- NAV BAR ---- */
+  .bottom-nav {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(13,13,13,0.95);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0 16px;
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 3px;
+    cursor: pointer;
+  }
+  .nav-icon { font-size: 18px; color: var(--text3); }
+  .nav-icon.active { color: var(--red-light); }
+  .nav-dot {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: transparent;
+  }
+  .nav-dot.active { background: var(--red); }
+
+  /* SCREEN 6: RÉVEIL / REVIVAL */
+  .rev-header { padding: 44px 20px 12px; }
+  .rev-title { font-size: 24px; font-weight: 700; color: var(--text); }
+  .rev-featured {
+    margin: 0 16px 16px;
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    height: 180px;
+    background: linear-gradient(160deg, #1C1C0A, #0A0A1C);
+  }
+  .rev-featured-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 60%);
+  }
+  .rev-featured-content {
+    position: absolute;
+    bottom: 16px; left: 16px; right: 16px;
+  }
+  .rev-era-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--gold-soft);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .rev-featured-name { font-size: 18px; font-weight: 700; color: #fff; }
+  .rev-featured-ministry { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 3px; }
+  .rev-circle {
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    border: 1px solid rgba(212,175,55,0.15);
+  }
+  .rev-circle2 {
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    border: 1px solid rgba(212,175,55,0.1);
+  }
+  .rev-list { padding: 0 16px; }
+  .rev-item {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+  .rev-avatar {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    border: 2px solid rgba(192,57,43,0.3);
+  }
+  .rev-info { flex: 1; }
+  .rev-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .rev-subtitle { font-size: 11px; color: var(--text2); margin-top: 3px; }
+  .rev-arrow { color: var(--text3); font-size: 14px; }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 68px; right: 16px;
+    background: var(--bg4);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 10px;
+    color: var(--text3);
+    display: flex; align-items: center; gap: 4px;
+  }
+</style>
+
+<div class="screens-wrapper">
+
+  <!-- SCREEN 1: SPLASH -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="phone-inner">
+        <div class="splash-bg"></div>
+        <div class="splash-ring2"></div>
+        <div class="splash-ring"></div>
+        <div class="splash-cross"></div>
+
+        <div class="status-bar" style="position:relative;z-index:5;padding-top:18px;">
+          <span>9:41</span>
+          <div class="status-icons">
+            <span>●●●</span>
+            <span>WiFi</span>
+            <span>▮</span>
+          </div>
+        </div>
+
+        <div class="splash-content">
+          <div class="app-name">N<span>arr</span>at</div>
+          <div class="app-tagline">Ta cathédrale numérique.<br>Grandis. Prie. Conquiers.</div>
+          <div class="splash-verse">
+            « Heureux ceux qui gardent mes voies… »
+            <span>Proverbes 8:32 · Verset du jour</span>
+          </div>
+        </div>
+
+        <div class="splash-btns">
+          <div class="btn-primary">Commencer ma foi</div>
+          <div class="btn-secondary">J'ai déjà un compte</div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-label">01 · Splash & Onboarding</div>
+  </div>
+
+  <!-- SCREEN 2: HOME -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="phone-inner">
+        <div class="home-bg"></div>
+
+        <div class="status-bar" style="position:relative;z-index:5;padding-top:18px;">
+          <span>9:41</span>
+          <div class="status-icons"><span>●●●</span><span>▮▮</span></div>
+        </div>
+
+        <div class="home-header">
+          <div>
+            <div class="home-greeting">Bonjour 🌅</div>
+            <div class="home-name">Bonne journée, frère</div>
+          </div>
+          <div class="home-avatar">JK</div>
+        </div>
+
+        <div class="verse-card">
+          <div class="verse-card-label">Verset du jour</div>
+          <div class="verse-card-text">« Car je sais les projets que j'ai formés sur vous, projets de paix et non de malheur... »</div>
+          <div class="verse-card-ref">Jérémie 29:11 · LSG</div>
+        </div>
+
+        <div class="streak-bar">
+          <div>
+            <div class="streak-num">12</div>
+            <div class="streak-label">jours consécutifs</div>
+          </div>
+          <div style="flex:1;padding-left:12px;">
+            <div style="font-size:12px;color:var(--text2);margin-bottom:5px;">Cette semaine</div>
+            <div class="streak-dots">
+              <div class="streak-dot on"></div>
+              <div class="streak-dot on"></div>
+              <div class="streak-dot on"></div>
+              <div class="streak-dot on"></div>
+              <div class="streak-dot on"></div>
+              <div class="streak-dot"></div>
+              <div class="streak-dot"></div>
+            </div>
+          </div>
+          <div style="font-size:18px;color:var(--red-light);">🔥</div>
+        </div>
+
+        <div class="section-title">Modules</div>
+        <div class="modules-grid">
+          <div class="module-card active">
+            <div class="module-icon red">📚</div>
+            <div class="module-name">Bibliothèque</div>
+            <div class="module-desc">1 200+ livres</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon gold">🕊</div>
+            <div class="module-name">Confession</div>
+            <div class="module-desc">Communauté</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon blue">🎓</div>
+            <div class="module-name">Formation</div>
+            <div class="module-desc">48 modules</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon green">⚡</div>
+            <div class="module-name">Défis</div>
+            <div class="module-desc">30 programmes</div>
+          </div>
+        </div>
+
+        <div class="bottom-nav">
+          <div class="nav-item">
+            <div class="nav-icon active">⌂</div>
+            <div class="nav-dot active"></div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-icon">📚</div>
+            <div class="nav-dot"></div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-icon">🤝</div>
+            <div class="nav-dot"></div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-icon">✦</div>
+            <div class="nav-dot"></div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-icon">👤</div>
+            <div class="nav-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-label">02 · Dashboard</div>
+  </div>
+
+  <!-- SCREEN 3: BIBLIOTHÈQUE -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="phone-inner" style="overflow-y:auto;">
+        <div class="status-bar" style="padding-top:18px;">
+          <span>9:41</span>
+          <div class="status-icons"><span>●●●</span><span>▮▮</span></div>
+        </div>
+
+        <div class="lib-header">
+          <div class="lib-title">Bibliothèque</div>
+          <div class="lib-sub">1 200 ouvrages chrétiens</div>
+        </div>
+
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <span>Chercher un livre, auteur…</span>
+        </div>
+
+        <div class="filter-chips">
+          <div class="chip active">Tout</div>
+          <div class="chip">Théologie</div>
+          <div class="chip">Prière</div>
+          <div class="chip">Biographies</div>
+          <div class="chip">Guerre spirituelle</div>
+        </div>
+
+        <div class="section-title">En cours de lecture</div>
+
+        <div class="book-row">
+          <div class="book-cover">
+            <div class="book-cover-inner" style="background:linear-gradient(145deg,#922B21,#4A0E0E);">
+              <div class="book-cover-title">The Pursuit of God</div>
+            </div>
+          </div>
+          <div class="book-info">
+            <div class="book-title">The Pursuit of God</div>
+            <div class="book-author">A.W. Tozer</div>
+            <div class="book-meta">
+              <div class="book-tag">Croissance</div>
+              <div class="book-audio">🎧 Audio</div>
+            </div>
+            <div class="book-progress"><div class="book-progress-fill" style="width:62%"></div></div>
+            <div style="font-size:10px;color:var(--text3);margin-top:4px;">62% · ch. 5/9</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-title">Recommandés pour toi</div>
+
+        <div class="book-row">
+          <div class="book-cover">
+            <div class="book-cover-inner" style="background:linear-gradient(145deg,#1A3A6A,#0A1A3A);">
+              <div class="book-cover-title">Experiencing God</div>
+            </div>
+          </div>
+          <div class="book-info">
+            <div class="book-title">Experiencing God</div>
+            <div class="book-author">Henry Blackaby</div>
+            <div class="book-meta">
+              <div class="book-tag">Foi</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="book-row">
+          <div class="book-cover">
+            <div class="book-cover-inner" style="background:linear-gradient(145deg,#1A4A1A,#0A2A0A);">
+              <div class="book-cover-title">Prayer</div>
+            </div>
+          </div>
+          <div class="book-info">
+            <div class="book-title">Prayer</div>
+            <div class="book-author">E.M. Bounds</div>
+            <div class="book-meta">
+              <div class="book-tag">Prière</div>
+              <div class="book-audio">🎧 Audio</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:80px;"></div>
+
+        <div class="bottom-nav">
+          <div class="nav-item"><div class="nav-icon">⌂</div><div class="nav-dot"></div></div>
+          <div class="nav-item"><div class="nav-icon active">📚</div><div class="nav-dot active"></div></div>
+          <div class="nav-item"><div class="nav-icon">🤝</div><div class="nav-dot"></div></div>
+          <div class="nav-item"><div class="nav-icon">✦</div><div class="nav-dot"></div></div>
+          <div class="nav-item"><div class="nav-icon">👤</div><div class="nav-dot"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-label">03 · Bibliothèque</div>
+  </div>
+
+  <!-- SCREEN 4: CONFESSION -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="phone-inner">
+        <div class="status-bar" style="padding-top:18px;">
+          <span>9:41</span>
+          <div class="status-icons"><span>●●●</span><span>▮▮</span></div>
+        </div>
+
+        <div class="conf-header">
+          <div class="conf-title">Communauté</div>
+          <div class="conf-badge">Anonyme ON</div>
+        </div>
+
+        <div class="conf-anon-toggle">
+          <div>
+            <div class="toggle-label">Mode anonyme</div>
+            <div class="toggle-sub">Ton identité est masquée</div>
+          </div>
+          <div class="toggle-switch"><div class="toggle-knob"></div></div>
+        </div>
+
+        <div class="conf-post">
+          <div class="conf-post-header">
+            <div class="anon-avatar">👤</div>
+            <div class="conf-post-meta">
+              <div class="conf-post-name">Frère anonyme</div>
+              <div class="conf-post-time">Il y a 23 min</div>
+            </div>
+            <div class="conf-post-type">Prière</div>
+          </div>
+          <div class="conf-post-body">
+            Je traverse une période sombre depuis 3 semaines. J'ai du mal à prier. Priez pour moi, frères.
+          </div>
+          <div class="conf-post-verse">
+            « L'Éternel est proche de ceux qui ont le cœur brisé » — Ps 34:18
+          </div>
+          <div class="conf-post-actions">
+            <div class="conf-action active">🙏 47 prières</div>
+            <div class="conf-action">💬 12 réponses</div>
+            <div class="conf-action" style="margin-left:auto;">Prier</div>
+          </div>
+        </div>
+
+        <div class="conf-post">
+          <div class="conf-post-header">
+            <div class="anon-avatar" style="background:rgba(212,175,55,0.1);color:var(--gold-soft);">✦</div>
+            <div class="conf-post-meta">
+              <div class="conf-post-name">Sœur Marie</div>
+              <div class="conf-post-time">Il y a 1h</div>
+            </div>
+            <div class="conf-post-type" style="background:rgba(39,120,75,0.15);color:#5ACD8A;">Témoignage</div>
+          </div>
+          <div class="conf-post-body">
+            Dieu a répondu à ma prière de 2 ans. Mon frère s'est converti hier soir. Gloire à Dieu ! 🙌
+          </div>
+          <div class="conf-post-actions">
+            <div class="conf-action active">🙏 128</div>
+            <div class="conf-action">💬 34</div>
+            <div class="conf-action" style="margin-left:auto;">❤️ Amen</div>
+          </div>
+        </div>
+
+        <div style="position:absolute;bottom:68px;right:16px;width:50px;height:50px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;box-shadow:0 4px 20px rgba(192,57,43,0.4);">+</div>
+
+        <div class="bottom-nav">
+          <div class="nav-item"><div class="nav-icon">⌂</div><div class="nav-dot"></div></div>
+          <div class="nav-item"><div class="nav-icon">📚</div><div class="nav-dot"></div></div>
+          <div class="nav-item"><div class="nav-icon active">🤝</div><div class="nav-dot active"></div></div>
+          <div class="nav-item"><div class="nav-icon">✦</div><div class="nav-dot"></div></div>
+          <div class="nav-item"><div class="nav-icon">👤</div><div class="nav-dot"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-label">04 · Confession & Communauté</div>
+  </div>
+
+  <!-- SCREEN 5: FORMATION -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="phone-inner">
+        <div class="status-bar" style="padding-top:18px;position:relative;z-index:5;">
+          <span>9:41</span>
+          <div class="status-icons"><span>●●●</span><span>▮▮</span></div>
+        </div>
+
+        <div class="mod-hero">
+          <div class="back-btn">←</div>
+          <div style="font-size:80px;position:absolute;top:20px;right:20px;opacity:0.08;">🎓</div>
+          <div class="mod-hero-badge">Formation · Avancé</div>
+          <div class="mod-hero-title">Guerre Spirituelle</div>
+          <div class="mod-hero-sub">8 modules · 4h30 · Quiz inclus</div>
+        </div>
+
+        <div style="padding:12px 16px 8px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:12px;color:var(--text2);">Progression</div>
+          <div style="font-size:12px;font-weight:600;color:var(--red-light);">35% · 3/8</div>
+        </div>
+        <div class="mod-progress-bar"><div class="mod-progress-fill"></div></div>
+
+        <div class="lessons-list">
+          <div class="lesson-item">
+            <div class="lesson-num done">✓</div>
+            <div class="lesson-info">
+              <div class="lesson-name">Comprendre le monde invisible</div>
+              <div class="lesson-meta">28 min · Quiz 92%</div>
+            </div>
+            <div class="lesson-badge done">Terminé</div>
+          </div>
+          <div class="lesson-item">
+            <div class="lesson-num done">✓</div>
+            <div class="lesson-info">
+              <div class="lesson-name">L'armure de Dieu</div>
+              <div class="lesson-meta">34 min · Quiz 78%</div>
+            </div>
+            <div class="lesson-badge done">Terminé</div>
+          </div>
+          <div class="lesson-item">
+            <div class="lesson-num active">3</div>
+            <div class="lesson-info">
+              <div class="lesson-name">Prier avec autorité</div>
+              <div class="lesson-meta">42 min · En cours</div>
+            </div>
+            <div class="lesson-badge active">En cours</div>
+          </div>
+          <div class="lesson-item">
+            <div class="lesson-num locked">4</div>
+            <div class="lesson-info">
+              <div class="lesson-name">Délivrance & liberté</div>
+              <div class="lesson-meta">38 min</div>
+            </div>
+            <div class="lesson-badge locked">🔒</div>
+          </div>
+          <div class="lesson-item">
+            <div class="lesson-num locked">5</div>
+            <div class="lesson-info">
+              <div class="lesson-name">Identifier les stratagèmes</div>
+              <div class="lesson-meta">31 min</div>
+            </div>
+            <div class="lesson-badge locked">🔒</div>
+          </div>
+        </div>
+
+        <div class="bottom-nav">
+          <div class="nav-item"><div class="nav-icon">⌂</div><div class="nav-dot"></div></div>
+          <div class="nav-item"><div class="nav-icon">📚</div><div class="nav-dot"></div></div>
+          <div class="nav-item"><div class="nav-icon">🤝</div><div class="nav-dot"></div></div>
+          <div class="nav-item"><div class="nav-icon active">✦</div><div class="nav-dot active"></div></div>
+          <div class="nav-item"><div class="nav-icon">👤</div><div class="nav-dot"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-label">05 · Formation (détail cours)</div>
+  </div>
+
+  <!-- SCREEN 6: RÉVEIL -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="phone-inner">
+        <div class="status-bar" style="padding-top:18px;">
+          <span>9:41</span>
+          <div class="status-icons"><span>●●●</span><span>▮▮</span></div>
+        </div>
+
+        <div class="rev-header">
+          <div class="rev-title">Histoires du Réveil</div>
+        </div>
+
+        <div class="rev-featured">
+          <div class="rev-circle"></div>
+          <div class="rev-circle2"></div>
+          <div style="position:absolute;top:20px;left:16px;font-size:40px;opacity:0.6;">✝</div>
+          <div class="rev-featured-overlay"></div>
+          <div class="rev-featured-content">
+            <div class="rev-era-badge">✦ Réveil d'Azusa Street · 1906</div>
+            <div class="rev-featured-name">William J. Seymour</div>
+            <div class="rev-featured-ministry">Los Angeles · Pentecôtisme mondial</div>
+          </div>
+        </div>
+
+        <div class="section-title">Figures du réveil</div>
+
+        <div class="rev-list">
+          <div class="rev-item">
+            <div class="rev-avatar" style="background:rgba(192,57,43,0.08);font-size:20px;">⚡</div>
+            <div class="rev-info">
+              <div class="rev-name">Smith Wigglesworth</div>
+              <div class="rev-subtitle">Angleterre · 1859–1947 · Miracles & guérisons</div>
+            </div>
+            <div class="rev-arrow">›</div>
+          </div>
+          <div class="rev-item">
+            <div class="rev-avatar" style="background:rgba(212,175,55,0.08);font-size:20px;">🔥</div>
+            <div class="rev-info">
+              <div class="rev-name">Reinhard Bonnke</div>
+              <div class="rev-subtitle">Allemagne/Afrique · 1940–2019</div>
+            </div>
+            <div class="rev-arrow">›</div>
+          </div>
+          <div class="rev-item">
+            <div class="rev-avatar" style="background:rgba(52,100,180,0.08);font-size:20px;">🕊</div>
+            <div class="rev-info">
+              <div class="rev-name">Kathryn Kuhlman</div>
+              <div class="rev-subtitle">États-Unis · 1907–1976 · Guérisseuse</div>
+            </div>
+            <div class="rev-arrow">›</div>
+          </div>
+          <div class="rev-item">
+            <div class="rev-avatar" style="background:rgba(39,120,75,0.08);font-size:20px;">📖</div>
+            <div class="rev-info">
+              <div class="rev-name">Charles Finney</div>
+              <div class="rev-subtitle">États-Unis · 1792–1875 · Évangéliste</div>
+            </div>
+            <div class="rev-arrow">›</div>
+          </div>
+        </div>
+
+        <div style="height:80px;"></div>
+
+        <div class="bottom-nav">
+          <div class="nav-item"><div class="nav-icon">⌂</div><div class="nav-dot"></div></div>
+          <div class="nav-item"><div class="nav-icon">📚</div><div class="nav-dot"></div></div>
+          <div class="nav-item"><div class="nav-icon">🤝</div><div class="nav-dot"></div></div>
+          <div class="nav-item"><div class="nav-icon active">✦</div><div class="nav-dot active"></div></div>
+          <div class="nav-item"><div class="nav-icon">👤</div><div class="nav-dot"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-label">06 · Histoires du Réveil</div>
+  </div>
+
+</div>

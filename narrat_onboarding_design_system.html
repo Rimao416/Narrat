@@ -1,0 +1,663 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --red:#C0392B;--red-deep:#922B21;--red-light:#E74C3C;
+  --red-m:rgba(192,57,43,0.14);--red-b:rgba(192,57,43,0.28);
+  --bg:#0D0D0D;--bg2:#141414;--bg3:#1A1A1A;--bg4:#222;--bg5:#2A2A2A;
+  --brd:rgba(255,255,255,0.07);--brd2:rgba(255,255,255,0.12);
+  --t:#F0F0F0;--t2:#909090;--t3:#555;
+  --gold:#D4AF37;--goldf:#F0D060;
+  --green-b:rgba(39,120,75,0.13);--green-f:#5ACD8A;
+  --blue-b:rgba(52,100,180,0.13);--blue-f:#6B9FEA;
+  --amber-b:rgba(186,117,23,0.13);--amber-f:#EFA827;
+  --purple-b:rgba(120,60,180,0.13);--purple-f:#B07EEA;
+}
+body{background:transparent;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;}
+.outer{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;padding:24px 12px 40px;}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.lbl{font-size:10px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;text-align:center;}
+.phone{width:375px;background:var(--bg);border-radius:50px;border:1.5px solid rgba(255,255,255,0.1);overflow:hidden;box-shadow:0 0 0 7px #0A0A0A,0 0 0 8.5px rgba(255,255,255,0.05);}
+.notch{width:110px;height:28px;background:#000;border-radius:0 0 18px 18px;margin:0 auto;}
+.sb{display:flex;justify-content:space-between;padding:8px 24px 4px;font-size:12px;font-weight:600;color:var(--t);}
+
+/* ── SHARED ── */
+.btn-red{background:var(--red);color:#fff;border:none;border-radius:16px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;text-align:center;width:100%;}
+.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--brd2);border-radius:16px;padding:16px;font-size:15px;font-weight:500;cursor:pointer;text-align:center;width:100%;}
+.btn-google{background:var(--bg3);color:var(--t);border:1px solid var(--brd2);border-radius:16px;padding:14px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;}
+.step-dots{display:flex;justify-content:center;gap:6px;margin-bottom:24px;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--bg5);}
+.dot.on{width:20px;border-radius:3px;background:var(--red);}
+.skip-btn{font-size:13px;color:var(--t3);cursor:pointer;text-align:right;padding-right:4px;}
+
+/* ── SCREEN 1 : SPLASH ── */
+.s1-wrap{min-height:680px;position:relative;background:var(--bg);display:flex;flex-direction:column;}
+.s1-art{
+  height:320px;background:var(--bg2);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.s1-ring1{position:absolute;width:280px;height:280px;border-radius:50%;border:1px solid rgba(192,57,43,0.1);}
+.s1-ring2{position:absolute;width:200px;height:200px;border-radius:50%;border:1px solid rgba(192,57,43,0.15);}
+.s1-ring3{position:absolute;width:130px;height:130px;border-radius:50%;border:1px solid rgba(192,57,43,0.2);}
+.s1-cross{
+  width:70px;height:70px;position:relative;
+  display:flex;align-items:center;justify-content:center;z-index:2;
+}
+.s1-cross::before{content:'';position:absolute;width:10px;height:70px;background:var(--red);border-radius:5px;}
+.s1-cross::after{content:'';position:absolute;width:52px;height:10px;background:var(--red);border-radius:5px;top:16px;}
+.s1-body{flex:1;padding:28px 24px 40px;display:flex;flex-direction:column;justify-content:space-between;}
+.s1-app{font-size:36px;font-weight:800;color:var(--t);letter-spacing:-1px;text-align:center;}
+.s1-app span{color:var(--red-light);}
+.s1-tag{font-size:14px;color:var(--t2);text-align:center;margin-top:6px;line-height:1.5;}
+.s1-btns{display:flex;flex-direction:column;gap:12px;margin-top:28px;}
+.s1-divider{display:flex;align-items:center;gap:10px;margin:4px 0;}
+.s1-line{flex:1;height:1px;background:var(--brd2);}
+.s1-or{font-size:12px;color:var(--t3);}
+
+/* ── SCREEN 2 : CRÉATION COMPTE ── */
+.form-screen{padding:46px 24px 32px;min-height:680px;display:flex;flex-direction:column;}
+.fs-title{font-size:26px;font-weight:700;color:var(--t);letter-spacing:-.4px;margin-bottom:6px;}
+.fs-sub{font-size:14px;color:var(--t2);line-height:1.5;margin-bottom:28px;}
+.input-group{margin-bottom:14px;}
+.ig-label{font-size:12px;font-weight:700;color:var(--t2);letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase;}
+.ig-input{
+  background:var(--bg3);border:1px solid var(--brd2);
+  border-radius:14px;padding:14px 16px;
+  font-size:14px;color:var(--t);width:100%;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.ig-input.focus{border-color:var(--red-b);}
+.ig-cursor{display:inline-block;width:2px;height:14px;background:var(--red-light);vertical-align:middle;}
+.ig-placeholder{color:var(--t3);}
+.ig-eye{font-size:16px;color:var(--t3);}
+.form-cta{margin-top:auto;display:flex;flex-direction:column;gap:12px;}
+.cgu-text{font-size:11px;color:var(--t3);text-align:center;line-height:1.5;}
+.cgu-text span{color:var(--red-light);}
+
+/* ── SCREEN 3 : LANGUE ── */
+.lang-screen{padding:46px 24px 32px;min-height:680px;display:flex;flex-direction:column;}
+.lang-ico{font-size:40px;text-align:center;margin-bottom:16px;}
+.lang-title{font-size:26px;font-weight:700;color:var(--t);text-align:center;margin-bottom:6px;}
+.lang-sub{font-size:14px;color:var(--t2);text-align:center;margin-bottom:32px;line-height:1.5;}
+.lang-options{display:flex;flex-direction:column;gap:10px;margin-bottom:auto;}
+.lang-opt{
+  background:var(--bg3);border:1px solid var(--brd);
+  border-radius:16px;padding:16px 18px;
+  display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+}
+.lang-opt.on{border-color:var(--red-b);background:var(--red-m);}
+.lo-left{display:flex;align-items:center;gap:14px;}
+.lo-flag{font-size:24px;}
+.lo-name{font-size:15px;font-weight:700;color:var(--t);}
+.lo-native{font-size:12px;color:var(--t2);margin-top:2px;}
+.lo-check{width:24px;height:24px;border-radius:50%;border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:12px;}
+.lo-check.on{background:var(--red);border-color:var(--red);color:#fff;}
+.lang-cta{margin-top:28px;}
+
+/* ── SCREEN 4 : NIVEAU SPIRITUEL ── */
+.level-screen{padding:46px 24px 32px;min-height:680px;display:flex;flex-direction:column;}
+.level-title{font-size:26px;font-weight:700;color:var(--t);margin-bottom:6px;}
+.level-sub{font-size:14px;color:var(--t2);margin-bottom:28px;line-height:1.5;}
+.level-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:auto;}
+.lv-opt{
+  background:var(--bg3);border:1px solid var(--brd);
+  border-radius:16px;padding:15px 16px;
+  display:flex;align-items:center;gap:14px;cursor:pointer;
+}
+.lv-opt.on{border-color:var(--red-b);background:var(--red-m);}
+.lv-ico{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.lv-info{flex:1;}
+.lv-name{font-size:14px;font-weight:700;color:var(--t);}
+.lv-desc{font-size:11px;color:var(--t2);margin-top:3px;}
+.lv-radio{width:22px;height:22px;border-radius:50%;border:2px solid var(--brd2);flex-shrink:0;}
+.lv-radio.on{background:var(--red);border-color:var(--red);}
+
+/* ── SCREEN 5 : CENTRES D'INTÉRÊT ── */
+.interest-screen{padding:46px 24px 32px;min-height:680px;display:flex;flex-direction:column;}
+.int-title{font-size:26px;font-weight:700;color:var(--t);margin-bottom:6px;}
+.int-sub{font-size:14px;color:var(--t2);margin-bottom:24px;line-height:1.5;}
+.int-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:auto;}
+.int-card{
+  background:var(--bg3);border:1px solid var(--brd);
+  border-radius:16px;padding:16px 14px;cursor:pointer;
+  text-align:center;
+}
+.int-card.on{border-color:var(--red-b);background:var(--red-m);}
+.ic-ico{font-size:24px;margin-bottom:8px;}
+.ic-name{font-size:13px;font-weight:700;color:var(--t);}
+.ic-desc{font-size:11px;color:var(--t2);margin-top:3px;}
+.int-count{font-size:12px;color:var(--t3);text-align:center;margin-top:12px;margin-bottom:20px;}
+.int-count span{color:var(--red-light);font-weight:700;}
+
+/* ── SCREEN 6 : PRÊT ── */
+.ready-screen{padding:0;min-height:680px;display:flex;flex-direction:column;}
+.ready-art{
+  height:280px;background:var(--red-deep);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.ra-ring1{position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid rgba(255,255,255,0.05);}
+.ra-ring2{position:absolute;width:200px;height:200px;border-radius:50%;border:1px solid rgba(255,255,255,0.07);}
+.ra-ico{font-size:70px;opacity:.15;position:absolute;}
+.ra-trophy{font-size:60px;position:relative;z-index:2;}
+.ready-body{flex:1;padding:28px 24px 40px;display:flex;flex-direction:column;}
+.rb-title{font-size:28px;font-weight:800;color:var(--t);letter-spacing:-.4px;text-align:center;}
+.rb-sub{font-size:14px;color:var(--t2);text-align:center;margin-top:8px;line-height:1.6;}
+.rb-verse{
+  margin:20px 0;padding:16px;
+  background:var(--bg3);border-radius:14px;border:1px solid var(--brd2);
+  border-left:3px solid var(--red);border-radius:0 14px 14px 0;
+}
+.rbv-text{font-size:13px;color:rgba(240,220,210,.9);font-style:italic;line-height:1.6;}
+.rbv-ref{font-size:11px;color:var(--t3);margin-top:6px;font-weight:600;}
+.ready-cta{margin-top:auto;display:flex;flex-direction:column;gap:10px;}
+
+/* ══ DESIGN SYSTEM PANEL ══ */
+.ds-panel{
+  width:760px;background:var(--bg);
+  border-radius:28px;border:1px solid var(--brd2);
+  padding:32px;
+}
+.ds-title{font-size:22px;font-weight:800;color:var(--t);margin-bottom:4px;letter-spacing:-.3px;}
+.ds-sub{font-size:13px;color:var(--t3);margin-bottom:28px;}
+.ds-section{margin-bottom:28px;}
+.dss-label{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;}
+
+/* COLORS */
+.color-row{display:flex;gap:8px;flex-wrap:wrap;}
+.swatch{width:48px;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.sw-circle{width:48px;height:48px;border-radius:50%;}
+.sw-name{font-size:9px;color:var(--t3);text-align:center;line-height:1.3;}
+.sw-hex{font-size:8px;color:var(--t3);text-align:center;}
+
+/* TYPOGRAPHY */
+.type-row{padding:10px 0;border-bottom:1px solid var(--brd);}
+.type-row:last-child{border-bottom:none;}
+.tr-sample{color:var(--t);}
+.tr-spec{font-size:11px;color:var(--t3);margin-top:3px;}
+
+/* COMPONENTS */
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.comp-item{background:var(--bg3);border-radius:14px;border:1px solid var(--brd);padding:14px;}
+.ci-label{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
+
+/* SPACING */
+.spacing-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;}
+.sp-item{display:flex;flex-direction:column;align-items:center;gap:5px;}
+.sp-box{background:var(--red-m);border:1px solid var(--red-b);}
+.sp-label{font-size:10px;color:var(--t3);}
+
+/* RADIUS */
+.radius-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+.rx-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.rx-box{width:56px;height:36px;background:var(--bg3);border:1px solid var(--brd2);}
+.rx-label{font-size:10px;color:var(--t3);}
+
+/* ICONS */
+.icon-grid{display:flex;gap:10px;flex-wrap:wrap;}
+.icon-item{
+  width:44px;height:44px;border-radius:12px;
+  background:var(--bg3);border:1px solid var(--brd);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;cursor:pointer;
+}
+
+/* BADGES/TAGS */
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.ds-tag{font-size:11px;font-weight:600;padding:4px 10px;border-radius:6px;}
+
+/* TOGGLES / INPUTS */
+.toggle-demo{display:flex;gap:14px;align-items:center;}
+.tgl{width:44px;height:26px;border-radius:13px;position:relative;cursor:pointer;}
+.tgl.on{background:var(--red);}
+.tgl.off{background:var(--bg5);}
+.tgl-k{width:22px;height:22px;border-radius:50%;background:#fff;position:absolute;top:2px;}
+.tgl.on .tgl-k{right:2px;}
+.tgl.off .tgl-k{left:2px;}
+.tgl-label{font-size:12px;color:var(--t2);}
+
+/* ELEVATION / SHADOWS */
+.elev-row{display:flex;gap:14px;}
+.elev-card{
+  flex:1;border-radius:14px;padding:14px;text-align:center;
+  font-size:12px;font-weight:600;color:var(--t2);
+}
+
+/* MOTION TOKENS */
+.motion-row{display:flex;flex-direction:column;gap:8px;}
+.motion-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--brd);}
+.mi-name{font-size:13px;font-weight:600;color:var(--t);}
+.mi-val{font-size:12px;color:var(--t3);font-family:monospace;}
+
+/* DIVIDER */
+.ds-divider{height:1px;background:var(--brd);margin:6px 0 20px;}
+</style>
+
+<div class="outer">
+
+  <!-- ══ ONBOARDING ══ -->
+
+  <!-- STEP 1 : SPLASH -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="s1-wrap">
+        <div class="s1-art">
+          <div class="s1-ring1"></div>
+          <div class="s1-ring2"></div>
+          <div class="s1-ring3"></div>
+          <div class="s1-cross"></div>
+        </div>
+        <div class="s1-body">
+          <div>
+            <div class="s1-app">N<span>arr</span>at</div>
+            <div class="s1-tag">Ta cathédrale numérique.<br>Grandis · Prie · Conquiers.</div>
+          </div>
+          <div class="s1-btns">
+            <div class="btn-red">Commencer ma foi</div>
+            <div class="s1-divider"><div class="s1-line"></div><div class="s1-or">ou continuer avec</div><div class="s1-line"></div></div>
+            <div class="btn-google">
+              <span style="font-size:16px;">G</span>
+              Continuer avec Google
+            </div>
+            <div class="btn-ghost">J'ai déjà un compte</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lbl">01 · Splash</div>
+  </div>
+
+  <!-- STEP 2 : CRÉATION COMPTE -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="form-screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+          <div style="font-size:14px;color:var(--t2);cursor:pointer;">←</div>
+          <div class="step-dots" style="margin-bottom:0;">
+            <div class="dot on"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="skip-btn">Ignorer</div>
+        </div>
+        <div class="fs-title">Crée ton compte</div>
+        <div class="fs-sub">Rejoins des milliers de croyants qui grandissent chaque jour.</div>
+        <div class="input-group">
+          <div class="ig-label">Prénom</div>
+          <div class="ig-input focus">Jean-Kévin<span class="ig-cursor"></span></div>
+        </div>
+        <div class="input-group">
+          <div class="ig-label">Email</div>
+          <div class="ig-input"><span class="ig-placeholder">ton@email.com</span></div>
+        </div>
+        <div class="input-group">
+          <div class="ig-label">Mot de passe</div>
+          <div class="ig-input">
+            <span class="ig-placeholder">••••••••</span>
+            <span class="ig-eye">👁</span>
+          </div>
+        </div>
+        <div class="form-cta">
+          <div class="btn-red">Créer mon compte</div>
+          <div class="cgu-text">En créant un compte, tu acceptes nos <span>Conditions d'utilisation</span> et notre <span>Politique de confidentialité</span>.</div>
+        </div>
+      </div>
+    </div>
+    <div class="lbl">02 · Création compte</div>
+  </div>
+
+  <!-- STEP 3 : LANGUE -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="lang-screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;">
+          <div style="font-size:14px;color:var(--t2);cursor:pointer;">←</div>
+          <div class="step-dots" style="margin-bottom:0;">
+            <div class="dot"></div>
+            <div class="dot on"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="skip-btn">Ignorer</div>
+        </div>
+        <div class="lang-ico">🌍</div>
+        <div class="lang-title">Quelle est ta langue ?</div>
+        <div class="lang-sub">Tous les contenus s'adapteront à ton choix. Tu pourras changer à tout moment.</div>
+        <div class="lang-options">
+          <div class="lang-opt on">
+            <div class="lo-left">
+              <div class="lo-flag">🇫🇷</div>
+              <div><div class="lo-name">Français</div><div class="lo-native">Interface & contenus en français</div></div>
+            </div>
+            <div class="lo-check on">✓</div>
+          </div>
+          <div class="lang-opt">
+            <div class="lo-left">
+              <div class="lo-flag">🇬🇧</div>
+              <div><div class="lo-name">English</div><div class="lo-native">Interface & content in English</div></div>
+            </div>
+            <div class="lo-check"></div>
+          </div>
+          <div class="lang-opt">
+            <div class="lo-left">
+              <div class="lo-flag">🇨🇩</div>
+              <div><div class="lo-name">Lingala</div><div class="lo-native">Lisanga mpe makambo</div></div>
+            </div>
+            <div class="lo-check"></div>
+          </div>
+          <div class="lang-opt">
+            <div class="lo-left">
+              <div class="lo-flag">🌍</div>
+              <div><div class="lo-name">Swahili</div><div class="lo-native">Lugha na maudhui</div></div>
+            </div>
+            <div class="lo-check"></div>
+          </div>
+        </div>
+        <div class="lang-cta"><div class="btn-red">Continuer</div></div>
+      </div>
+    </div>
+    <div class="lbl">03 · Choix langue</div>
+  </div>
+
+  <!-- STEP 4 : NIVEAU SPIRITUEL -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="level-screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+          <div style="font-size:14px;color:var(--t2);">←</div>
+          <div class="step-dots" style="margin-bottom:0;">
+            <div class="dot"></div><div class="dot"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+          <div class="skip-btn">Ignorer</div>
+        </div>
+        <div class="level-title">Où en es-tu ?</div>
+        <div class="level-sub">Aucune mauvaise réponse. Cela nous aide à personnaliser ton parcours spirituel.</div>
+        <div class="level-opts">
+          <div class="lv-opt">
+            <div class="lv-ico" style="background:var(--green-b);">🌱</div>
+            <div class="lv-info"><div class="lv-name">Nouveau croyant</div><div class="lv-desc">Je découvre la foi chrétienne</div></div>
+            <div class="lv-radio"></div>
+          </div>
+          <div class="lv-opt on">
+            <div class="lv-ico" style="background:var(--blue-b);">📖</div>
+            <div class="lv-info"><div class="lv-name">Croyant établi</div><div class="lv-desc">Je suis dans la foi depuis quelques années</div></div>
+            <div class="lv-radio on"></div>
+          </div>
+          <div class="lv-opt">
+            <div class="lv-ico" style="background:var(--amber-b);">🔥</div>
+            <div class="lv-info"><div class="lv-name">Croyant avancé</div><div class="lv-desc">Je suis dans la foi depuis plus de 5 ans</div></div>
+            <div class="lv-radio"></div>
+          </div>
+          <div class="lv-opt">
+            <div class="lv-ico" style="background:var(--red-m);">👑</div>
+            <div class="lv-info"><div class="lv-name">Leader / Pasteur</div><div class="lv-desc">Je dirige ou encadre d'autres croyants</div></div>
+            <div class="lv-radio"></div>
+          </div>
+        </div>
+        <div style="margin-top:24px;"><div class="btn-red">Continuer</div></div>
+      </div>
+    </div>
+    <div class="lbl">04 · Niveau spirituel</div>
+  </div>
+
+  <!-- STEP 5 : INTÉRÊTS -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="interest-screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+          <div style="font-size:14px;color:var(--t2);">←</div>
+          <div class="step-dots" style="margin-bottom:0;">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot on"></div><div class="dot"></div>
+          </div>
+          <div class="skip-btn">Ignorer</div>
+        </div>
+        <div class="int-title">Tes centres d'intérêt</div>
+        <div class="int-sub">Choisis au moins 3 thèmes pour personnaliser ta bibliothèque et tes formations.</div>
+        <div class="int-grid">
+          <div class="int-card on">
+            <div class="ic-ico">🙏</div>
+            <div class="ic-name">Prière</div>
+            <div class="ic-desc">Intercession & dévotion</div>
+          </div>
+          <div class="int-card on">
+            <div class="ic-ico">⚔</div>
+            <div class="ic-name">Guerre spirituelle</div>
+            <div class="ic-desc">Combat & délivrance</div>
+          </div>
+          <div class="int-card on">
+            <div class="ic-ico">💒</div>
+            <div class="ic-name">Mariage</div>
+            <div class="ic-desc">Couple & famille</div>
+          </div>
+          <div class="int-card">
+            <div class="ic-ico">📖</div>
+            <div class="ic-name">Théologie</div>
+            <div class="ic-desc">Doctrine & apologétique</div>
+          </div>
+          <div class="int-card">
+            <div class="ic-ico">💰</div>
+            <div class="ic-name">Finances</div>
+            <div class="ic-desc">Gestion biblique</div>
+          </div>
+          <div class="int-card on">
+            <div class="ic-ico">🌍</div>
+            <div class="ic-name">Évangélisation</div>
+            <div class="ic-desc">Témoignage & mission</div>
+          </div>
+          <div class="int-card">
+            <div class="ic-ico">🧠</div>
+            <div class="ic-name">Santé mentale</div>
+            <div class="ic-desc">Foi & bien-être</div>
+          </div>
+          <div class="int-card">
+            <div class="ic-ico">🕊</div>
+            <div class="ic-name">Saint-Esprit</div>
+            <div class="ic-desc">Dons & onction</div>
+          </div>
+        </div>
+        <div class="int-count"><span>4</span> thèmes sélectionnés · minimum 3</div>
+        <div class="btn-red">Continuer</div>
+      </div>
+    </div>
+    <div class="lbl">05 · Centres d'intérêt</div>
+  </div>
+
+  <!-- STEP 6 : PRÊT -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb" style="background:var(--red-deep);"><span style="color:rgba(255,255,255,.7);">9:41</span><span style="color:rgba(255,255,255,.7);">●●● WiFi ■</span></div>
+      <div class="ready-screen">
+        <div class="ready-art">
+          <div class="ra-ring1"></div>
+          <div class="ra-ring2"></div>
+          <div class="ra-ico">✝</div>
+          <div class="ra-trophy">🏆</div>
+        </div>
+        <div class="ready-body">
+          <div class="step-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot on"></div></div>
+          <div class="rb-title">Tu es prêt, Jean-Kévin !</div>
+          <div class="rb-sub">Ton profil spirituel est configuré. Ta cathédrale numérique t'attend. À toi de la bâtir.</div>
+          <div class="rb-verse">
+            <div class="rbv-text">« Cherchez premièrement le royaume et la justice de Dieu, et toutes ces choses vous seront données par-dessus. »</div>
+            <div class="rbv-ref">Matthieu 6:33 · LSG</div>
+          </div>
+          <div class="ready-cta">
+            <div class="btn-red">Entrer dans Narrat</div>
+            <div style="font-size:12px;color:var(--t3);text-align:center;">Aucune carte de crédit requise · Gratuit pour commencer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lbl">06 · Bienvenue !</div>
+  </div>
+
+  <!-- ══ DESIGN SYSTEM ══ -->
+  <div class="col" style="width:100%;align-items:center;margin-top:16px;">
+    <div class="ds-panel">
+      <div class="ds-title">Narrat — Design System</div>
+      <div class="ds-sub">Tokens, composants et règles pour les développeurs React Native</div>
+      <div class="ds-divider"></div>
+
+      <!-- COULEURS -->
+      <div class="ds-section">
+        <div class="dss-label">Palette de couleurs</div>
+        <div class="color-row">
+          <div class="swatch"><div class="sw-circle" style="background:#C0392B;"></div><div class="sw-name">Primary Red</div><div class="sw-hex">#C0392B</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#922B21;"></div><div class="sw-name">Red Deep</div><div class="sw-hex">#922B21</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#E74C3C;"></div><div class="sw-name">Red Light</div><div class="sw-hex">#E74C3C</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#0D0D0D;border:1px solid var(--brd2);"></div><div class="sw-name">BG 900</div><div class="sw-hex">#0D0D0D</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#1A1A1A;border:1px solid var(--brd2);"></div><div class="sw-name">BG 800</div><div class="sw-hex">#1A1A1A</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#222222;border:1px solid var(--brd2);"></div><div class="sw-name">BG 700</div><div class="sw-hex">#222222</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#2A2A2A;border:1px solid var(--brd2);"></div><div class="sw-name">BG 600</div><div class="sw-hex">#2A2A2A</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#F0F0F0;"></div><div class="sw-name">Text 100</div><div class="sw-hex">#F0F0F0</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#909090;"></div><div class="sw-name">Text 400</div><div class="sw-hex">#909090</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#555555;"></div><div class="sw-name">Text 600</div><div class="sw-hex">#555555</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#D4AF37;"></div><div class="sw-name">Gold</div><div class="sw-hex">#D4AF37</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#F0D060;"></div><div class="sw-name">Gold Light</div><div class="sw-hex">#F0D060</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#5ACD8A;"></div><div class="sw-name">Success</div><div class="sw-hex">#5ACD8A</div></div>
+          <div class="swatch"><div class="sw-circle" style="background:#6B9FEA;"></div><div class="sw-name">Info Blue</div><div class="sw-hex">#6B9FEA</div></div>
+        </div>
+      </div>
+
+      <div class="ds-divider"></div>
+
+      <!-- TYPO -->
+      <div class="ds-section">
+        <div class="dss-label">Typographie — SF Pro Display / Inter</div>
+        <div class="type-row"><div class="tr-sample" style="font-size:28px;font-weight:700;letter-spacing:-.4px;">Titre H1 · 28px Bold</div><div class="tr-spec">fontSize:28 · fontWeight:700 · letterSpacing:-0.4</div></div>
+        <div class="type-row"><div class="tr-sample" style="font-size:22px;font-weight:700;letter-spacing:-.3px;">Titre H2 · 22px Bold</div><div class="tr-spec">fontSize:22 · fontWeight:700 · letterSpacing:-0.3</div></div>
+        <div class="type-row"><div class="tr-sample" style="font-size:18px;font-weight:700;">Titre H3 · 18px Bold</div><div class="tr-spec">fontSize:18 · fontWeight:700</div></div>
+        <div class="type-row"><div class="tr-sample" style="font-size:15px;font-weight:600;">Body Large · 15px Semi</div><div class="tr-spec">fontSize:15 · fontWeight:600</div></div>
+        <div class="type-row"><div class="tr-sample" style="font-size:13px;color:var(--t2);">Body Regular · 13px · lineHeight 1.65</div><div class="tr-spec">fontSize:13 · fontWeight:400 · color:text2</div></div>
+        <div class="type-row"><div class="tr-sample" style="font-size:11px;color:var(--t3);">Caption · 11px · color text3</div><div class="tr-spec">fontSize:11 · fontWeight:400 · color:text3</div></div>
+        <div class="type-row"><div class="tr-sample" style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);">Label · 10px caps</div><div class="tr-spec">fontSize:10 · fontWeight:700 · letterSpacing:0.1 · UPPERCASE</div></div>
+      </div>
+
+      <div class="ds-divider"></div>
+
+      <!-- SPACING & RADIUS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+        <div>
+          <div class="dss-label">Espacements</div>
+          <div class="spacing-row">
+            <div class="sp-item"><div class="sp-box" style="width:4px;height:4px;"></div><div class="sp-label">4</div></div>
+            <div class="sp-item"><div class="sp-box" style="width:8px;height:8px;"></div><div class="sp-label">8</div></div>
+            <div class="sp-item"><div class="sp-box" style="width:12px;height:12px;"></div><div class="sp-label">12</div></div>
+            <div class="sp-item"><div class="sp-box" style="width:16px;height:16px;"></div><div class="sp-label">16</div></div>
+            <div class="sp-item"><div class="sp-box" style="width:20px;height:20px;"></div><div class="sp-label">20</div></div>
+            <div class="sp-item"><div class="sp-box" style="width:24px;height:24px;"></div><div class="sp-label">24</div></div>
+            <div class="sp-item"><div class="sp-box" style="width:32px;height:32px;"></div><div class="sp-label">32</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="dss-label">Border Radius</div>
+          <div class="radius-row">
+            <div class="rx-item"><div class="rx-box" style="border-radius:4px;"></div><div class="rx-label">4 · xs</div></div>
+            <div class="rx-item"><div class="rx-box" style="border-radius:8px;"></div><div class="rx-label">8 · sm</div></div>
+            <div class="rx-item"><div class="rx-box" style="border-radius:12px;"></div><div class="rx-label">12 · md</div></div>
+            <div class="rx-item"><div class="rx-box" style="border-radius:16px;"></div><div class="rx-label">16 · lg</div></div>
+            <div class="rx-item"><div class="rx-box" style="border-radius:20px;"></div><div class="rx-label">20 · xl</div></div>
+            <div class="rx-item"><div class="rx-box" style="border-radius:999px;width:56px;"></div><div class="rx-label">full · pill</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ds-divider"></div>
+
+      <!-- BADGES -->
+      <div class="ds-section">
+        <div class="dss-label">Tags & Badges</div>
+        <div class="tag-row">
+          <div class="ds-tag" style="background:var(--red-m);color:var(--red-light);">Actif</div>
+          <div class="ds-tag" style="background:var(--green-b);color:var(--green-f);">Terminé ✓</div>
+          <div class="ds-tag" style="background:var(--blue-b);color:var(--blue-f);">Débutant</div>
+          <div class="ds-tag" style="background:var(--amber-b);color:var(--amber-f);">En cours</div>
+          <div class="ds-tag" style="background:var(--purple-b);color:var(--purple-f);">Avancé</div>
+          <div class="ds-tag" style="background:rgba(212,175,55,.1);color:var(--goldf);">🎧 Audio</div>
+          <div class="ds-tag" style="background:var(--bg4);color:var(--t3);">🔒 Verrouillé</div>
+          <div class="ds-tag" style="background:var(--red);color:#fff;">Rejoindre</div>
+        </div>
+      </div>
+
+      <div class="ds-divider"></div>
+
+      <!-- COMPOSANTS -->
+      <div class="ds-section">
+        <div class="dss-label">Composants clés</div>
+        <div class="comp-grid">
+          <div class="comp-item">
+            <div class="ci-label">Bouton primaire</div>
+            <div class="btn-red" style="border-radius:14px;padding:13px;font-size:13px;">Confirmer</div>
+          </div>
+          <div class="comp-item">
+            <div class="ci-label">Bouton secondaire</div>
+            <div class="btn-ghost" style="border-radius:14px;padding:13px;font-size:13px;">Annuler</div>
+          </div>
+          <div class="comp-item">
+            <div class="ci-label">Input champ texte</div>
+            <div style="background:var(--bg4);border:1px solid var(--red-b);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--t);">Jean-Kévin<span style="display:inline-block;width:2px;height:13px;background:var(--red-light);vertical-align:middle;margin-left:1px;"></span></div>
+          </div>
+          <div class="comp-item">
+            <div class="ci-label">Toggle On / Off</div>
+            <div class="toggle-demo">
+              <div class="tgl on"><div class="tgl-k"></div></div>
+              <div class="tgl-label">Activé</div>
+              <div class="tgl off" style="margin-left:8px;"><div class="tgl-k"></div></div>
+              <div class="tgl-label">Désactivé</div>
+            </div>
+          </div>
+          <div class="comp-item">
+            <div class="ci-label">Barre de progression</div>
+            <div style="height:4px;background:var(--bg5);border-radius:2px;overflow:hidden;margin-top:4px;">
+              <div style="width:62%;height:100%;background:var(--red);border-radius:2px;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:5px;">
+              <div style="font-size:10px;color:var(--t3);">Progression</div>
+              <div style="font-size:10px;font-weight:700;color:var(--red-light);">62%</div>
+            </div>
+          </div>
+          <div class="comp-item">
+            <div class="ci-label">Avatar initiales</div>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <div style="width:44px;height:44px;border-radius:50%;background:var(--red-deep);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;border:2px solid var(--red);">JK</div>
+              <div style="width:36px;height:36px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t2);border:1px solid var(--brd2);">👤</div>
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--blue-b);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--blue-f);">DK</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ds-divider"></div>
+
+      <!-- MOTION TOKENS -->
+      <div class="ds-section" style="margin-bottom:0;">
+        <div class="dss-label">Tokens d'animation</div>
+        <div class="motion-row">
+          <div class="motion-item"><div class="mi-name">Transition rapide</div><div class="mi-val">duration: 150ms · easing: ease-out</div></div>
+          <div class="motion-item"><div class="mi-name">Transition normale</div><div class="mi-val">duration: 250ms · easing: ease-in-out</div></div>
+          <div class="motion-item"><div class="mi-name">Transition lente</div><div class="mi-val">duration: 400ms · easing: spring(1, 90, 15)</div></div>
+          <div class="motion-item"><div class="mi-name">Haptic léger</div><div class="mi-val">ImpactFeedbackStyle.Light</div></div>
+          <div class="motion-item" style="border-bottom:none;"><div class="mi-name">Haptic confirmation</div><div class="mi-val">NotificationFeedbackType.Success</div></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="lbl">Design System complet · Tokens & Composants</div>
+  </div>
+
+</div>

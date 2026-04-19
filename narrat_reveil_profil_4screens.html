@@ -1,0 +1,655 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --red:#C0392B;--red-deep:#922B21;--red-light:#E74C3C;
+  --red-m:rgba(192,57,43,0.14);--red-b:rgba(192,57,43,0.28);
+  --bg:#0D0D0D;--bg2:#141414;--bg3:#1A1A1A;--bg4:#222;--bg5:#2A2A2A;
+  --brd:rgba(255,255,255,0.07);--brd2:rgba(255,255,255,0.12);
+  --t:#F0F0F0;--t2:#909090;--t3:#555;
+  --gold:#D4AF37;--goldf:#F0D060;
+  --blue-b:rgba(52,100,180,0.13);--blue-f:#6B9FEA;
+  --green-b:rgba(39,120,75,0.13);--green-f:#5ACD8A;
+  --purple-b:rgba(120,60,180,0.13);--purple-f:#B07EEA;
+  --amber-b:rgba(186,117,23,0.13);--amber-f:#EFA827;
+}
+body{background:transparent;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;}
+.outer{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;padding:24px 12px 36px;}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.lbl{font-size:10px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;}
+.phone{width:375px;background:var(--bg);border-radius:50px;border:1.5px solid rgba(255,255,255,0.1);overflow:hidden;box-shadow:0 0 0 7px #0A0A0A,0 0 0 8.5px rgba(255,255,255,0.05);}
+.notch{width:110px;height:28px;background:#000;border-radius:0 0 18px 18px;margin:0 auto;}
+.sb{display:flex;justify-content:space-between;padding:8px 24px 4px;font-size:12px;font-weight:600;color:var(--t);}
+.sc{padding-bottom:76px;}
+.nav{background:rgba(13,13,13,.97);border-top:1px solid var(--brd2);display:flex;justify-content:space-around;padding:10px 0 20px;}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+.ni-ico{font-size:20px;color:var(--t3);}
+.ni-ico.on{color:var(--red-light);}
+.ni-bar{width:18px;height:2px;border-radius:1px;background:transparent;}
+.ni-bar.on{background:var(--red);}
+.ni-lbl{font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;}
+.ni-lbl.on{color:var(--red-light);}
+.sh{display:flex;justify-content:space-between;align-items:center;padding:0 20px;margin-bottom:11px;}
+.st{font-size:13px;font-weight:700;color:var(--t);}
+.sl{font-size:12px;color:var(--red-light);font-weight:500;cursor:pointer;}
+.tag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;}
+.tr{background:var(--red-m);color:var(--red-light);}
+.tb{background:var(--blue-b);color:var(--blue-f);}
+.tg{background:var(--green-b);color:var(--green-f);}
+.tgo{background:var(--amber-b);color:var(--amber-f);}
+.tp{background:var(--purple-b);color:var(--purple-f);}
+
+/* ══ SCREEN 1 : RÉVEIL — LISTE ══ */
+.rev-header{padding:18px 20px 12px;}
+.rev-title{font-size:26px;font-weight:700;color:var(--t);letter-spacing:-.4px;}
+.rev-sub{font-size:13px;color:var(--t2);margin-top:3px;}
+
+.featured-card{
+  margin:0 16px 16px;border-radius:20px;
+  background:var(--bg3);border:1px solid rgba(212,175,55,.2);
+  overflow:hidden;cursor:pointer;position:relative;
+}
+.fc-top{
+  height:160px;background:linear-gradient(135deg,#1C1404,#0A0A1C);
+  position:relative;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:16px;overflow:hidden;
+}
+.fc-deco1{position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;border:1px solid rgba(212,175,55,.1);}
+.fc-deco2{position:absolute;top:-20px;right:-20px;width:90px;height:90px;border-radius:50%;border:1px solid rgba(212,175,55,.07);}
+.fc-cross{position:absolute;top:20px;left:20px;font-size:50px;opacity:.06;color:var(--goldf);}
+.fc-overlay{position:absolute;inset:0;background:rgba(0,0,0,.35);}
+.fc-content{position:relative;z-index:2;}
+.fc-era{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--goldf);text-transform:uppercase;margin-bottom:5px;}
+.fc-name{font-size:20px;font-weight:700;color:#fff;line-height:1.2;}
+.fc-ministry{font-size:12px;color:rgba(255,255,255,.45);margin-top:4px;}
+.fc-body{padding:14px 16px;}
+.fc-quote{font-size:13px;color:var(--t2);font-style:italic;line-height:1.6;border-left:2px solid var(--goldf);padding-left:12px;}
+.fc-quote-author{font-size:11px;color:var(--t3);margin-top:6px;font-style:normal;font-weight:600;}
+.fc-tags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+
+.figure-row{
+  display:flex;gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--brd);
+  align-items:center;cursor:pointer;
+}
+.fr-avatar{
+  width:48px;height:48px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+  border:2px solid var(--brd2);
+}
+.fr-info{flex:1;}
+.fr-name{font-size:14px;font-weight:700;color:var(--t);}
+.fr-sub{font-size:11px;color:var(--t2);margin-top:3px;}
+.fr-arrow{font-size:18px;color:var(--t3);}
+
+.era-chips{display:flex;gap:8px;padding:0 16px 14px;overflow-x:auto;}
+.ec{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;background:var(--bg3);color:var(--t2);border:1px solid var(--brd);cursor:pointer;}
+.ec.on{background:rgba(212,175,55,.1);color:var(--goldf);border-color:rgba(212,175,55,.3);}
+
+/* ══ SCREEN 2 : FICHE FIGURE ══ */
+.fig-hero{
+  height:220px;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#1C1404,#0A0A0A);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:20px;
+}
+.fig-back{position:absolute;top:46px;left:16px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--t);cursor:pointer;z-index:5;}
+.fig-audio-btn{position:absolute;top:46px;right:16px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--t);cursor:pointer;z-index:5;}
+.fig-deco{position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;border:1px solid rgba(212,175,55,.08);}
+.fig-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);}
+.fig-content{position:relative;z-index:3;}
+.fig-era{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--goldf);text-transform:uppercase;margin-bottom:6px;}
+.fig-name{font-size:24px;font-weight:700;color:#fff;letter-spacing:-.3px;line-height:1.1;}
+.fig-nat{font-size:12px;color:rgba(255,255,255,.45);margin-top:5px;}
+
+.life-verse{
+  margin:14px 16px;padding:14px 16px;
+  background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.2);
+  border-radius:14px;
+}
+.lv-label{font-size:10px;font-weight:700;color:var(--goldf);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+.lv-text{font-size:13px;color:rgba(240,230,200,.9);font-style:italic;line-height:1.6;}
+.lv-ref{font-size:11px;color:rgba(212,175,55,.5);margin-top:5px;font-style:normal;font-weight:600;}
+
+.sections-list{padding:0 16px;}
+.section-item{
+  padding:14px 0;border-bottom:1px solid var(--brd);cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.si-left{}
+.si-icon{font-size:16px;margin-bottom:4px;}
+.si-title{font-size:14px;font-weight:700;color:var(--t);}
+.si-sub{font-size:11px;color:var(--t2);margin-top:2px;}
+.si-arrow{font-size:18px;color:var(--t3);}
+
+.quotes-block{padding:0 16px 14px;}
+.qb-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:10px;}
+.quote-card{
+  background:var(--bg3);border-radius:14px;border:1px solid var(--brd);
+  padding:14px;margin-bottom:8px;
+  border-left:3px solid var(--goldf);border-radius:0 14px 14px 0;
+}
+.qc-text{font-size:13px;color:var(--t2);font-style:italic;line-height:1.6;}
+.qc-ctx{font-size:10px;color:var(--t3);margin-top:6px;font-style:normal;font-weight:600;}
+
+/* ══ SCREEN 3 : PROFIL ══ */
+.profile-hero{
+  padding:46px 20px 20px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;position:relative;
+}
+.profile-settings{position:absolute;top:46px;right:20px;font-size:22px;color:var(--t2);cursor:pointer;}
+.profile-av{
+  width:80px;height:80px;border-radius:50%;
+  background:var(--red-deep);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:700;color:#fff;
+  border:3px solid var(--red);margin-bottom:12px;
+}
+.profile-name{font-size:22px;font-weight:700;color:var(--t);letter-spacing:-.3px;}
+.profile-church{font-size:13px;color:var(--t2);margin-top:4px;}
+.profile-level{
+  margin-top:10px;display:inline-flex;align-items:center;gap:6px;
+  background:var(--red-m);border:1px solid var(--red-b);
+  border-radius:20px;padding:5px 14px;
+  font-size:12px;font-weight:700;color:var(--red-light);
+}
+
+.xp-block{
+  margin:0 16px 16px;
+  background:var(--bg3);border-radius:18px;border:1px solid var(--brd);padding:16px;
+}
+.xp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.xp-label{font-size:13px;font-weight:700;color:var(--t);}
+.xp-total{font-size:13px;font-weight:700;color:var(--amber-f);}
+.xp-bar{height:6px;background:var(--bg5);border-radius:3px;overflow:hidden;margin-bottom:6px;}
+.xp-fill{height:100%;background:var(--amber-f);border-radius:3px;width:68%;}
+.xp-next{font-size:11px;color:var(--t3);}
+
+.stats-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin:0 16px 16px;}
+.s4{background:var(--bg3);border-radius:12px;border:1px solid var(--brd);padding:12px 8px;text-align:center;}
+.s4-val{font-size:16px;font-weight:700;color:var(--t);}
+.s4-lbl{font-size:10px;color:var(--t2);margin-top:3px;}
+
+.badges-block{padding:0 16px 14px;}
+.bb-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.bb-title{font-size:13px;font-weight:700;color:var(--t);}
+.bb-count{font-size:12px;color:var(--red-light);font-weight:600;}
+.badges-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
+.badge-ico{
+  width:48px;height:48px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;border:1px solid var(--brd);
+}
+.badge-ico.earned{border-color:rgba(212,175,55,.3);background:rgba(212,175,55,.08);}
+.badge-ico.locked{background:var(--bg4);opacity:.4;}
+.badge-name{font-size:9px;color:var(--t3);text-align:center;line-height:1.2;}
+
+.modules-progress{padding:0 16px 14px;}
+.mp-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:12px;}
+.mp-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.mp-icon{font-size:20px;width:36px;text-align:center;flex-shrink:0;}
+.mp-info{flex:1;}
+.mp-name{font-size:13px;font-weight:700;color:var(--t);}
+.mp-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:5px;overflow:hidden;}
+.mp-fill{height:100%;border-radius:2px;}
+.mp-pct{font-size:11px;font-weight:700;color:var(--t2);flex-shrink:0;}
+
+.settings-list{padding:0 16px;}
+.sl-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 0;border-bottom:1px solid var(--brd);cursor:pointer;
+}
+.sl-ico{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.sl-label{flex:1;font-size:14px;font-weight:600;color:var(--t);}
+.sl-arrow{font-size:16px;color:var(--t3);}
+.sl-badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;}
+
+/* ══ SCREEN 4 : SETTINGS PROFIL ══ */
+.settings-hdr{display:flex;align-items:center;gap:14px;padding:46px 20px 16px;}
+.set-back{font-size:14px;color:var(--t2);cursor:pointer;}
+.set-title{font-size:20px;font-weight:700;color:var(--t);}
+
+.set-section{padding:0 16px;margin-bottom:8px;}
+.set-sec-label{font-size:11px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;padding:12px 0 6px;}
+.set-item{
+  background:var(--bg3);border:1px solid var(--brd);
+  border-radius:14px;overflow:hidden;margin-bottom:8px;
+}
+.set-row{
+  display:flex;align-items:center;gap:14px;
+  padding:13px 16px;border-bottom:1px solid var(--brd);cursor:pointer;
+}
+.set-row:last-child{border-bottom:none;}
+.set-row-ico{font-size:18px;flex-shrink:0;}
+.set-row-info{flex:1;}
+.set-row-label{font-size:14px;font-weight:600;color:var(--t);}
+.set-row-sub{font-size:11px;color:var(--t2);margin-top:2px;}
+.set-row-val{font-size:12px;color:var(--t3);}
+.set-toggle{width:42px;height:24px;border-radius:12px;position:relative;flex-shrink:0;}
+.set-toggle.on{background:var(--red);}
+.set-toggle.off{background:var(--bg5);}
+.set-knob{width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:2px;}
+.set-toggle.on .set-knob{right:2px;}
+.set-toggle.off .set-knob{left:2px;}
+.set-arrow{font-size:16px;color:var(--t3);}
+
+.danger-btn{
+  margin:8px 16px;padding:15px;
+  background:var(--bg3);border:1px solid rgba(192,57,43,.2);
+  border-radius:14px;text-align:center;
+  font-size:14px;font-weight:700;color:var(--red-light);cursor:pointer;
+}
+</style>
+
+<div class="outer">
+
+  <!-- ══ SCREEN 1 : RÉVEIL LISTE ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="rev-header">
+          <div class="rev-title">Histoires du Réveil</div>
+          <div class="rev-sub">Les géants qui ont secoué le monde</div>
+        </div>
+
+        <div class="era-chips">
+          <div class="ec on">Tous</div>
+          <div class="ec">XIXe siècle</div>
+          <div class="ec">XXe siècle</div>
+          <div class="ec">Contemporain</div>
+          <div class="ec">Afrique</div>
+          <div class="ec">Réveils</div>
+        </div>
+
+        <div class="featured-card">
+          <div class="fc-top">
+            <div class="fc-deco1"></div>
+            <div class="fc-deco2"></div>
+            <div class="fc-cross">✝</div>
+            <div class="fc-overlay"></div>
+            <div class="fc-content">
+              <div class="fc-era">✦ Mis en avant · Azusa Street 1906</div>
+              <div class="fc-name">William J. Seymour</div>
+              <div class="fc-ministry">Los Angeles · Père du Pentecôtisme mondial</div>
+            </div>
+          </div>
+          <div class="fc-body">
+            <div class="fc-quote">
+              « Ce qui est tombé une fois peut tomber encore. Dieu n'a pas changé, et la promesse est pour vous. »
+              <div class="fc-quote-author">— William J. Seymour</div>
+            </div>
+            <div class="fc-tags">
+              <span class="tag tgo">Réveil · 1906</span>
+              <span class="tag tb">Pentecôtisme</span>
+              <span class="tag tg">🎧 Audio</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sh"><div class="st">Figures du réveil</div><div class="sl">Voir tout</div></div>
+
+        <div style="padding:0 16px;">
+          <div class="figure-row">
+            <div class="fr-avatar" style="background:rgba(192,57,43,.08);">⚡</div>
+            <div class="fr-info">
+              <div class="fr-name">Smith Wigglesworth</div>
+              <div class="fr-sub">Angleterre · 1859–1947 · Miracles & guérisons</div>
+            </div>
+            <div class="fr-arrow">›</div>
+          </div>
+          <div class="figure-row">
+            <div class="fr-avatar" style="background:rgba(212,175,55,.08);">🔥</div>
+            <div class="fr-info">
+              <div class="fr-name">Reinhard Bonnke</div>
+              <div class="fr-sub">Allemagne/Afrique · 1940–2019 · Évangéliste</div>
+            </div>
+            <div class="fr-arrow">›</div>
+          </div>
+          <div class="figure-row">
+            <div class="fr-avatar" style="background:rgba(52,100,180,.08);">🕊</div>
+            <div class="fr-info">
+              <div class="fr-name">Kathryn Kuhlman</div>
+              <div class="fr-sub">États-Unis · 1907–1976 · Guérisseuse</div>
+            </div>
+            <div class="fr-arrow">›</div>
+          </div>
+          <div class="figure-row">
+            <div class="fr-avatar" style="background:rgba(39,120,75,.08);">📖</div>
+            <div class="fr-info">
+              <div class="fr-name">Charles Finney</div>
+              <div class="fr-sub">États-Unis · 1792–1875 · Réveil américain</div>
+            </div>
+            <div class="fr-arrow">›</div>
+          </div>
+          <div class="figure-row">
+            <div class="fr-avatar" style="background:rgba(120,60,180,.08);">✦</div>
+            <div class="fr-info">
+              <div class="fr-name">David Wilkerson</div>
+              <div class="fr-sub">États-Unis · 1931–2011 · Times Square Church</div>
+            </div>
+            <div class="fr-arrow">›</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico">🤝</div><div class="ni-bar"></div><div class="ni-lbl">Communauté</div></div>
+        <div class="ni"><div class="ni-ico on">✦</div><div class="ni-bar on"></div><div class="ni-lbl on">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">01 · Histoires du réveil</div>
+  </div>
+
+  <!-- ══ SCREEN 2 : FICHE FIGURE ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="fig-hero">
+          <div class="fig-back">←</div>
+          <div class="fig-audio-btn">🎧</div>
+          <div class="fig-deco"></div>
+          <div style="position:absolute;top:20px;right:60px;font-size:70px;opacity:.05;">⚡</div>
+          <div class="fig-overlay"></div>
+          <div class="fig-content">
+            <div class="fig-era">✦ Angleterre · 1859–1947</div>
+            <div class="fig-name">Smith Wigglesworth</div>
+            <div class="fig-nat">Plombier devenu apôtre de la foi · Bradford, Angleterre</div>
+          </div>
+        </div>
+
+        <div class="life-verse">
+          <div class="lv-label">Verset de vie</div>
+          <div class="lv-text">« Je puis tout par Christ qui me fortifie. »</div>
+          <div class="lv-ref">Philippiens 4:13 · LSG</div>
+        </div>
+
+        <div class="sh"><div class="st">Biographie</div></div>
+        <div class="sections-list">
+          <div class="section-item">
+            <div class="si-left">
+              <div class="si-icon">🌱</div>
+              <div class="si-title">Jeunesse & Conversion</div>
+              <div class="si-sub">De plombier illettré à homme de Dieu</div>
+            </div>
+            <div class="si-arrow">›</div>
+          </div>
+          <div class="section-item">
+            <div class="si-left">
+              <div class="si-icon">🔥</div>
+              <div class="si-title">L'appel & le baptême</div>
+              <div class="si-sub">Le feu du Saint-Esprit à 48 ans</div>
+            </div>
+            <div class="si-arrow">›</div>
+          </div>
+          <div class="section-item">
+            <div class="si-left">
+              <div class="si-icon">⚡</div>
+              <div class="si-title">Ministère & miracles</div>
+              <div class="si-sub">Guérisons, résurrections, délivrances</div>
+            </div>
+            <div class="si-arrow">›</div>
+          </div>
+          <div class="section-item">
+            <div class="si-left">
+              <div class="si-icon">✦</div>
+              <div class="si-title">Héritage & postérité</div>
+              <div class="si-sub">Son impact sur le XXe siècle</div>
+            </div>
+            <div class="si-arrow">›</div>
+          </div>
+        </div>
+
+        <div class="quotes-block" style="margin-top:6px;">
+          <div class="qb-title">Citations marquantes</div>
+          <div class="quote-card">
+            <div class="qc-text">« La grande chose avec Dieu est que lorsque tu es à l'extrémité de toi-même, tu es au début de Lui. »</div>
+            <div class="qc-ctx">Tiré de ses sermons à Bradford · 1920</div>
+          </div>
+          <div class="quote-card">
+            <div class="qc-text">« La foi n'est pas un sentiment — c'est un acte. »</div>
+            <div class="qc-ctx">Smith Wigglesworth · Ever Increasing Faith</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico">🤝</div><div class="ni-bar"></div><div class="ni-lbl">Communauté</div></div>
+        <div class="ni"><div class="ni-ico on">✦</div><div class="ni-bar on"></div><div class="ni-lbl on">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">02 · Fiche figure du réveil</div>
+  </div>
+
+  <!-- ══ SCREEN 3 : PROFIL ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="profile-hero">
+          <div class="profile-settings">⚙</div>
+          <div class="profile-av">JK</div>
+          <div class="profile-name">Jean-Kévin M.</div>
+          <div class="profile-church">Église de la Grâce · Kinshasa</div>
+          <div class="profile-level">⭐ Niveau 4 · Croyant établi</div>
+        </div>
+
+        <div class="xp-block">
+          <div class="xp-top">
+            <div class="xp-label">Points d'expérience</div>
+            <div class="xp-total">840 / 1200 XP</div>
+          </div>
+          <div class="xp-bar"><div class="xp-fill"></div></div>
+          <div class="xp-next">+ 360 XP pour atteindre le Niveau 5</div>
+        </div>
+
+        <div class="stats-4">
+          <div class="s4"><div class="s4-val" style="color:var(--red-light);">12</div><div class="s4-lbl">Streak</div></div>
+          <div class="s4"><div class="s4-val">3</div><div class="s4-lbl">Défis</div></div>
+          <div class="s4"><div class="s4-val">5</div><div class="s4-lbl">Cours</div></div>
+          <div class="s4"><div class="s4-val" style="color:var(--goldf);">18</div><div class="s4-lbl">Badges</div></div>
+        </div>
+
+        <div class="badges-block">
+          <div class="bb-header">
+            <div class="bb-title">Mes badges</div>
+            <div class="bb-count">18 / 40 obtenus</div>
+          </div>
+          <div class="badges-grid">
+            <div class="badge-item"><div class="badge-ico earned">🙏</div><div class="badge-name">Premier pas</div></div>
+            <div class="badge-item"><div class="badge-ico earned">🔥</div><div class="badge-name">Streak 7j</div></div>
+            <div class="badge-item"><div class="badge-ico earned">📚</div><div class="badge-name">1er livre</div></div>
+            <div class="badge-item"><div class="badge-ico earned">⚡</div><div class="badge-name">Défi actif</div></div>
+            <div class="badge-item"><div class="badge-ico earned">🎓</div><div class="badge-name">1er cours</div></div>
+            <div class="badge-item"><div class="badge-ico earned">✦</div><div class="badge-name">Réveil lu</div></div>
+            <div class="badge-item"><div class="badge-ico earned">🤝</div><div class="badge-name">Communauté</div></div>
+            <div class="badge-item"><div class="badge-ico locked">🏆</div><div class="badge-name">Champion</div></div>
+            <div class="badge-item"><div class="badge-ico locked">💎</div><div class="badge-name">Niveau 5</div></div>
+            <div class="badge-item"><div class="badge-ico locked">🌍</div><div class="badge-name">Évangéliste</div></div>
+          </div>
+        </div>
+
+        <div class="modules-progress">
+          <div class="mp-title">Progression par module</div>
+          <div class="mp-row">
+            <div class="mp-icon">📚</div>
+            <div class="mp-info">
+              <div class="mp-name">Bibliothèque</div>
+              <div class="mp-bar"><div class="mp-fill" style="width:62%;background:var(--red);"></div></div>
+            </div>
+            <div class="mp-pct" style="color:var(--red-light);">62%</div>
+          </div>
+          <div class="mp-row">
+            <div class="mp-icon">🎓</div>
+            <div class="mp-info">
+              <div class="mp-name">Formation</div>
+              <div class="mp-bar"><div class="mp-fill" style="width:35%;background:var(--blue-f);"></div></div>
+            </div>
+            <div class="mp-pct" style="color:var(--blue-f);">35%</div>
+          </div>
+          <div class="mp-row">
+            <div class="mp-icon">⚡</div>
+            <div class="mp-info">
+              <div class="mp-name">Défis</div>
+              <div class="mp-bar"><div class="mp-fill" style="width:27%;background:var(--amber-f);"></div></div>
+            </div>
+            <div class="mp-pct" style="color:var(--amber-f);">27%</div>
+          </div>
+          <div class="mp-row">
+            <div class="mp-icon">✦</div>
+            <div class="mp-info">
+              <div class="mp-name">Histoires du réveil</div>
+              <div class="mp-bar"><div class="mp-fill" style="width:48%;background:var(--goldf);"></div></div>
+            </div>
+            <div class="mp-pct" style="color:var(--goldf);">48%</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico">🤝</div><div class="ni-bar"></div><div class="ni-lbl">Communauté</div></div>
+        <div class="ni"><div class="ni-ico">✦</div><div class="ni-bar"></div><div class="ni-lbl">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico on">👤</div><div class="ni-bar on"></div><div class="ni-lbl on">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">03 · Profil utilisateur</div>
+  </div>
+
+  <!-- ══ SCREEN 4 : PARAMÈTRES ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="settings-hdr">
+          <div class="set-back">←</div>
+          <div class="set-title">Paramètres</div>
+        </div>
+
+        <div class="set-section">
+          <div class="set-sec-label">Compte</div>
+          <div class="set-item">
+            <div class="set-row">
+              <div class="set-row-ico">👤</div>
+              <div class="set-row-info">
+                <div class="set-row-label">Modifier le profil</div>
+                <div class="set-row-sub">Nom, photo, église locale</div>
+              </div>
+              <div class="set-arrow">›</div>
+            </div>
+            <div class="set-row">
+              <div class="set-row-ico">🌍</div>
+              <div class="set-row-info">
+                <div class="set-row-label">Langue</div>
+                <div class="set-row-sub">Interface & contenus</div>
+              </div>
+              <div class="set-row-val">Français</div>
+            </div>
+            <div class="set-row">
+              <div class="set-row-ico">⛪</div>
+              <div class="set-row-info">
+                <div class="set-row-label">Niveau spirituel</div>
+                <div class="set-row-sub">Personnalise tes recommandations</div>
+              </div>
+              <div class="set-row-val">Établi</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="set-section">
+          <div class="set-sec-label">Notifications</div>
+          <div class="set-item">
+            <div class="set-row">
+              <div class="set-row-ico">📖</div>
+              <div class="set-row-info">
+                <div class="set-row-label">Verset du jour</div>
+                <div class="set-row-sub">Chaque matin à 7h00</div>
+              </div>
+              <div class="set-toggle on"><div class="set-knob"></div></div>
+            </div>
+            <div class="set-row">
+              <div class="set-row-ico">🙏</div>
+              <div class="set-row-info">
+                <div class="set-row-label">Rappel de prière</div>
+                <div class="set-row-sub">6h00 et 21h00</div>
+              </div>
+              <div class="set-toggle on"><div class="set-knob"></div></div>
+            </div>
+            <div class="set-row">
+              <div class="set-row-ico">⚡</div>
+              <div class="set-row-info">
+                <div class="set-row-label">Rappel défi quotidien</div>
+                <div class="set-row-sub">Ne rate aucun jour</div>
+              </div>
+              <div class="set-toggle on"><div class="set-knob"></div></div>
+            </div>
+            <div class="set-row">
+              <div class="set-row-ico">🤝</div>
+              <div class="set-row-info">
+                <div class="set-row-label">Activité communauté</div>
+                <div class="set-row-sub">Réponses à tes posts</div>
+              </div>
+              <div class="set-toggle off"><div class="set-knob"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="set-section">
+          <div class="set-sec-label">Confidentialité</div>
+          <div class="set-item">
+            <div class="set-row">
+              <div class="set-row-ico">🔒</div>
+              <div class="set-row-info">
+                <div class="set-row-label">Profil public</div>
+                <div class="set-row-sub">Visible par la communauté</div>
+              </div>
+              <div class="set-toggle on"><div class="set-knob"></div></div>
+            </div>
+            <div class="set-row">
+              <div class="set-row-ico">💬</div>
+              <div class="set-row-info">
+                <div class="set-row-label">Chat direct</div>
+                <div class="set-row-sub">Recevoir des messages privés</div>
+              </div>
+              <div class="set-toggle on"><div class="set-knob"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="danger-btn">Se déconnecter</div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico">🤝</div><div class="ni-bar"></div><div class="ni-lbl">Communauté</div></div>
+        <div class="ni"><div class="ni-ico">✦</div><div class="ni-bar"></div><div class="ni-lbl">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico on">👤</div><div class="ni-bar on"></div><div class="ni-lbl on">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">04 · Paramètres</div>
+  </div>
+
+</div>

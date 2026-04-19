@@ -365,3 +365,206 @@ export const MOCK_BADGES = [
   { id: '9', name: 'Niveau 5', icon: 'award', earned: false },
   { id: '10', name: 'Evangeliste', icon: 'globe', earned: false },
 ];
+
+export const MOCK_READER_CONTENT = {
+  chapterNum: 5,
+  chapterTitle: 'La presence universelle',
+  bookTitle: 'The Pursuit of God',
+  totalChapters: 9,
+  paragraphs: [
+    'Tozer nous rappelle que Dieu est omnipresent non pas de facon mecanique, mais d\'une maniere vivante et personnelle. Sa presence n\'est pas une force impersonnelle diffuse dans l\'univers — c\'est une personne qui se donne Lui-meme a ceux qui Le cherchent.',
+    'La presence de Dieu est la realite la plus concrète de notre existence. Avant que nous Le reconnaissions, avant que nous Le cherchions, Il est deja la. Son etre precede notre conscience, Sa grace precede notre repentance.',
+    {
+      type: 'verse',
+      text: '« L\'Eternel est partout, considerant les mechants et les bons. »',
+      ref: 'Proverbes 15:3',
+    },
+    'Ce n\'est pas en voyageant que l\'on trouve Dieu, mais en s\'arretant. La ruee de notre epoque est l\'ennemie de la contemplation. Nous passons nos jours a faire du bruit, et dans ce bruit, nous etouffons la voix douce et subtile qui desire nous parler.',
+    'Pratiquer la presence de Dieu n\'est pas un exercice mystique reserve aux moines. C\'est le droit de naissance de chaque croyant. C\'est revenir a ce pour quoi nous avons ete crees : la communion avec Lui.',
+    {
+      type: 'verse',
+      text: '« Car en Lui nous avons la vie, le mouvement et l\'etre. »',
+      ref: 'Actes 17:28',
+    },
+    'Tozer conclut ce chapitre avec une invitation : arretons de courir apres les experiences spirituelles, et commençons a nous reposer dans la realite de Celui qui est deja present. La quete n\'est pas de trouver Dieu — mais de realiser qu\'Il nous a deja trouves.',
+  ],
+};
+
+export const MOCK_CHALLENGE_DAYS = [
+  {
+    dayNum: 8,
+    totalDays: 30,
+    title: 'Renouveler son esprit',
+    teaching: 'La bataille pour la purete commence dans l\'esprit. Les neurosciences modernes confirment ce que l\'apôtre Paul enseignait : nos pensees creent des voies neuronales. Chaque pensee impure, repetee, creuse un sillon plus profond. Mais la grace est que ces memes voies peuvent etre remplacees.',
+    verse: {
+      text: '« Ne vous conformez pas au siecle present ; mais soyez transformes par le renouvellement de votre intelligence. »',
+      ref: 'Romains 12:2',
+    },
+    prayerText: 'Seigneur, je te presente mon esprit. Je reconnais que mes pensees ont ete souillees. Je te demande de les purifier, de renouveler chaque coin de mon imagination par la puissance de Ton Esprit.',
+    tasks: [
+      { id: '1', text: 'Lire Philippiens 4:8 et lister 5 choses pures a mediter aujourd\'hui', done: true },
+      { id: '2', text: 'Identifier les 2 principaux declencheurs de pensees impures dans ta vie', done: true },
+      { id: '3', text: 'Passer 10 minutes a prier en langues ou a adorer', done: false },
+      { id: '4', text: 'Partager un temoignage dans le groupe de soutien anonyme', done: false },
+    ],
+  },
+];
+
+export const MOCK_COURSE_MODULES = [
+  {
+    id: 'm1', courseId: '1', num: 1, title: 'Introduction a la guerre spirituelle',
+    duration: '32 min', done: true, locked: false,
+  },
+  {
+    id: 'm2', courseId: '1', num: 2, title: 'Connaitre son ennemi',
+    duration: '41 min', done: true, locked: false,
+  },
+  {
+    id: 'm3', courseId: '1', num: 3, title: 'L\'armure de Dieu (Ephesiens 6)',
+    duration: '38 min', done: false, current: true, locked: false,
+  },
+  {
+    id: 'm4', courseId: '1', num: 4, title: 'La priere de combat',
+    duration: '45 min', done: false, locked: false,
+  },
+  {
+    id: 'm5', courseId: '1', num: 5, title: 'Delivrance et liberation',
+    duration: '52 min', done: false, locked: true,
+  },
+  {
+    id: 'm6', courseId: '1', num: 6, title: 'Guerir les blessures spirituelles',
+    duration: '39 min', done: false, locked: true,
+  },
+  {
+    id: 'm7', courseId: '1', num: 7, title: 'Maintenir sa victoire',
+    duration: '36 min', done: false, locked: true,
+  },
+  {
+    id: 'm8', courseId: '1', num: 8, title: 'Evaluation finale & certificat',
+    duration: '20 min', done: false, locked: true,
+  },
+];
+
+export const MOCK_LESSON_CONTENT = {
+  moduleNum: 3,
+  moduleTitle: "L'armure de Dieu (Ephesiens 6)",
+  courseTitle: 'Guerre Spirituelle',
+  totalModules: 8,
+  body: [
+    'L\'apôtre Paul, ecrivant depuis une prison romaine, utilise l\'image du soldat comme metaphore puissante pour decrire l\'equipement spirituel du croyant. Ce n\'est pas un hasard — chaque piece de l\'armure correspond a une realite de notre combat invisible.',
+    'La ceinture de verite stabilise tout le reste. Dans un monde ou le mensonge est devenu culturel, tenir ferme dans la verite de l\'Evangile est un acte de guerre. La cuirasse de justice protege notre coeur — non pas notre propre righteousness, mais celle de Christ.',
+    {
+      type: 'verse',
+      text: '« Revetez-vous de toutes les armes de Dieu, afin de pouvoir tenir ferme contre les ruses du diable. »',
+      ref: 'Ephesiens 6:11',
+    },
+    'Les chaussures de l\'Evangile de paix sont particulierement interessantes. Paul dit que nous devons etre "chausses" — prets a marcher, a avancer. La paix de Dieu n\'est pas une invitation a la passivite, mais un equipement pour l\'action.',
+  ],
+  keyVerse: {
+    text: '« Prenez aussi le casque du salut, et l\'epee de l\'Esprit, qui est la parole de Dieu. »',
+    ref: 'Ephesiens 6:17',
+  },
+  quote: {
+    text: '« Vous n\'etes pas en train de chercher la victoire. Vous partez du lieu de la victoire. »',
+    author: 'Neil T. Anderson',
+  },
+};
+
+export const MOCK_QUIZ = {
+  courseId: '1',
+  moduleNum: 3,
+  moduleTitle: "L'armure de Dieu",
+  questions: [
+    {
+      id: 'q1',
+      num: 1,
+      total: 5,
+      question: 'Selon Ephesiens 6:14, quelle est la premiere piece de l\'armure de Dieu mentionnee par Paul ?',
+      verse: '« Ayez donc vos reins ceints de la verite... » — Ephesiens 6:14',
+      options: [
+        { id: 'a', text: 'Le bouclier de la foi' },
+        { id: 'b', text: 'La ceinture de la verite' },
+        { id: 'c', text: 'La cuirasse de la justice' },
+        { id: 'd', text: 'Le casque du salut' },
+      ],
+      correctId: 'b',
+    },
+    {
+      id: 'q2',
+      num: 2,
+      total: 5,
+      question: 'Quelle piece de l\'armure est designee comme "l\'epee de l\'Esprit" ?',
+      verse: '« ...et l\'epee de l\'Esprit, qui est la parole de Dieu. » — Ephesiens 6:17',
+      options: [
+        { id: 'a', text: 'La priere incessante' },
+        { id: 'b', text: 'La foi' },
+        { id: 'c', text: 'La Parole de Dieu' },
+        { id: 'd', text: 'La justice de Christ' },
+      ],
+      correctId: 'c',
+    },
+  ],
+};
+
+export const MOCK_REVIVAL_BIOGRAPHY = {
+  '1': {
+    intro: 'William Joseph Seymour nait le 2 mai 1870 a Centerville, en Louisiane, de parents anciennement esclaves. Son enfance marquee par la segregation raciale forgera en lui une vision radicale de l\'unite en Christ.',
+    sections: [
+      {
+        icon: 'map-pin',
+        title: 'Origines et formation',
+        text: 'Eleve dans une famille catholique, Seymour se convertit au protestantisme dans sa vingtaine. Il etudiera sous Charles Parham a Houston malgre les lois segregationnistes — contraint d\'ecouter les cours depuis le couloir.',
+      },
+      {
+        icon: 'flame',
+        title: 'Le Reveil d\'Azusa Street (1906)',
+        text: 'En avril 1906, une reunion dans une chapelle delaissee au 312 Azusa Street, Los Angeles, devient l\'epicentre du Pentecotisme mondial. Pendant trois ans, des milliers viendront de tous les continents. Noirs et blancs, riches et pauvres — adorant ensemble.',
+      },
+      {
+        icon: 'globe',
+        title: 'Heritage mondial',
+        text: 'Le reveil d\'Azusa Street est la source directe du mouvement pentecôtiste et charismatique mondial. Aujourd\'hui, plus de 600 millions de chretiens dans le monde tracent leur heritage spirituel a cette petite chapelle de Los Angeles.',
+      },
+    ],
+    quotes: [
+      '« Ce qui est tombe une fois peut tomber encore. Dieu n\'a pas change, et la promesse est pour vous. »',
+      '« L\'amour est le signe de ce reveil. Non les langues, non les miracles — l\'amour. »',
+    ],
+  },
+};
+
+export const MOCK_POST_REPLIES = [
+  {
+    id: 'r1',
+    postId: '1',
+    authorName: 'Frere David M.',
+    isAnonymous: false,
+    timeAgo: 'il y a 5 min',
+    body: 'Je prie pour toi, frere. J\'ai traverse la meme chose l\'annee derniere. Dieu est fidelee — Il a un plan pour toi dans ce desert.',
+    verse: '« Meme si je marche dans la vallee de l\'ombre de la mort, je ne crains aucun mal »',
+    verseRef: 'Psaumes 23:4',
+    prayerCount: 8,
+  },
+  {
+    id: 'r2',
+    postId: '1',
+    authorName: 'Soeur anonyme',
+    isAnonymous: true,
+    timeAgo: 'il y a 12 min',
+    body: 'Tu n\'es pas seul(e). Ces periodes de secheresse spirituelle font partie du voyage de la foi. Sois patient avec toi-meme.',
+    verse: null,
+    verseRef: null,
+    prayerCount: 14,
+  },
+  {
+    id: 'r3',
+    postId: '1',
+    authorName: 'Pasteur Jean-Luc',
+    isAnonymous: false,
+    timeAgo: 'il y a 30 min',
+    body: 'La priere en periode de secheresse ressemble souvent a crier dans le vide — mais Dieu entend meme les silences. Continue, meme si c\'est difficile. La constance, pas l\'emotion, construit la vie spirituelle.',
+    verse: '« C\'est pourquoi, ne vous lassey pas de faire le bien »',
+    verseRef: '2 Thessaloniciens 3:13',
+    prayerCount: 21,
+  },
+];

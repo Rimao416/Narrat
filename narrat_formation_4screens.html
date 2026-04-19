@@ -1,0 +1,624 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --red:#C0392B;--red-deep:#922B21;--red-light:#E74C3C;
+  --red-m:rgba(192,57,43,0.14);--red-b:rgba(192,57,43,0.28);
+  --bg:#0D0D0D;--bg2:#141414;--bg3:#1A1A1A;--bg4:#222;--bg5:#2A2A2A;
+  --brd:rgba(255,255,255,0.07);--brd2:rgba(255,255,255,0.12);
+  --t:#F0F0F0;--t2:#909090;--t3:#555;
+  --gold:#D4AF37;--goldf:#F0D060;
+  --blue-b:rgba(52,100,180,0.13);--blue-f:#6B9FEA;
+  --green-b:rgba(39,120,75,0.13);--green-f:#5ACD8A;
+  --purple-b:rgba(120,60,180,0.13);--purple-f:#B07EEA;
+  --amber-b:rgba(186,117,23,0.13);--amber-f:#EFA827;
+}
+body{background:transparent;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;}
+.outer{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;padding:24px 12px 36px;}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.lbl{font-size:10px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;}
+
+.phone{
+  width:375px;background:var(--bg);
+  border-radius:50px;border:1.5px solid rgba(255,255,255,0.1);
+  overflow:hidden;
+  box-shadow:0 0 0 7px #0A0A0A,0 0 0 8.5px rgba(255,255,255,0.05);
+}
+.notch{width:110px;height:28px;background:#000;border-radius:0 0 18px 18px;margin:0 auto;}
+.sb{display:flex;justify-content:space-between;padding:8px 24px 4px;font-size:12px;font-weight:600;color:var(--t);}
+.sc{padding-bottom:76px;}
+
+.nav{background:rgba(13,13,13,.97);border-top:1px solid var(--brd2);display:flex;justify-content:space-around;padding:10px 0 20px;}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+.ni-ico{font-size:20px;color:var(--t3);}
+.ni-ico.on{color:var(--red-light);}
+.ni-bar{width:18px;height:2px;border-radius:1px;background:transparent;}
+.ni-bar.on{background:var(--red);}
+.ni-lbl{font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;}
+.ni-lbl.on{color:var(--red-light);}
+
+.sh{display:flex;justify-content:space-between;align-items:center;padding:0 20px;margin-bottom:11px;}
+.st{font-size:13px;font-weight:700;color:var(--t);}
+.sl{font-size:12px;color:var(--red-light);font-weight:500;cursor:pointer;}
+
+.tag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;}
+.tr{background:var(--red-m);color:var(--red-light);}
+.tb{background:var(--blue-b);color:var(--blue-f);}
+.tg{background:var(--green-b);color:var(--green-f);}
+.tgo{background:var(--amber-b);color:var(--amber-f);}
+.tp{background:var(--purple-b);color:var(--purple-f);}
+
+/* ── SCREEN 1 : CATALOGUE ── */
+.cat-header{padding:18px 20px 12px;}
+.cat-title{font-size:26px;font-weight:700;color:var(--t);letter-spacing:-.4px;}
+.cat-sub{font-size:13px;color:var(--t2);margin-top:3px;}
+
+.searchbar{
+  margin:0 16px 14px;
+  background:var(--bg3);border:1px solid var(--brd2);
+  border-radius:14px;padding:11px 16px;
+  display:flex;align-items:center;gap:10px;
+  color:var(--t3);font-size:13px;
+}
+
+.level-tabs{display:flex;gap:8px;padding:0 16px 16px;}
+.ltab{
+  flex:1;padding:9px 6px;border-radius:12px;text-align:center;
+  font-size:12px;font-weight:700;cursor:pointer;
+  background:var(--bg3);color:var(--t2);border:1px solid var(--brd);
+}
+.ltab.on{background:var(--red-m);color:var(--red-light);border-color:var(--red-b);}
+
+.course-card{
+  margin:0 16px 12px;
+  background:var(--bg3);border-radius:18px;border:1px solid var(--brd);
+  overflow:hidden;cursor:pointer;
+}
+.cc-hero{
+  height:90px;position:relative;
+  display:flex;align-items:flex-end;padding:12px;
+}
+.cc-hero-ico{
+  position:absolute;top:50%;right:16px;transform:translateY(-50%);
+  font-size:38px;opacity:.15;
+}
+.cc-hero-badge{
+  font-size:9px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:3px 10px;border-radius:20px;
+  background:rgba(0,0,0,.4);color:rgba(255,255,255,.7);
+}
+.cc-body{padding:13px 16px 14px;}
+.cc-title{font-size:15px;font-weight:700;color:var(--t);line-height:1.3;}
+.cc-teacher{font-size:11px;color:var(--t2);margin-top:3px;}
+.cc-tags{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap;align-items:center;}
+.cc-stats{display:flex;gap:16px;margin-top:10px;}
+.cc-stat{font-size:11px;color:var(--t3);}
+.cc-stat span{color:var(--t2);font-weight:600;}
+.cc-prog-row{display:flex;align-items:center;gap:8px;margin-top:10px;}
+.cc-prog-bar{flex:1;height:3px;background:var(--bg5);border-radius:2px;overflow:hidden;}
+.cc-prog-fill{height:100%;background:var(--red);border-radius:2px;}
+.cc-prog-pct{font-size:11px;font-weight:600;color:var(--red-light);}
+.cc-enroll{
+  margin:10px 16px 0;padding:11px;
+  background:var(--red);border-radius:10px;
+  text-align:center;font-size:13px;font-weight:700;color:#fff;cursor:pointer;
+}
+
+/* ── SCREEN 2 : FICHE COURS ── */
+.course-hero{
+  height:210px;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:20px;
+}
+.ch-back{
+  position:absolute;top:46px;left:16px;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:var(--t);cursor:pointer;z-index:5;
+}
+.ch-save{
+  position:absolute;top:46px;right:16px;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:var(--t);cursor:pointer;z-index:5;
+}
+.ch-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);}
+.ch-content{position:relative;z-index:3;}
+.ch-badge{font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.55);text-transform:uppercase;margin-bottom:6px;}
+.ch-title{font-size:22px;font-weight:700;color:#fff;letter-spacing:-.3px;line-height:1.2;}
+.ch-teacher{font-size:12px;color:rgba(255,255,255,.5);margin-top:5px;}
+
+.stats-strip{
+  display:grid;grid-template-columns:1fr 1fr 1fr 1fr;
+  gap:8px;margin:14px 16px;
+}
+.ss{background:var(--bg3);border-radius:12px;border:1px solid var(--brd);padding:11px 8px;text-align:center;}
+.ss-val{font-size:14px;font-weight:700;color:var(--t);}
+.ss-lbl{font-size:10px;color:var(--t2);margin-top:3px;}
+
+.objectives-block{padding:0 20px 14px;}
+.ob-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:8px;}
+.ob-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:7px;}
+.ob-dot{
+  width:18px;height:18px;border-radius:50%;
+  background:var(--red-m);border:1px solid var(--red-b);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:var(--red-light);font-weight:700;flex-shrink:0;margin-top:1px;
+}
+.ob-text{font-size:12px;color:var(--t2);line-height:1.5;}
+
+.modules-list{padding:0 16px;}
+.ml-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--brd);cursor:pointer;
+}
+.ml-num{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;flex-shrink:0;
+}
+.ml-num.done{background:var(--red);color:#fff;}
+.ml-num.active{background:var(--red-m);color:var(--red-light);border:1.5px solid var(--red);}
+.ml-num.locked{background:var(--bg4);color:var(--t3);}
+.ml-info{flex:1;}
+.ml-name{font-size:13px;font-weight:700;color:var(--t);line-height:1.3;}
+.ml-meta{font-size:11px;color:var(--t2);margin-top:2px;}
+.ml-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;}
+.ml-done{background:var(--green-b);color:var(--green-f);}
+.ml-active{background:var(--red-m);color:var(--red-light);}
+.ml-locked{background:var(--bg4);color:var(--t3);}
+
+.cta-strip{display:flex;gap:10px;margin:14px 16px 0;}
+.btn-main{flex:1;background:var(--red);color:#fff;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;}
+.btn-sec{width:50px;background:var(--bg3);border:1px solid var(--brd2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;}
+
+/* ── SCREEN 3 : MODULE / LECTEUR ── */
+.mod-top{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:46px 20px 10px;
+}
+.mod-back{font-size:14px;color:var(--t2);cursor:pointer;}
+.mod-chapter{font-size:12px;font-weight:600;color:var(--t2);}
+.mod-menu{font-size:20px;color:var(--t2);cursor:pointer;}
+
+.mod-prog{margin:0 20px 14px;}
+.mod-prog-bar{height:2px;background:var(--bg4);border-radius:1px;overflow:hidden;}
+.mod-prog-fill{height:100%;background:var(--red);width:28%;border-radius:1px;}
+.mod-prog-lbl{display:flex;justify-content:space-between;margin-top:5px;}
+.mpl{font-size:10px;color:var(--t3);}
+
+.mod-content{padding:0 22px 16px;}
+.mod-badge{
+  display:inline-block;margin-bottom:10px;
+  font-size:10px;font-weight:700;letter-spacing:.08em;
+  color:var(--red-light);background:var(--red-m);
+  padding:4px 10px;border-radius:20px;text-transform:uppercase;
+}
+.mod-title{font-size:20px;font-weight:700;color:var(--t);letter-spacing:-.2px;margin-bottom:14px;line-height:1.3;}
+.mod-text{font-size:14px;color:rgba(240,240,240,.82);line-height:1.8;}
+.mod-text p{margin-bottom:13px;}
+.highlight{background:var(--red-m);border-radius:3px;padding:1px 3px;color:var(--t);}
+
+.key-verse{
+  margin:14px 0;padding:13px 16px;
+  background:var(--bg3);border:1px solid var(--brd2);
+  border-radius:14px;
+  border-left:3px solid var(--red);
+  border-radius:0 14px 14px 0;
+}
+.kv-label{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+.kv-text{font-size:13px;color:rgba(240,220,210,.9);font-style:italic;line-height:1.6;}
+.kv-ref{font-size:11px;color:var(--t3);font-style:normal;margin-top:5px;font-weight:600;}
+
+.quote-block{
+  margin:14px 0;padding:14px 16px;
+  background:var(--bg3);border-radius:14px;border:1px solid var(--brd);
+}
+.qb-quote{font-size:13px;color:var(--t2);font-style:italic;line-height:1.6;}
+.qb-author{font-size:11px;color:var(--t3);margin-top:7px;font-style:normal;font-weight:600;}
+
+.mod-bottom{
+  background:rgba(13,13,13,.97);border-top:1px solid var(--brd2);
+  padding:12px 16px 22px;
+  display:flex;align-items:center;gap:10px;
+}
+.mb-prev{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--bg3);border:1px solid var(--brd2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:var(--t2);cursor:pointer;flex-shrink:0;
+}
+.mb-next{
+  flex:1;background:var(--red);color:#fff;
+  border-radius:12px;padding:12px;
+  text-align:center;font-size:14px;font-weight:700;cursor:pointer;
+}
+.mb-audio{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--bg3);border:1px solid var(--brd2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:var(--t2);cursor:pointer;flex-shrink:0;
+}
+
+/* ── SCREEN 4 : QUIZ ── */
+.quiz-top{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:46px 20px 14px;
+}
+.qt-back{font-size:14px;color:var(--t2);cursor:pointer;}
+.qt-title{font-size:17px;font-weight:700;color:var(--t);}
+.qt-timer{
+  background:var(--red-m);border:1px solid var(--red-b);
+  border-radius:20px;padding:5px 12px;
+  font-size:13px;font-weight:700;color:var(--red-light);
+}
+
+.quiz-prog{
+  margin:0 16px 18px;
+  display:flex;gap:4px;
+}
+.qp-dot{
+  flex:1;height:4px;border-radius:2px;background:var(--bg4);
+}
+.qp-dot.done{background:var(--red);}
+.qp-dot.active{background:var(--red-light);}
+
+.question-block{padding:0 20px 16px;}
+.qb-num{font-size:11px;font-weight:700;color:var(--t3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;}
+.qb-text{font-size:17px;font-weight:700;color:var(--t);line-height:1.4;}
+.qb-verse{
+  margin-top:10px;padding:10px 14px;
+  background:var(--bg3);border-radius:12px;border:1px solid var(--brd);
+  font-size:12px;color:var(--t2);font-style:italic;line-height:1.5;
+}
+
+.answers-list{padding:0 16px 14px;}
+.answer-item{
+  margin-bottom:10px;padding:14px 16px;
+  background:var(--bg3);border:1px solid var(--brd);
+  border-radius:14px;cursor:pointer;
+  display:flex;align-items:center;gap:12px;
+}
+.answer-item.correct{border-color:rgba(39,120,75,.5);background:var(--green-b);}
+.answer-item.wrong{border-color:rgba(192,57,43,.4);background:var(--red-m);}
+.answer-item.selected{border-color:var(--blue-f);background:var(--blue-b);}
+.ai-letter{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--bg4);display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:var(--t2);flex-shrink:0;
+}
+.answer-item.correct .ai-letter{background:var(--green-b);color:var(--green-f);}
+.answer-item.wrong .ai-letter{background:var(--red-m);color:var(--red-light);}
+.answer-item.selected .ai-letter{background:var(--blue-b);color:var(--blue-f);}
+.ai-text{font-size:13px;font-weight:600;color:var(--t);flex:1;line-height:1.4;}
+.answer-item.correct .ai-text{color:var(--green-f);}
+.answer-item.wrong .ai-text{color:var(--red-light);}
+
+.explanation-box{
+  margin:0 16px 14px;padding:14px 16px;
+  background:var(--green-b);border:1px solid rgba(39,120,75,.3);
+  border-radius:14px;
+}
+.eb-title{font-size:12px;font-weight:700;color:var(--green-f);margin-bottom:5px;}
+.eb-text{font-size:12px;color:rgba(200,240,215,.85);line-height:1.6;}
+
+.quiz-nav{
+  display:flex;gap:10px;margin:0 16px;
+}
+.qn-skip{
+  flex:1;background:var(--bg3);border:1px solid var(--brd2);
+  border-radius:14px;padding:13px;
+  text-align:center;font-size:14px;font-weight:700;color:var(--t2);cursor:pointer;
+}
+.qn-next{
+  flex:2;background:var(--red);border-radius:14px;padding:13px;
+  text-align:center;font-size:14px;font-weight:700;color:#fff;cursor:pointer;
+}
+</style>
+
+<div class="outer">
+
+  <!-- ══ SCREEN 1 : CATALOGUE ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="cat-header">
+          <div class="cat-title">Formation</div>
+          <div class="cat-sub">48 cours · 320 modules · Certifiés</div>
+        </div>
+
+        <div class="searchbar">
+          <span style="font-size:15px;">🔍</span>
+          <span>Rechercher un cours…</span>
+        </div>
+
+        <div class="level-tabs">
+          <div class="ltab on">Tout</div>
+          <div class="ltab">Débutant</div>
+          <div class="ltab">Intermédiaire</div>
+          <div class="ltab">Avancé</div>
+        </div>
+
+        <div class="sh"><div class="st">En cours</div></div>
+
+        <div class="course-card">
+          <div class="cc-hero" style="background:linear-gradient(135deg,#1A0A0A,#3A1010);">
+            <div class="cc-hero-ico">⚔</div>
+            <span class="cc-hero-badge">Avancé · Module 3/8</span>
+          </div>
+          <div class="cc-body">
+            <div class="cc-title">Guerre Spirituelle</div>
+            <div class="cc-teacher">Par Pasteur Emmanuel Nkosi</div>
+            <div class="cc-tags">
+              <span class="tag tr">Avancé</span>
+              <span class="tag tgo">🎧 Audio</span>
+              <span class="tag tp">Certificat</span>
+            </div>
+            <div class="cc-prog-row">
+              <div class="cc-prog-bar"><div class="cc-prog-fill" style="width:35%"></div></div>
+              <div class="cc-prog-pct">35%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sh" style="margin-top:4px;"><div class="st">Recommandés</div><div class="sl">Voir tout</div></div>
+
+        <div class="course-card">
+          <div class="cc-hero" style="background:linear-gradient(135deg,#0A1428,#101830);">
+            <div class="cc-hero-ico">📖</div>
+            <span class="cc-hero-badge">Débutant · 6 modules</span>
+          </div>
+          <div class="cc-body">
+            <div class="cc-title">Comprendre la Bible de A à Z</div>
+            <div class="cc-teacher">Par Dr. Samuel Atangana</div>
+            <div class="cc-tags">
+              <span class="tag tb">Débutant</span>
+              <span class="tag tp">Certificat</span>
+            </div>
+            <div class="cc-stats">
+              <div class="cc-stat"><span>2 340</span> inscrits</div>
+              <div class="cc-stat"><span>4h15</span> de cours</div>
+              <div class="cc-stat"><span>4.8</span> ⭐</div>
+            </div>
+            <div class="cc-enroll">S'inscrire gratuitement</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico">🤝</div><div class="ni-bar"></div><div class="ni-lbl">Communauté</div></div>
+        <div class="ni"><div class="ni-ico on">✦</div><div class="ni-bar on"></div><div class="ni-lbl on">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">01 · Catalogue de cours</div>
+  </div>
+
+  <!-- ══ SCREEN 2 : FICHE COURS ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="course-hero" style="background:linear-gradient(160deg,#2A0A0A,#1A0505);">
+          <div class="ch-back">←</div>
+          <div class="ch-save">♡</div>
+          <div style="position:absolute;top:30px;right:30px;font-size:70px;opacity:.07;">⚔</div>
+          <div class="ch-overlay"></div>
+          <div class="ch-content">
+            <div class="ch-badge">Formation · Avancé · 8 modules</div>
+            <div class="ch-title">Guerre Spirituelle</div>
+            <div class="ch-teacher">Pasteur Emmanuel Nkosi · Kinshasa</div>
+          </div>
+        </div>
+
+        <div class="stats-strip">
+          <div class="ss"><div class="ss-val">8</div><div class="ss-lbl">modules</div></div>
+          <div class="ss"><div class="ss-val">4h30</div><div class="ss-lbl">durée</div></div>
+          <div class="ss"><div class="ss-val" style="color:var(--goldf);">4.9</div><div class="ss-lbl">note</div></div>
+          <div class="ss"><div class="ss-val">847</div><div class="ss-lbl">inscrits</div></div>
+        </div>
+
+        <div style="padding:0 16px 6px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="font-size:12px;color:var(--t2);">Progression</div>
+            <div style="font-size:12px;font-weight:700;color:var(--red-light);">35% · Module 3/8</div>
+          </div>
+          <div style="height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;">
+            <div style="width:35%;height:100%;background:var(--red);border-radius:2px;"></div>
+          </div>
+        </div>
+
+        <div class="objectives-block" style="margin-top:14px;">
+          <div class="ob-title">Objectifs du cours</div>
+          <div class="ob-item"><div class="ob-dot">1</div><div class="ob-text">Comprendre le monde invisible et les puissances spirituelles</div></div>
+          <div class="ob-item"><div class="ob-dot">2</div><div class="ob-text">Maîtriser l'armure de Dieu et prier avec autorité</div></div>
+          <div class="ob-item"><div class="ob-dot">3</div><div class="ob-text">Identifier les stratagèmes de l'ennemi et résister</div></div>
+        </div>
+
+        <div class="cta-strip">
+          <div class="btn-main">▶ Continuer — Module 3</div>
+          <div class="btn-sec">🎧</div>
+        </div>
+
+        <div class="sh" style="margin-top:16px;"><div class="st">Modules</div></div>
+        <div class="modules-list">
+          <div class="ml-item">
+            <div class="ml-num done">✓</div>
+            <div class="ml-info"><div class="ml-name">Comprendre le monde invisible</div><div class="ml-meta">28 min · Quiz 92%</div></div>
+            <span class="ml-badge ml-done">Terminé</span>
+          </div>
+          <div class="ml-item">
+            <div class="ml-num done">✓</div>
+            <div class="ml-info"><div class="ml-name">L'armure de Dieu</div><div class="ml-meta">34 min · Quiz 78%</div></div>
+            <span class="ml-badge ml-done">Terminé</span>
+          </div>
+          <div class="ml-item">
+            <div class="ml-num active">3</div>
+            <div class="ml-info"><div class="ml-name">Prier avec autorité</div><div class="ml-meta">42 min · En cours</div></div>
+            <span class="ml-badge ml-active">En cours</span>
+          </div>
+          <div class="ml-item">
+            <div class="ml-num locked">4</div>
+            <div class="ml-info"><div class="ml-name">Délivrance & liberté</div><div class="ml-meta">38 min</div></div>
+            <span class="ml-badge ml-locked">🔒</span>
+          </div>
+          <div class="ml-item">
+            <div class="ml-num locked">5</div>
+            <div class="ml-info"><div class="ml-name">Identifier les stratagèmes</div><div class="ml-meta">31 min</div></div>
+            <span class="ml-badge ml-locked">🔒</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico">🤝</div><div class="ni-bar"></div><div class="ni-lbl">Communauté</div></div>
+        <div class="ni"><div class="ni-ico on">✦</div><div class="ni-bar on"></div><div class="ni-lbl on">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">02 · Fiche cours</div>
+  </div>
+
+  <!-- ══ SCREEN 3 : LECTEUR MODULE ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div style="padding-bottom:72px;">
+
+        <div class="mod-top">
+          <div class="mod-back">← Cours</div>
+          <div class="mod-chapter">Module 3 / 8</div>
+          <div class="mod-menu">⋯</div>
+        </div>
+
+        <div class="mod-prog">
+          <div class="mod-prog-bar"><div class="mod-prog-fill"></div></div>
+          <div class="mod-prog-lbl">
+            <span class="mpl">28% lu</span>
+            <span class="mpl">Guerre Spirituelle</span>
+          </div>
+        </div>
+
+        <div class="mod-content">
+          <div class="mod-badge">Module 3 · Guerre Spirituelle</div>
+          <div class="mod-title">Prier avec autorité</div>
+          <div class="mod-text">
+            <p>La prière d'autorité n'est pas une prière de supplication — c'est une <span class="highlight">déclaration fondée sur la Parole</span>. Elle repose sur ce que Christ a accompli à la croix, pas sur ce que nous ressentons.</p>
+          </div>
+
+          <div class="key-verse">
+            <div class="kv-label">Verset clé</div>
+            <div class="kv-text">« Je vous ai donné le pouvoir de marcher sur les serpents et les scorpions, et sur toute la puissance de l'ennemi ; et rien ne pourra vous nuire. »</div>
+            <div class="kv-ref">Luc 10:19 · LSG</div>
+          </div>
+
+          <div class="mod-text">
+            <p>Trois types de prières d'autorité existent dans le Nouveau Testament : la proclamation, l'intercession d'arrêt, et le commandement direct. Chacune opère dans un contexte précis et requiert une connaissance solide de la Parole.</p>
+          </div>
+
+          <div class="quote-block">
+            <div class="qb-quote">« La prière n'équipe pas pour un plus grand travail — la prière est le plus grand travail. »</div>
+            <div class="qb-author">— Oswald Chambers</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mod-bottom">
+        <div class="mb-prev">←</div>
+        <div class="mb-next">Module suivant →</div>
+        <div class="mb-audio">🎧</div>
+      </div>
+
+    </div>
+    <div class="lbl">03 · Lecteur module</div>
+  </div>
+
+  <!-- ══ SCREEN 4 : QUIZ ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="quiz-top">
+          <div class="qt-back">✕</div>
+          <div class="qt-title">Quiz · Module 3</div>
+          <div class="qt-timer">0:42</div>
+        </div>
+
+        <div class="quiz-prog">
+          <div class="qp-dot done"></div>
+          <div class="qp-dot done"></div>
+          <div class="qp-dot done"></div>
+          <div class="qp-dot active"></div>
+          <div class="qp-dot"></div>
+          <div class="qp-dot"></div>
+          <div class="qp-dot"></div>
+          <div class="qp-dot"></div>
+          <div class="qp-dot"></div>
+          <div class="qp-dot"></div>
+        </div>
+
+        <div class="question-block">
+          <div class="qb-num">Question 4 / 10</div>
+          <div class="qb-text">Quel verset donne autorité au croyant sur les puissances de l'ennemi ?</div>
+          <div class="qb-verse">« Je vous ai donné le pouvoir de marcher sur les serpents… »</div>
+        </div>
+
+        <div class="answers-list">
+          <div class="answer-item wrong">
+            <div class="ai-letter">A</div>
+            <div class="ai-text">Jean 3:16</div>
+            <div style="font-size:16px;color:var(--red-light);">✕</div>
+          </div>
+          <div class="answer-item correct">
+            <div class="ai-letter">B</div>
+            <div class="ai-text">Luc 10:19</div>
+            <div style="font-size:16px;color:var(--green-f);">✓</div>
+          </div>
+          <div class="answer-item">
+            <div class="ai-letter">C</div>
+            <div class="ai-text">Éphésiens 6:12</div>
+          </div>
+          <div class="answer-item">
+            <div class="ai-letter">D</div>
+            <div class="ai-text">Romains 8:37</div>
+          </div>
+        </div>
+
+        <div class="explanation-box">
+          <div class="eb-title">✓ Bonne réponse — Luc 10:19</div>
+          <div class="eb-text">Jésus confère ici une autorité déléguée à ses disciples sur toute puissance ennemie. Cette autorité est positionnelle — elle appartient à tout croyant en Christ.</div>
+        </div>
+
+        <div class="quiz-nav">
+          <div class="qn-skip">Passer</div>
+          <div class="qn-next">Question suivante →</div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico">🤝</div><div class="ni-bar"></div><div class="ni-lbl">Communauté</div></div>
+        <div class="ni"><div class="ni-ico on">✦</div><div class="ni-bar on"></div><div class="ni-lbl on">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">04 · Quiz module</div>
+  </div>
+
+</div>

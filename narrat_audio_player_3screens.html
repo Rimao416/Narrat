@@ -1,0 +1,378 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --red:#C0392B;--red-deep:#922B21;--red-light:#E74C3C;
+  --red-m:rgba(192,57,43,0.14);--red-b:rgba(192,57,43,0.28);
+  --bg:#0D0D0D;--bg2:#141414;--bg3:#1A1A1A;--bg4:#222;--bg5:#2A2A2A;
+  --brd:rgba(255,255,255,0.07);--brd2:rgba(255,255,255,0.12);
+  --t:#F0F0F0;--t2:#909090;--t3:#555;
+  --gold:#D4AF37;--goldf:#F0D060;
+  --green-b:rgba(39,120,75,0.13);--green-f:#5ACD8A;
+  --amber-b:rgba(186,117,23,0.13);--amber-f:#EFA827;
+}
+body{background:transparent;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;}
+.outer{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;padding:24px 12px 40px;}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.lbl{font-size:10px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;text-align:center;}
+.phone{width:375px;background:var(--bg);border-radius:50px;border:1.5px solid rgba(255,255,255,0.1);overflow:hidden;box-shadow:0 0 0 7px #0A0A0A,0 0 0 8.5px rgba(255,255,255,0.05);}
+.notch{width:110px;height:28px;background:#000;border-radius:0 0 18px 18px;margin:0 auto;}
+.sb{display:flex;justify-content:space-between;padding:8px 24px 4px;font-size:12px;font-weight:600;color:var(--t);}
+.tag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;}
+.tr{background:var(--red-m);color:var(--red-light);}
+.tgo{background:var(--amber-b);color:var(--amber-f);}
+.tg{background:var(--green-b);color:var(--green-f);}
+</style>
+
+<div class="outer">
+
+  <!-- ══ SCREEN 1 : LECTEUR PLEIN ÉCRAN ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+
+      <div style="min-height:680px;background:var(--bg);display:flex;flex-direction:column;">
+
+        <!-- Header -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px 10px;">
+          <div style="width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--t2);cursor:pointer;">↓</div>
+          <div style="text-align:center;">
+            <div style="font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;">En cours d'écoute</div>
+          </div>
+          <div style="width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--t2);cursor:pointer;">⋯</div>
+        </div>
+
+        <!-- Artwork -->
+        <div style="padding:10px 32px 24px;">
+          <div style="width:100%;aspect-ratio:1;border-radius:24px;background:linear-gradient(145deg,#922B21,#3A0A0A);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;">
+            <div style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;border:1px solid rgba(255,255,255,0.05);"></div>
+            <div style="position:absolute;top:-10px;right:-10px;width:120px;height:120px;border-radius:50%;border:1px solid rgba(255,255,255,0.04);"></div>
+            <div style="position:absolute;top:20px;left:20px;font-size:60px;opacity:.06;">📚</div>
+            <div style="position:relative;z-index:2;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:6px;">Bibliothèque Audio</div>
+              <div style="font-size:18px;font-weight:700;color:#fff;line-height:1.2;">The Pursuit of God</div>
+              <div style="font-size:13px;color:rgba(255,255,255,.45);margin-top:4px;">A.W. Tozer · Chapitre 5</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Titre + actions -->
+        <div style="padding:0 24px 20px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:20px;font-weight:700;color:var(--t);letter-spacing:-.3px;">La présence universelle</div>
+            <div style="font-size:13px;color:var(--t2);margin-top:4px;">Chapitre 5 / 9 · 28 min</div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;">♡</div>
+            <div style="width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;">📤</div>
+          </div>
+        </div>
+
+        <!-- Waveform -->
+        <div style="padding:0 24px 16px;">
+          <div style="height:48px;background:var(--bg3);border-radius:12px;padding:6px 10px;display:flex;align-items:center;gap:2px;overflow:hidden;">
+            <!-- Fausse waveform avec des barres -->
+            <div style="display:flex;align-items:center;gap:2px;width:100%;height:100%;">
+              <!-- Barres jouées (rouge) -->
+              <div style="flex:1;height:60%;background:var(--red);border-radius:2px;opacity:.9;"></div>
+              <div style="flex:1;height:90%;background:var(--red);border-radius:2px;opacity:.9;"></div>
+              <div style="flex:1;height:45%;background:var(--red);border-radius:2px;opacity:.9;"></div>
+              <div style="flex:1;height:75%;background:var(--red);border-radius:2px;opacity:.9;"></div>
+              <div style="flex:1;height:55%;background:var(--red);border-radius:2px;opacity:.9;"></div>
+              <div style="flex:1;height:80%;background:var(--red);border-radius:2px;opacity:.9;"></div>
+              <div style="flex:1;height:40%;background:var(--red);border-radius:2px;opacity:.9;"></div>
+              <div style="flex:1;height:95%;background:var(--red);border-radius:2px;opacity:.9;"></div>
+              <div style="flex:1;height:65%;background:var(--red);border-radius:2px;opacity:.9;"></div>
+              <div style="flex:1;height:50%;background:var(--red);border-radius:2px;opacity:.9;"></div>
+              <div style="flex:1;height:85%;background:var(--red);border-radius:2px;opacity:.9;"></div>
+              <div style="flex:1;height:70%;background:var(--red);border-radius:2px;opacity:.9;"></div>
+              <!-- Tête de lecture -->
+              <div style="width:3px;height:100%;background:#fff;border-radius:2px;flex-shrink:0;"></div>
+              <!-- Barres à jouer (gris) -->
+              <div style="flex:1;height:60%;background:var(--bg5);border-radius:2px;"></div>
+              <div style="flex:1;height:35%;background:var(--bg5);border-radius:2px;"></div>
+              <div style="flex:1;height:80%;background:var(--bg5);border-radius:2px;"></div>
+              <div style="flex:1;height:50%;background:var(--bg5);border-radius:2px;"></div>
+              <div style="flex:1;height:70%;background:var(--bg5);border-radius:2px;"></div>
+              <div style="flex:1;height:45%;background:var(--bg5);border-radius:2px;"></div>
+              <div style="flex:1;height:90%;background:var(--bg5);border-radius:2px;"></div>
+              <div style="flex:1;height:55%;background:var(--bg5);border-radius:2px;"></div>
+              <div style="flex:1;height:75%;background:var(--bg5);border-radius:2px;"></div>
+              <div style="flex:1;height:40%;background:var(--bg5);border-radius:2px;"></div>
+              <div style="flex:1;height:65%;background:var(--bg5);border-radius:2px;"></div>
+              <div style="flex:1;height:85%;background:var(--bg5);border-radius:2px;"></div>
+            </div>
+          </div>
+          <!-- Temps -->
+          <div style="display:flex;justify-content:space-between;margin-top:8px;">
+            <div style="font-size:12px;font-weight:600;color:var(--t2);">12:34</div>
+            <div style="font-size:12px;font-weight:600;color:var(--t3);">28:00</div>
+          </div>
+        </div>
+
+        <!-- Contrôles vitesse & sleep -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 24px 20px;">
+          <div style="background:var(--bg3);border:1px solid var(--brd2);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;">1×</div>
+          <div style="font-size:12px;color:var(--t3);cursor:pointer;">⏱ Minuterie</div>
+          <div style="background:var(--bg3);border:1px solid var(--brd2);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;">🔀 Aléatoire</div>
+        </div>
+
+        <!-- Contrôles principaux -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0 28px 28px;">
+          <!-- Recul 15s -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;">
+            <div style="width:44px;height:44px;border-radius:50%;background:var(--bg3);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:18px;color:var(--t2);">↺</span>
+            </div>
+            <div style="font-size:9px;color:var(--t3);">15s</div>
+          </div>
+          <!-- Précédent -->
+          <div style="width:50px;height:50px;border-radius:50%;background:var(--bg3);border:1px solid var(--brd2);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+            <span style="font-size:22px;color:var(--t2);">⏮</span>
+          </div>
+          <!-- Play principal -->
+          <div style="width:72px;height:72px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+            <span style="font-size:28px;color:#fff;margin-left:4px;">▶</span>
+          </div>
+          <!-- Suivant -->
+          <div style="width:50px;height:50px;border-radius:50%;background:var(--bg3);border:1px solid var(--brd2);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+            <span style="font-size:22px;color:var(--t2);">⏭</span>
+          </div>
+          <!-- Avance 15s -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;">
+            <div style="width:44px;height:44px;border-radius:50%;background:var(--bg3);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:18px;color:var(--t2);">↻</span>
+            </div>
+            <div style="font-size:9px;color:var(--t3);">15s</div>
+          </div>
+        </div>
+
+        <!-- Volume -->
+        <div style="padding:0 28px 24px;display:flex;align-items:center;gap:12px;">
+          <span style="font-size:16px;color:var(--t3);">🔈</span>
+          <div style="flex:1;height:4px;background:var(--bg4);border-radius:2px;position:relative;">
+            <div style="width:70%;height:100%;background:var(--t2);border-radius:2px;"></div>
+            <div style="position:absolute;top:50%;right:30%;transform:translate(50%,-50%);width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--bg);"></div>
+          </div>
+          <span style="font-size:16px;color:var(--t2);">🔊</span>
+        </div>
+
+      </div>
+    </div>
+    <div class="lbl">01 · Lecteur plein écran</div>
+  </div>
+
+  <!-- ══ SCREEN 2 : LISTE DES CHAPITRES ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+
+      <div style="min-height:680px;background:var(--bg);display:flex;flex-direction:column;">
+
+        <!-- Header -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px 12px;">
+          <div style="font-size:14px;color:var(--t2);cursor:pointer;">← Retour</div>
+          <div style="font-size:17px;font-weight:700;color:var(--t);">Chapitres</div>
+          <div style="width:34px;"></div>
+        </div>
+
+        <!-- Mini player collant -->
+        <div style="margin:0 16px 16px;background:var(--red-deep);border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:40px;height:40px;border-radius:10px;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">📚</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">The Pursuit of God · Ch.5</div>
+            <div style="height:3px;background:rgba(255,255,255,.2);border-radius:2px;margin-top:6px;overflow:hidden;">
+              <div style="width:44%;height:100%;background:#fff;border-radius:2px;"></div>
+            </div>
+          </div>
+          <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;flex-shrink:0;">⏸</div>
+        </div>
+
+        <!-- Infos livre -->
+        <div style="padding:0 20px 14px;display:flex;gap:14px;align-items:center;">
+          <div style="width:56px;height:80px;border-radius:10px;background:linear-gradient(145deg,#922B21,#3A0A0A);flex-shrink:0;display:flex;flex-direction:column;justify-content:flex-end;padding:6px;">
+            <div style="font-size:8px;font-weight:700;color:rgba(255,255,255,.8);line-height:1.2;">The Pursuit of God</div>
+          </div>
+          <div>
+            <div style="font-size:16px;font-weight:700;color:var(--t);">The Pursuit of God</div>
+            <div style="font-size:12px;color:var(--t2);margin-top:3px;">A.W. Tozer · 9 chapitres</div>
+            <div style="display:flex;gap:6px;margin-top:8px;">
+              <span class="tag tr">Classique</span>
+              <span class="tag tgo">3h20 total</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:1px;background:var(--brd);margin:0 16px 8px;"></div>
+
+        <!-- Liste chapitres -->
+        <div style="padding:0 16px;flex:1;">
+
+          <!-- Chapitre terminé -->
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--brd);cursor:pointer;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--green-b);border:1px solid rgba(39,120,75,.3);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--green-f);font-weight:700;flex-shrink:0;">✓</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:700;color:var(--t2);">Ch. 1 · Suivre Dieu de tout son cœur</div>
+              <div style="font-size:11px;color:var(--t3);margin-top:2px;">18 min · Écouté</div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:var(--t3);">18:00</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--brd);cursor:pointer;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--green-b);border:1px solid rgba(39,120,75,.3);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--green-f);font-weight:700;flex-shrink:0;">✓</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:700;color:var(--t2);">Ch. 2 · La blessure de Dieu</div>
+              <div style="font-size:11px;color:var(--t3);margin-top:2px;">22 min · Écouté</div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:var(--t3);">22:00</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--brd);cursor:pointer;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--green-b);border:1px solid rgba(39,120,75,.3);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--green-f);font-weight:700;flex-shrink:0;">✓</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:700;color:var(--t2);">Ch. 3 · Contemplation et vision</div>
+              <div style="font-size:11px;color:var(--t3);margin-top:2px;">20 min · Écouté</div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:var(--t3);">20:00</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--brd);cursor:pointer;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--green-b);border:1px solid rgba(39,120,75,.3);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--green-f);font-weight:700;flex-shrink:0;">✓</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:700;color:var(--t2);">Ch. 4 · Appréhender Dieu</div>
+              <div style="font-size:11px;color:var(--t3);margin-top:2px;">25 min · Écouté</div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:var(--t3);">25:00</div>
+          </div>
+
+          <!-- Chapitre actif -->
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 12px;border-bottom:1px solid var(--brd);cursor:pointer;background:var(--red-m);border-radius:12px;margin-bottom:2px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;flex-shrink:0;">▶</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:700;color:var(--t);">Ch. 5 · La présence universelle</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+                <div style="flex:1;height:3px;background:rgba(192,57,43,.3);border-radius:2px;overflow:hidden;">
+                  <div style="width:44%;height:100%;background:var(--red);border-radius:2px;"></div>
+                </div>
+                <div style="font-size:10px;color:var(--red-light);font-weight:700;">12:34 / 28:00</div>
+              </div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:var(--red-light);">28:00</div>
+          </div>
+
+          <!-- Chapitres à venir -->
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--brd);cursor:pointer;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t3);font-weight:700;flex-shrink:0;">6</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:700;color:var(--t);">Ch. 6 · La parole vive et efficace</div>
+              <div style="font-size:11px;color:var(--t3);margin-top:2px;">21 min</div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:var(--t3);">21:00</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--brd);cursor:pointer;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t3);font-weight:700;flex-shrink:0;">7</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:700;color:var(--t);">Ch. 7 · Le feu consumant</div>
+              <div style="font-size:11px;color:var(--t3);margin-top:2px;">24 min</div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:var(--t3);">24:00</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="lbl">02 · Liste des chapitres</div>
+  </div>
+
+  <!-- ══ SCREEN 3 : MINI PLAYER + OPTIONS ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+
+      <div style="min-height:680px;background:var(--bg);display:flex;flex-direction:column;">
+
+        <!-- Contexte — on simule qu'on est sur la bibliothèque -->
+        <div style="padding:16px 20px 12px;display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-size:22px;font-weight:700;color:var(--t);">Bibliothèque</div>
+          <div style="font-size:20px;color:var(--t2);">🔍</div>
+        </div>
+
+        <!-- Quelques livres factices -->
+        <div style="padding:0 16px;flex:1;">
+          <div style="font-size:13px;font-weight:700;color:var(--t2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;">Recommandés</div>
+          <div style="display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--brd);">
+            <div style="width:52px;height:74px;border-radius:8px;background:linear-gradient(145deg,#1A3A6A,#0A1428);flex-shrink:0;"></div>
+            <div><div style="font-size:14px;font-weight:700;color:var(--t);">Experiencing God</div><div style="font-size:11px;color:var(--t2);margin-top:3px;">Henry Blackaby</div></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--brd);">
+            <div style="width:52px;height:74px;border-radius:8px;background:linear-gradient(145deg,#1A4A20,#0A2010);flex-shrink:0;"></div>
+            <div><div style="font-size:14px;font-weight:700;color:var(--t);">Prayer</div><div style="font-size:11px;color:var(--t2);margin-top:3px;">E.M. Bounds</div></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--brd);">
+            <div style="width:52px;height:74px;border-radius:8px;background:linear-gradient(145deg,#3A2A0A,#1A1205);flex-shrink:0;"></div>
+            <div><div style="font-size:14px;font-weight:700;color:var(--t);">Knowing God</div><div style="font-size:11px;color:var(--t2);margin-top:3px;">J.I. Packer</div></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;padding:12px 0;">
+            <div style="width:52px;height:74px;border-radius:8px;background:linear-gradient(145deg,#3A1A3A,#1A0A1A);flex-shrink:0;"></div>
+            <div><div style="font-size:14px;font-weight:700;color:var(--t);">Surprised by Joy</div><div style="font-size:11px;color:var(--t2);margin-top:3px;">C.S. Lewis</div></div>
+          </div>
+        </div>
+
+        <!-- MINI PLAYER PERSISTANT (bottom) -->
+        <div style="background:var(--bg2);border-top:1px solid var(--brd2);padding:10px 16px 14px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <!-- Cover mini -->
+            <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(145deg,#922B21,#3A0A0A);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;opacity:.8;">📚</div>
+            <!-- Info -->
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:13px;font-weight:700;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">La présence universelle</div>
+              <div style="font-size:11px;color:var(--t2);margin-top:2px;">The Pursuit of God · Tozer</div>
+            </div>
+            <!-- Contrôles mini -->
+            <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t2);cursor:pointer;">↺</div>
+              <div style="width:40px;height:40px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;cursor:pointer;margin-left:2px;">⏸</div>
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t2);cursor:pointer;">⏭</div>
+            </div>
+          </div>
+          <!-- Barre de progression mini -->
+          <div style="height:2px;background:var(--bg5);border-radius:1px;margin-top:10px;overflow:hidden;">
+            <div style="width:44%;height:100%;background:var(--red);border-radius:1px;"></div>
+          </div>
+        </div>
+
+        <!-- Nav bar -->
+        <div style="background:rgba(13,13,13,.97);border-top:1px solid var(--brd2);display:flex;justify-content:space-around;padding:10px 0 20px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div style="font-size:20px;color:var(--t3);">⌂</div>
+            <div style="width:18px;height:2px;border-radius:1px;background:transparent;"></div>
+            <div style="font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;">Accueil</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div style="font-size:20px;color:var(--red-light);">📚</div>
+            <div style="width:18px;height:2px;border-radius:1px;background:var(--red);"></div>
+            <div style="font-size:9px;font-weight:600;color:var(--red-light);text-transform:uppercase;letter-spacing:.04em;">Biblioth.</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div style="font-size:20px;color:var(--t3);">🤝</div>
+            <div style="width:18px;height:2px;border-radius:1px;"></div>
+            <div style="font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;">Communauté</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div style="font-size:20px;color:var(--t3);">✦</div>
+            <div style="width:18px;height:2px;border-radius:1px;"></div>
+            <div style="font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;">Découvrir</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div style="font-size:20px;color:var(--t3);">👤</div>
+            <div style="width:18px;height:2px;border-radius:1px;"></div>
+            <div style="font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;">Profil</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="lbl">03 · Mini player persistant</div>
+  </div>
+
+</div>

@@ -1,0 +1,669 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --red:#C0392B;--red-deep:#922B21;--red-light:#E74C3C;
+  --red-m:rgba(192,57,43,0.14);--red-b:rgba(192,57,43,0.28);
+  --bg:#0D0D0D;--bg2:#141414;--bg3:#1A1A1A;--bg4:#222;--bg5:#2A2A2A;
+  --brd:rgba(255,255,255,0.07);--brd2:rgba(255,255,255,0.12);
+  --t:#F0F0F0;--t2:#909090;--t3:#555;
+  --gold:#D4AF37;--goldf:#F0D060;
+  --blue-b:rgba(52,100,180,0.13);--blue-f:#6B9FEA;
+  --green-b:rgba(39,120,75,0.13);--green-f:#5ACD8A;
+  --purple-b:rgba(120,60,180,0.13);--purple-f:#B07EEA;
+  --amber-b:rgba(186,117,23,0.13);--amber-f:#EFA827;
+}
+body{background:transparent;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;}
+.outer{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;padding:24px 12px 36px;}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.lbl{font-size:10px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;}
+.phone{
+  width:375px;background:var(--bg);
+  border-radius:50px;border:1.5px solid rgba(255,255,255,0.1);
+  overflow:hidden;
+  box-shadow:0 0 0 7px #0A0A0A,0 0 0 8.5px rgba(255,255,255,0.05);
+}
+.notch{width:110px;height:28px;background:#000;border-radius:0 0 18px 18px;margin:0 auto;}
+.sb{display:flex;justify-content:space-between;padding:8px 24px 4px;font-size:12px;font-weight:600;color:var(--t);}
+.sc{padding-bottom:76px;}
+.nav{background:rgba(13,13,13,.97);border-top:1px solid var(--brd2);display:flex;justify-content:space-around;padding:10px 0 20px;}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+.ni-ico{font-size:20px;color:var(--t3);}
+.ni-ico.on{color:var(--red-light);}
+.ni-bar{width:18px;height:2px;border-radius:1px;background:transparent;}
+.ni-bar.on{background:var(--red);}
+.ni-lbl{font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;}
+.ni-lbl.on{color:var(--red-light);}
+.sh{display:flex;justify-content:space-between;align-items:center;padding:0 20px;margin-bottom:11px;}
+.st{font-size:13px;font-weight:700;color:var(--t);}
+.sl{font-size:12px;color:var(--red-light);font-weight:500;cursor:pointer;}
+.tag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;}
+.tr{background:var(--red-m);color:var(--red-light);}
+.tb{background:var(--blue-b);color:var(--blue-f);}
+.tg{background:var(--green-b);color:var(--green-f);}
+.tgo{background:var(--amber-b);color:var(--amber-f);}
+.tp{background:var(--purple-b);color:var(--purple-f);}
+
+/* ══ SCREEN 1 : CATALOGUE DÉFIS ══ */
+.cat-hdr{padding:18px 20px 12px;}
+.cat-title{font-size:26px;font-weight:700;color:var(--t);letter-spacing:-.4px;}
+.cat-sub{font-size:13px;color:var(--t2);margin-top:3px;}
+
+.active-banner{
+  margin:0 16px 16px;
+  background:var(--red-deep);border-radius:20px;
+  padding:18px;position:relative;overflow:hidden;cursor:pointer;
+}
+.ab-deco{
+  position:absolute;top:-20px;right:-20px;
+  width:100px;height:100px;border-radius:50%;
+  border:1px solid rgba(255,255,255,0.07);
+}
+.ab-deco2{
+  position:absolute;top:10px;right:10px;
+  width:60px;height:60px;border-radius:50%;
+  border:1px solid rgba(255,255,255,0.05);
+}
+.ab-label{font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.45);text-transform:uppercase;margin-bottom:6px;}
+.ab-title{font-size:18px;font-weight:700;color:#fff;line-height:1.2;}
+.ab-sub{font-size:12px;color:rgba(255,255,255,.5);margin-top:4px;}
+.ab-prog-row{display:flex;align-items:center;gap:10px;margin-top:14px;}
+.ab-prog-bar{flex:1;height:4px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;}
+.ab-prog-fill{height:100%;background:#fff;border-radius:2px;}
+.ab-pct{font-size:12px;font-weight:700;color:rgba(255,255,255,.7);}
+.ab-day{
+  position:absolute;top:16px;right:16px;
+  display:flex;flex-direction:column;align-items:center;
+}
+.ab-day-num{font-size:28px;font-weight:700;color:rgba(255,255,255,.9);line-height:1;}
+.ab-day-lbl{font-size:9px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;}
+
+.filter-chips{display:flex;gap:8px;padding:0 16px 14px;overflow-x:auto;}
+.chip{
+  flex-shrink:0;padding:6px 14px;border-radius:20px;
+  font-size:12px;font-weight:500;
+  background:var(--bg3);color:var(--t2);border:1px solid var(--brd);cursor:pointer;
+}
+.chip.on{background:var(--red-m);color:var(--red-light);border-color:var(--red-b);}
+
+.defi-card{
+  margin:0 16px 12px;
+  background:var(--bg3);border-radius:18px;border:1px solid var(--brd);
+  padding:16px;cursor:pointer;
+  display:flex;gap:14px;align-items:center;
+}
+.dc-icon{
+  width:54px;height:54px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;
+}
+.dc-info{flex:1;}
+.dc-title{font-size:14px;font-weight:700;color:var(--t);line-height:1.3;}
+.dc-sub{font-size:11px;color:var(--t2);margin-top:3px;}
+.dc-tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:center;}
+.dc-arrow{font-size:18px;color:var(--t3);}
+.dc-prog-mini{height:3px;background:var(--bg5);border-radius:2px;margin-top:8px;overflow:hidden;}
+.dc-prog-fill{height:100%;background:var(--red);border-radius:2px;}
+
+/* ══ SCREEN 2 : FICHE DÉFI ══ */
+.defi-hero{
+  height:200px;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:20px;
+}
+.dh-back{
+  position:absolute;top:46px;left:16px;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:var(--t);cursor:pointer;z-index:5;
+}
+.dh-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);}
+.dh-content{position:relative;z-index:3;}
+.dh-badge{font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.5);text-transform:uppercase;margin-bottom:6px;}
+.dh-title{font-size:22px;font-weight:700;color:#fff;letter-spacing:-.3px;line-height:1.2;}
+.dh-sub{font-size:12px;color:rgba(255,255,255,.45);margin-top:5px;}
+
+.stats-strip{
+  display:grid;grid-template-columns:1fr 1fr 1fr 1fr;
+  gap:8px;margin:14px 16px;
+}
+.ss{background:var(--bg3);border-radius:12px;border:1px solid var(--brd);padding:11px 8px;text-align:center;}
+.ss-val{font-size:14px;font-weight:700;color:var(--t);}
+.ss-lbl{font-size:10px;color:var(--t2);margin-top:3px;}
+
+.desc-block{padding:0 20px 14px;}
+.desc-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:7px;}
+.desc-text{font-size:13px;color:var(--t2);line-height:1.65;}
+
+.partner-block{
+  margin:0 16px 14px;
+  background:var(--bg3);border-radius:14px;border:1px solid var(--brd);
+  padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.pb-left{display:flex;align-items:center;gap:10px;}
+.pb-icon{font-size:20px;}
+.pb-title{font-size:13px;font-weight:700;color:var(--t);}
+.pb-sub{font-size:11px;color:var(--t2);margin-top:2px;}
+.pb-btn{
+  font-size:12px;font-weight:700;
+  background:var(--red-m);color:var(--red-light);
+  border:1px solid var(--red-b);border-radius:20px;
+  padding:6px 14px;cursor:pointer;
+}
+
+.preview-days{padding:0 16px 14px;}
+.pd-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:10px;}
+.day-row{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 0;border-bottom:1px solid var(--brd);
+}
+.day-num{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;flex-shrink:0;
+}
+.day-num.done{background:var(--red);color:#fff;}
+.day-num.today{background:var(--red-m);color:var(--red-light);border:1.5px solid var(--red);}
+.day-num.lock{background:var(--bg4);color:var(--t3);}
+.day-info{flex:1;}
+.day-name{font-size:13px;font-weight:700;color:var(--t);}
+.day-tasks{font-size:11px;color:var(--t2);margin-top:2px;}
+.day-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;}
+.done-b{background:var(--green-b);color:var(--green-f);}
+.today-b{background:var(--red-m);color:var(--red-light);}
+.lock-b{background:var(--bg4);color:var(--t3);}
+
+.cta-strip{display:flex;gap:10px;margin:0 16px 16px;}
+.btn-main{flex:1;background:var(--red);color:#fff;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;}
+.btn-sec{width:50px;background:var(--bg3);border:1px solid var(--brd2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;}
+
+/* ══ SCREEN 3 : JOUR DU DÉFI ══ */
+.day-hdr{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:46px 20px 10px;
+}
+.day-back{font-size:14px;color:var(--t2);cursor:pointer;}
+.day-info2{font-size:12px;font-weight:600;color:var(--t2);}
+.day-menu{font-size:20px;color:var(--t2);}
+
+.day-prog-block{margin:0 16px 16px;}
+.dpb-top{display:flex;justify-content:space-between;margin-bottom:6px;}
+.dpb-label{font-size:11px;color:var(--t3);}
+.dpb-val{font-size:11px;font-weight:700;color:var(--red-light);}
+.dpb-bar{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;}
+.dpb-fill{height:100%;background:var(--red);border-radius:2px;width:27%;}
+
+.day-content{padding:0 20px 14px;}
+.dc-day-badge{
+  display:inline-block;margin-bottom:10px;
+  font-size:10px;font-weight:700;letter-spacing:.08em;
+  color:var(--red-light);background:var(--red-m);
+  padding:4px 10px;border-radius:20px;text-transform:uppercase;
+}
+.dc-day-title{font-size:20px;font-weight:700;color:var(--t);line-height:1.3;margin-bottom:14px;letter-spacing:-.2px;}
+.dc-teaching{font-size:14px;color:rgba(240,240,240,.82);line-height:1.8;}
+.dc-teaching p{margin-bottom:12px;}
+
+.verse-block{
+  margin:12px 0;padding:13px 16px;
+  background:var(--bg3);border:1px solid var(--brd2);
+  border-left:3px solid var(--red);border-radius:0 14px 14px 0;
+}
+.vb-label{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+.vb-text{font-size:13px;color:rgba(240,210,210,.9);font-style:italic;line-height:1.6;}
+.vb-ref{font-size:11px;color:var(--t3);font-style:normal;margin-top:5px;font-weight:600;}
+
+.tasks-block{padding:0 16px 14px;}
+.tb-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:10px;}
+.task-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 14px;background:var(--bg3);
+  border-radius:14px;border:1px solid var(--brd);
+  margin-bottom:8px;cursor:pointer;
+}
+.task-item.done{border-color:rgba(39,120,75,.3);background:var(--green-b);}
+.task-check{
+  width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--brd2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+}
+.task-item.done .task-check{background:var(--green-f);border-color:var(--green-f);color:#fff;font-size:12px;font-weight:700;}
+.task-body{flex:1;}
+.task-type{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;}
+.task-item.done .task-type{color:var(--green-f);}
+.task-name{font-size:13px;font-weight:700;color:var(--t);}
+.task-item.done .task-name{color:var(--green-f);}
+.task-desc{font-size:12px;color:var(--t2);margin-top:3px;line-height:1.4;}
+
+.prayer-block{
+  margin:0 16px 14px;padding:14px 16px;
+  background:var(--red-m);border:1px solid var(--red-b);
+  border-radius:14px;
+}
+.pray-title{font-size:13px;font-weight:700;color:var(--red-light);margin-bottom:7px;}
+.pray-text{font-size:13px;color:rgba(240,210,210,.85);line-height:1.65;font-style:italic;}
+
+.day-bottom{
+  background:rgba(13,13,13,.97);border-top:1px solid var(--brd2);
+  padding:12px 16px 22px;
+  display:flex;gap:10px;
+}
+.db-complete{
+  flex:1;background:var(--red);color:#fff;
+  border-radius:12px;padding:14px;
+  text-align:center;font-size:14px;font-weight:700;cursor:pointer;
+}
+.db-share{
+  width:48px;background:var(--bg3);border:1px solid var(--brd2);
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;cursor:pointer;
+}
+
+/* ══ SCREEN 4 : CHECK-IN COMPLÉTÉ ══ */
+.checkin-top{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:46px 20px 20px;
+}
+.ct-back{font-size:14px;color:var(--t2);}
+.ct-title{font-size:17px;font-weight:700;color:var(--t);}
+.ct-share{font-size:14px;color:var(--red-light);font-weight:600;}
+
+.success-badge{
+  margin:0 16px 18px;
+  background:var(--green-b);border:1px solid rgba(39,120,75,.3);
+  border-radius:20px;padding:20px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+}
+.sb-ico{font-size:40px;margin-bottom:10px;}
+.sb-title{font-size:20px;font-weight:700;color:var(--green-f);}
+.sb-sub{font-size:13px;color:rgba(90,205,138,.7);margin-top:5px;line-height:1.5;}
+
+.streak-block{
+  margin:0 16px 16px;
+  background:var(--bg3);border-radius:18px;border:1px solid var(--brd);
+  padding:16px;
+}
+.streak-top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.str-label{font-size:13px;font-weight:700;color:var(--t);}
+.str-fire{font-size:13px;font-weight:700;color:var(--red-light);}
+.week-grid{display:flex;gap:5px;}
+.wk-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.wk-lbl{font-size:9px;color:var(--t3);font-weight:600;text-transform:uppercase;}
+.wk-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.wk-dot.done{background:var(--red);color:#fff;}
+.wk-dot.today{background:var(--green-f);color:#fff;font-size:14px;}
+.wk-dot.empty{background:var(--bg4);}
+
+.note-block{margin:0 16px 16px;}
+.nb-label{font-size:13px;font-weight:700;color:var(--t);margin-bottom:8px;}
+.nb-area{
+  background:var(--bg3);border:1px solid var(--brd2);
+  border-radius:14px;padding:14px;
+  font-size:13px;color:var(--t2);line-height:1.6;min-height:80px;
+}
+.nb-cursor{display:inline-block;width:2px;height:13px;background:var(--red-light);vertical-align:middle;}
+
+.partner-preview{
+  margin:0 16px 16px;
+  background:var(--bg3);border-radius:14px;border:1px solid var(--brd);
+  padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;
+}
+.pp-av{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--blue-b);display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:var(--blue-f);flex-shrink:0;
+}
+.pp-info{flex:1;}
+.pp-name{font-size:13px;font-weight:700;color:var(--t);}
+.pp-status{font-size:11px;color:var(--t2);margin-top:2px;}
+.pp-notify{
+  font-size:11px;font-weight:700;
+  background:var(--amber-b);color:var(--amber-f);
+  padding:5px 12px;border-radius:20px;cursor:pointer;
+}
+
+.xp-banner{
+  margin:0 16px 16px;
+  background:var(--amber-b);border:1px solid rgba(186,117,23,.25);
+  border-radius:14px;padding:14px 16px;
+  display:flex;align-items:center;gap:14px;
+}
+.xp-ico{font-size:28px;flex-shrink:0;}
+.xp-info{flex:1;}
+.xp-title{font-size:14px;font-weight:700;color:var(--amber-f);}
+.xp-sub{font-size:11px;color:rgba(239,168,39,.65);margin-top:3px;}
+.xp-val{font-size:22px;font-weight:700;color:var(--amber-f);}
+</style>
+
+<div class="outer">
+
+  <!-- ══ SCREEN 1 : CATALOGUE ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="cat-hdr">
+          <div class="cat-title">Défis</div>
+          <div class="cat-sub">30 programmes · Discipline & Victoire</div>
+        </div>
+
+        <div class="active-banner">
+          <div class="ab-deco"></div>
+          <div class="ab-deco2"></div>
+          <div class="ab-label">Défi actif · Pureté</div>
+          <div class="ab-title">Vaincre la pornographie</div>
+          <div class="ab-sub">Programme de 30 jours</div>
+          <div class="ab-prog-row">
+            <div class="ab-prog-bar"><div class="ab-prog-fill" style="width:27%"></div></div>
+            <div class="ab-pct">Jour 8/30</div>
+          </div>
+          <div class="ab-day">
+            <div class="ab-day-num">8</div>
+            <div class="ab-day-lbl">/ 30</div>
+          </div>
+        </div>
+
+        <div class="filter-chips">
+          <div class="chip on">Tous</div>
+          <div class="chip">Pureté</div>
+          <div class="chip">Prière</div>
+          <div class="chip">Santé mentale</div>
+          <div class="chip">Bible</div>
+          <div class="chip">Famille</div>
+        </div>
+
+        <div class="sh"><div class="st">Programmes populaires</div><div class="sl">Voir tout</div></div>
+
+        <div class="defi-card">
+          <div class="dc-icon" style="background:rgba(120,60,180,.12);">🧠</div>
+          <div class="dc-info">
+            <div class="dc-title">Surmonter la dépression</div>
+            <div class="dc-sub">21 jours d'accompagnement spirituel</div>
+            <div class="dc-tags">
+              <span class="tag tp">Santé mentale</span>
+              <span class="tag tgo">Modéré</span>
+            </div>
+            <div class="dc-prog-mini"><div class="dc-prog-fill" style="width:0%"></div></div>
+          </div>
+          <div class="dc-arrow">›</div>
+        </div>
+
+        <div class="defi-card">
+          <div class="dc-icon" style="background:rgba(212,175,55,.1);">🙏</div>
+          <div class="dc-info">
+            <div class="dc-title">30 jours de prière solide</div>
+            <div class="dc-sub">Construire une vie de prière durable</div>
+            <div class="dc-tags">
+              <span class="tag tgo">Prière</span>
+              <span class="tag tb">Débutant</span>
+            </div>
+            <div class="dc-prog-mini"><div class="dc-prog-fill" style="width:60%"></div></div>
+          </div>
+          <div class="dc-arrow">›</div>
+        </div>
+
+        <div class="defi-card">
+          <div class="dc-icon" style="background:rgba(39,120,75,.1);">💛</div>
+          <div class="dc-info">
+            <div class="dc-title">Pardonner quelqu'un</div>
+            <div class="dc-sub">14 jours de libération intérieure</div>
+            <div class="dc-tags">
+              <span class="tag tg">Restauration</span>
+              <span class="tag tgo">Intense</span>
+            </div>
+          </div>
+          <div class="dc-arrow">›</div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico">🤝</div><div class="ni-bar"></div><div class="ni-lbl">Communauté</div></div>
+        <div class="ni"><div class="ni-ico on">✦</div><div class="ni-bar on"></div><div class="ni-lbl on">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">01 · Catalogue défis</div>
+  </div>
+
+  <!-- ══ SCREEN 2 : FICHE DÉFI ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="defi-hero" style="background:linear-gradient(160deg,#1A0A2A,#0A0A1A);">
+          <div class="dh-back">←</div>
+          <div style="position:absolute;top:30px;right:24px;font-size:65px;opacity:.07;">🔥</div>
+          <div class="dh-overlay"></div>
+          <div class="dh-content">
+            <div class="dh-badge">Défi · Pureté · 30 jours · Intense</div>
+            <div class="dh-title">Vaincre la pornographie</div>
+            <div class="dh-sub">Programme complet de restauration et de pureté</div>
+          </div>
+        </div>
+
+        <div class="stats-strip">
+          <div class="ss"><div class="ss-val">30</div><div class="ss-lbl">jours</div></div>
+          <div class="ss"><div class="ss-val" style="color:var(--red-light);">8</div><div class="ss-lbl">en cours</div></div>
+          <div class="ss"><div class="ss-val" style="color:var(--goldf);">1.2k</div><div class="ss-lbl">actifs</div></div>
+          <div class="ss"><div class="ss-val" style="color:var(--green-f);">68%</div><div class="ss-lbl">succès</div></div>
+        </div>
+
+        <div class="desc-block">
+          <div class="desc-title">À propos du défi</div>
+          <div class="desc-text">Un programme structuré combinant enseignement biblique, exercices pratiques et soutien communautaire anonyme. Chaque jour apporte une lecture, une prière guidée et une tâche concrète.</div>
+        </div>
+
+        <div class="partner-block">
+          <div class="pb-left">
+            <div class="pb-icon">🤝</div>
+            <div>
+              <div class="pb-title">Accountability partner</div>
+              <div class="pb-sub">Fais le défi avec un frère</div>
+            </div>
+          </div>
+          <div class="pb-btn">Inviter</div>
+        </div>
+
+        <div class="cta-strip">
+          <div class="btn-main">▶ Jour 8 — Continuer</div>
+          <div class="btn-sec">📤</div>
+        </div>
+
+        <div class="preview-days">
+          <div class="pd-title">Programme</div>
+          <div class="day-row">
+            <div class="day-num done">✓</div>
+            <div class="day-info"><div class="day-name">Jour 7 — Renouveau de l'esprit</div><div class="day-tasks">Lecture · Prière · Exercice</div></div>
+            <span class="day-badge done-b">Terminé</span>
+          </div>
+          <div class="day-row" style="background:var(--red-m);border-radius:12px;padding:11px 10px;border-bottom:none;margin-bottom:6px;">
+            <div class="day-num today">8</div>
+            <div class="day-info"><div class="day-name" style="color:var(--t);">Jour 8 — Le regard renouvelé</div><div class="day-tasks">Lecture · Prière · Filtrage</div></div>
+            <span class="day-badge today-b">Aujourd'hui</span>
+          </div>
+          <div class="day-row">
+            <div class="day-num lock">9</div>
+            <div class="day-info"><div class="day-name">Jour 9 — Fuir et résister</div><div class="day-tasks">Verrouillé</div></div>
+            <span class="day-badge lock-b">🔒</span>
+          </div>
+          <div class="day-row">
+            <div class="day-num lock">10</div>
+            <div class="day-info"><div class="day-name">Jour 10 — Construire des murs</div><div class="day-tasks">Verrouillé</div></div>
+            <span class="day-badge lock-b">🔒</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico">🤝</div><div class="ni-bar"></div><div class="ni-lbl">Communauté</div></div>
+        <div class="ni"><div class="ni-ico on">✦</div><div class="ni-bar on"></div><div class="ni-lbl on">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">02 · Fiche défi</div>
+  </div>
+
+  <!-- ══ SCREEN 3 : JOUR DU DÉFI ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div style="padding-bottom:72px;">
+
+        <div class="day-hdr">
+          <div class="day-back">← Défi</div>
+          <div class="day-info2">Jour 8 / 30</div>
+          <div class="day-menu">⋯</div>
+        </div>
+
+        <div class="day-prog-block">
+          <div class="dpb-top">
+            <span class="dpb-label">Progression du défi</span>
+            <span class="dpb-val">27% · 8 jours</span>
+          </div>
+          <div class="dpb-bar"><div class="dpb-fill"></div></div>
+        </div>
+
+        <div class="day-content">
+          <div class="dc-day-badge">Jour 8 · Pureté</div>
+          <div class="dc-day-title">Le regard renouvelé</div>
+          <div class="dc-teaching">
+            <p>Job a dit : « J'avais fait un pacte avec mes yeux ; comment donc aurais-je arrêté mes regards sur une vierge ? » La pureté commence par une décision du regard — une alliance consciente avec tes yeux.</p>
+          </div>
+
+          <div class="verse-block">
+            <div class="vb-label">Verset du jour</div>
+            <div class="vb-text">« Heureux ceux qui ont le cœur pur, car ils verront Dieu. »</div>
+            <div class="vb-ref">Matthieu 5:8 · LSG</div>
+          </div>
+
+          <div class="dc-teaching">
+            <p>Aujourd'hui, la tâche n'est pas de supprimer — c'est de <strong style="color:var(--t);font-weight:700;">remplacer</strong>. Chaque pensée impure remplacée par une pensée de la Parole est une victoire concrète.</p>
+          </div>
+        </div>
+
+        <div class="tasks-block">
+          <div class="tb-title">Tâches du jour</div>
+          <div class="task-item done">
+            <div class="task-check">✓</div>
+            <div class="task-body">
+              <div class="task-type">Lecture</div>
+              <div class="task-name">Méditer Job 31:1</div>
+              <div class="task-desc">Lire et mémoriser le verset de l'alliance des yeux</div>
+            </div>
+          </div>
+          <div class="task-item done">
+            <div class="task-check">✓</div>
+            <div class="task-body">
+              <div class="task-type">Exercice pratique</div>
+              <div class="task-name">Activer un filtre web</div>
+              <div class="task-desc">Installer un filtre sur tous tes appareils aujourd'hui</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-check"></div>
+            <div class="task-body">
+              <div class="task-type">Prière</div>
+              <div class="task-name">Prière de délivrance guidée</div>
+              <div class="task-desc">15 minutes de prière avec le guide ci-dessous</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="prayer-block">
+          <div class="pray-title">🙏 Prière guidée</div>
+          <div class="pray-text">« Seigneur, je fais aujourd'hui l'alliance de Job avec mes yeux. Je choisis de te voir, Toi. Purifie mon regard, renouvelle mon esprit et que ta présence soit plus désirable que tout plaisir passager. Amen. »</div>
+        </div>
+
+      </div>
+
+      <div class="day-bottom">
+        <div class="db-complete">✓ Marquer le jour comme complété</div>
+        <div class="db-share">📤</div>
+      </div>
+
+    </div>
+    <div class="lbl">03 · Contenu du jour</div>
+  </div>
+
+  <!-- ══ SCREEN 4 : CHECK-IN COMPLÉTÉ ══ -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="checkin-top">
+          <div class="ct-back">← Défi</div>
+          <div class="ct-title">Jour complété</div>
+          <div class="ct-share">Partager</div>
+        </div>
+
+        <div class="success-badge">
+          <div class="sb-ico">🏆</div>
+          <div class="sb-title">Jour 8 accompli !</div>
+          <div class="sb-sub">Tu viens de franchir une étape de plus.<br>La discipline constante forge le caractère.</div>
+        </div>
+
+        <div class="streak-block">
+          <div class="streak-top-row">
+            <div class="str-label">Fidélité cette semaine</div>
+            <div class="str-fire">🔥 8 jours consécutifs</div>
+          </div>
+          <div class="week-grid">
+            <div class="wk-day"><div class="wk-lbl">Lun</div><div class="wk-dot done">✓</div></div>
+            <div class="wk-day"><div class="wk-lbl">Mar</div><div class="wk-dot done">✓</div></div>
+            <div class="wk-day"><div class="wk-lbl">Mer</div><div class="wk-dot done">✓</div></div>
+            <div class="wk-day"><div class="wk-lbl">Jeu</div><div class="wk-dot done">✓</div></div>
+            <div class="wk-day"><div class="wk-lbl">Ven</div><div class="wk-dot done">✓</div></div>
+            <div class="wk-day"><div class="wk-lbl">Sam</div><div class="wk-dot done">✓</div></div>
+            <div class="wk-day"><div class="wk-lbl">Dim</div><div class="wk-dot today">✓</div></div>
+          </div>
+        </div>
+
+        <div class="note-block">
+          <div class="nb-label">Note personnelle du jour</div>
+          <div class="nb-area">Aujourd'hui j'ai vraiment ressenti la force de ce verset. Le filtre est activé. Je me sens libéré...<span class="nb-cursor"></span></div>
+        </div>
+
+        <div class="partner-preview">
+          <div class="pp-av">DK</div>
+          <div class="pp-info">
+            <div class="pp-name">Frère David K. · Partner</div>
+            <div class="pp-status">N'a pas encore complété son jour 8</div>
+          </div>
+          <div class="pp-notify">Encourager</div>
+        </div>
+
+        <div class="xp-banner">
+          <div class="xp-ico">⭐</div>
+          <div class="xp-info">
+            <div class="xp-title">XP gagné aujourd'hui</div>
+            <div class="xp-sub">Total : 840 XP · Niveau 4</div>
+          </div>
+          <div class="xp-val">+50</div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico">📚</div><div class="ni-bar"></div><div class="ni-lbl">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico">🤝</div><div class="ni-bar"></div><div class="ni-lbl">Communauté</div></div>
+        <div class="ni"><div class="ni-ico on">✦</div><div class="ni-bar on"></div><div class="ni-lbl on">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">04 · Check-in complété</div>
+  </div>
+
+</div>

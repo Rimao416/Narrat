@@ -1,0 +1,563 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --red:#C0392B; --red-deep:#922B21; --red-light:#E74C3C;
+  --red-muted:rgba(192,57,43,0.14); --red-border:rgba(192,57,43,0.28);
+  --bg:#0D0D0D; --bg2:#141414; --bg3:#1A1A1A; --bg4:#222; --bg5:#2A2A2A;
+  --brd:rgba(255,255,255,0.07); --brd2:rgba(255,255,255,0.12);
+  --t:#F0F0F0; --t2:#909090; --t3:#555;
+  --gold:#D4AF37; --goldf:#F0D060;
+  --blue-bg:rgba(52,100,180,0.12); --blue-f:#6B9FEA;
+  --green-bg:rgba(39,120,75,0.12); --green-f:#5ACD8A;
+}
+body { background:transparent; font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif; }
+.outer { display:flex; flex-wrap:wrap; gap:28px; justify-content:center; padding:24px 12px 36px; }
+.col { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.lbl { font-size:10px; color:var(--t3); letter-spacing:.08em; text-transform:uppercase; }
+
+.phone {
+  width:375px; background:var(--bg);
+  border-radius:50px; border:1.5px solid rgba(255,255,255,0.1);
+  overflow:hidden;
+  box-shadow:0 0 0 7px #0A0A0A, 0 0 0 8.5px rgba(255,255,255,0.05);
+}
+.notch { width:110px; height:28px; background:#000; border-radius:0 0 18px 18px; margin:0 auto; }
+.sb { display:flex; justify-content:space-between; padding:8px 24px 4px; font-size:12px; font-weight:600; color:var(--t); }
+
+/* ── SHARED ── */
+.sc { padding-bottom:76px; }
+.nav {
+  background:rgba(13,13,13,.97); border-top:1px solid var(--brd2);
+  display:flex; justify-content:space-around; padding:10px 0 20px;
+}
+.ni { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; }
+.ni-ico { font-size:20px; color:var(--t3); }
+.ni-ico.on { color:var(--red-light); }
+.ni-bar { width:18px; height:2px; border-radius:1px; background:transparent; }
+.ni-bar.on { background:var(--red); }
+.ni-lbl { font-size:9px; font-weight:600; color:var(--t3); text-transform:uppercase; letter-spacing:.04em; }
+.ni-lbl.on { color:var(--red-light); }
+
+.sec-head { display:flex; justify-content:space-between; align-items:center; padding:0 20px; margin-bottom:11px; }
+.sec-t { font-size:13px; font-weight:700; color:var(--t); }
+.sec-l { font-size:12px; color:var(--red-light); font-weight:500; cursor:pointer; }
+
+.chip-row { display:flex; gap:8px; padding:0 16px 14px; overflow-x:auto; }
+.chip {
+  flex-shrink:0; padding:6px 14px; border-radius:20px;
+  font-size:12px; font-weight:500;
+  background:var(--bg3); color:var(--t2); border:1px solid var(--brd);
+}
+.chip.on { background:var(--red-muted); color:var(--red-light); border-color:var(--red-border); }
+
+.tag { font-size:10px; font-weight:600; padding:3px 8px; border-radius:6px; }
+.tag-r { background:var(--red-muted); color:var(--red-light); }
+.tag-g { background:rgba(212,175,55,.1); color:var(--goldf); }
+.tag-b { background:var(--blue-bg); color:var(--blue-f); }
+.tag-gr { background:var(--green-bg); color:var(--green-f); }
+
+/* ═══════════════════════════════
+   SCREEN 1 — LISTE BIBLIOTHÈQUE
+═══════════════════════════════ */
+.s1-header { padding:18px 20px 10px; }
+.s1-title { font-size:26px; font-weight:700; color:var(--t); letter-spacing:-.4px; }
+.s1-sub { font-size:13px; color:var(--t2); margin-top:3px; }
+
+.searchbar {
+  margin:0 16px 14px;
+  background:var(--bg3); border:1px solid var(--brd2);
+  border-radius:14px; padding:11px 16px;
+  display:flex; align-items:center; gap:10px;
+  color:var(--t3); font-size:13px;
+}
+
+.featured-book {
+  margin:0 16px 18px;
+  background:var(--bg3); border:1px solid var(--red-border);
+  border-radius:20px; padding:16px;
+  display:flex; gap:14px; align-items:center; cursor:pointer;
+  position:relative; overflow:hidden;
+}
+.fb-glow {
+  position:absolute; top:-30px; right:-30px;
+  width:100px; height:100px; border-radius:50%;
+  background:rgba(192,57,43,0.05);
+}
+.fb-badge {
+  position:absolute; top:14px; right:14px;
+  font-size:9px; font-weight:700; letter-spacing:.08em;
+  color:var(--red-light); background:var(--red-muted);
+  padding:3px 8px; border-radius:20px;
+  text-transform:uppercase;
+}
+.cover { flex-shrink:0; border-radius:10px; overflow:hidden; }
+.cover-inner { display:flex; flex-direction:column; justify-content:flex-end; padding:7px; }
+.cover-t { font-size:8px; font-weight:700; color:rgba(255,255,255,.9); line-height:1.25; }
+.fb-info {}
+.fb-label { font-size:10px; font-weight:700; color:var(--t2); letter-spacing:.06em; text-transform:uppercase; margin-bottom:5px; }
+.fb-title { font-size:15px; font-weight:700; color:var(--t); line-height:1.3; }
+.fb-author { font-size:12px; color:var(--t2); margin-top:3px; }
+.fb-tags { display:flex; gap:6px; margin-top:9px; flex-wrap:wrap; }
+.prog-row { display:flex; align-items:center; gap:8px; margin-top:10px; }
+.prog-bar { flex:1; height:3px; background:var(--bg5); border-radius:2px; overflow:hidden; }
+.prog-fill { height:100%; background:var(--red); border-radius:2px; }
+.prog-pct { font-size:11px; font-weight:600; color:var(--red-light); }
+
+.book-list { padding:0 16px; }
+.book-row2 {
+  display:flex; gap:12px; align-items:flex-start;
+  padding:13px 0; border-bottom:1px solid var(--brd);
+  cursor:pointer;
+}
+.book-row2:last-child { border-bottom:none; }
+.bi { flex:1; min-width:0; }
+.bi-title { font-size:14px; font-weight:700; color:var(--t); line-height:1.3; }
+.bi-author { font-size:11px; color:var(--t2); margin-top:3px; }
+.bi-meta { display:flex; gap:6px; margin-top:7px; flex-wrap:wrap; align-items:center; }
+.bi-arrow { color:var(--t3); font-size:18px; align-self:center; }
+
+/* ═══════════════════════════════
+   SCREEN 2 — FICHE LIVRE
+═══════════════════════════════ */
+.book-hero {
+  height:220px; position:relative; overflow:hidden;
+  background:var(--bg2);
+  display:flex; flex-direction:column; justify-content:flex-end;
+}
+.hero-cover-bg { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+.hero-cover {
+  width:110px; height:158px; border-radius:12px;
+  overflow:hidden; position:relative; top:-10px;
+}
+.hero-overlay {
+  position:absolute; bottom:0; left:0; right:0;
+  height:120px; background:linear-gradient(0deg, var(--bg) 0%, transparent 100%);
+}
+.back-btn {
+  position:absolute; top:46px; left:16px;
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.1);
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; color:var(--t); cursor:pointer; z-index:5;
+}
+.save-btn {
+  position:absolute; top:46px; right:16px;
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.1);
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; color:var(--t); cursor:pointer; z-index:5;
+}
+.book-info-block { padding:16px 20px 0; }
+.bib-cat { font-size:10px; font-weight:700; color:var(--red-light); letter-spacing:.1em; text-transform:uppercase; margin-bottom:5px; }
+.bib-title { font-size:22px; font-weight:700; color:var(--t); letter-spacing:-.3px; line-height:1.2; }
+.bib-author { font-size:13px; color:var(--t2); margin-top:5px; }
+.bib-tags { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+.stats-strip {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:8px; margin:14px 16px;
+}
+.stat-mini {
+  background:var(--bg3); border-radius:12px; border:1px solid var(--brd);
+  padding:11px 10px; text-align:center;
+}
+.sm-val { font-size:15px; font-weight:700; color:var(--t); }
+.sm-lbl { font-size:10px; color:var(--t2); margin-top:3px; }
+.desc-block { padding:0 20px 14px; }
+.desc-title { font-size:13px; font-weight:700; color:var(--t); margin-bottom:7px; }
+.desc-text { font-size:13px; color:var(--t2); line-height:1.65; }
+.read-more { font-size:12px; color:var(--red-light); font-weight:600; margin-top:5px; cursor:pointer; }
+.toc-block { padding:0 16px 14px; }
+.toc-item {
+  display:flex; align-items:center; gap:12px;
+  padding:11px 0; border-bottom:1px solid var(--brd);
+}
+.toc-num { font-size:11px; font-weight:700; color:var(--t3); width:18px; }
+.toc-name { flex:1; font-size:13px; color:var(--t); }
+.toc-dur { font-size:11px; color:var(--t3); }
+.toc-check { font-size:14px; }
+.cta-btns { display:flex; gap:10px; margin:0 16px 16px; }
+.btn-main {
+  flex:1; background:var(--red); color:#fff;
+  border:none; border-radius:14px; padding:14px;
+  font-size:14px; font-weight:700; cursor:pointer; text-align:center;
+}
+.btn-sec {
+  width:50px; background:var(--bg3); border:1px solid var(--brd2);
+  border-radius:14px; display:flex; align-items:center; justify-content:center;
+  font-size:18px; cursor:pointer;
+}
+
+/* ═══════════════════════════════
+   SCREEN 3 — LECTEUR
+═══════════════════════════════ */
+.reader-top {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:46px 20px 12px;
+}
+.reader-back { font-size:14px; color:var(--t2); cursor:pointer; }
+.reader-chapter { font-size:12px; font-weight:600; color:var(--t2); }
+.reader-menu { font-size:18px; color:var(--t2); cursor:pointer; }
+.reader-prog { margin:0 20px 16px; }
+.reader-prog-bar { height:2px; background:var(--bg4); border-radius:1px; overflow:hidden; }
+.reader-prog-fill { height:100%; background:var(--red); width:34%; border-radius:1px; }
+.reader-prog-lbl { display:flex; justify-content:space-between; margin-top:5px; }
+.rpl { font-size:10px; color:var(--t3); }
+.reader-content { padding:0 22px 16px; }
+.chapter-title { font-size:20px; font-weight:700; color:var(--t); line-height:1.3; margin-bottom:16px; letter-spacing:-.2px; }
+.reader-text { font-size:15px; color:rgba(240,240,240,.85); line-height:1.85; }
+.reader-text p { margin-bottom:14px; }
+.highlighted { background:rgba(192,57,43,.2); border-radius:3px; padding:1px 3px; color:var(--t); }
+.verse-inline {
+  margin:14px 0; padding:12px 16px;
+  background:var(--red-muted); border-left:3px solid var(--red);
+  border-radius:0 10px 10px 0;
+  font-size:13px; color:rgba(240,220,220,.9);
+  font-style:italic; line-height:1.6;
+}
+.verse-ref { font-size:11px; color:var(--t3); font-style:normal; margin-top:5px; font-weight:600; }
+.reader-bottom-bar {
+  background:rgba(13,13,13,.97); border-top:1px solid var(--brd2);
+  padding:12px 20px 22px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.rbb-btn {
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  cursor:pointer;
+}
+.rbb-ico { font-size:20px; color:var(--t3); }
+.rbb-ico.on { color:var(--red-light); }
+.rbb-lbl { font-size:9px; color:var(--t3); font-weight:600; text-transform:uppercase; }
+.audio-player {
+  flex:1; margin:0 14px;
+  background:var(--bg3); border-radius:12px; border:1px solid var(--brd2);
+  padding:8px 14px; display:flex; align-items:center; gap:10px;
+}
+.ap-play {
+  width:32px; height:32px; border-radius:50%;
+  background:var(--red); display:flex; align-items:center; justify-content:center;
+  font-size:13px; color:#fff; flex-shrink:0; cursor:pointer;
+}
+.ap-info { flex:1; min-width:0; }
+.ap-title { font-size:11px; font-weight:600; color:var(--t); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ap-bar { height:2px; background:var(--bg5); border-radius:1px; margin-top:5px; overflow:hidden; }
+.ap-fill { height:100%; background:var(--red); width:34%; }
+.ap-time { font-size:10px; color:var(--t3); flex-shrink:0; }
+</style>
+
+<div class="outer">
+
+  <!-- ── SCREEN 1 : LISTE ── -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="s1-header">
+          <div class="s1-title">Bibliothèque</div>
+          <div class="s1-sub">1 200 ouvrages · 340 en audio</div>
+        </div>
+
+        <div class="searchbar">
+          <span style="font-size:15px;">🔍</span>
+          <span>Titre, auteur, thème, verset…</span>
+        </div>
+
+        <div class="chip-row">
+          <div class="chip on">Tout</div>
+          <div class="chip">Théologie</div>
+          <div class="chip">Prière</div>
+          <div class="chip">Biographies</div>
+          <div class="chip">Guerre spir.</div>
+          <div class="chip">Famille</div>
+        </div>
+
+        <div class="sec-head">
+          <div class="sec-t">En cours de lecture</div>
+        </div>
+
+        <div class="featured-book">
+          <div class="fb-glow"></div>
+          <div class="fb-badge">En cours</div>
+          <div class="cover" style="width:72px;height:102px;">
+            <div class="cover-inner" style="width:100%;height:100%;background:linear-gradient(145deg,#922B21,#3A0A0A);">
+              <div class="cover-t">The Pursuit of God</div>
+            </div>
+          </div>
+          <div class="fb-info">
+            <div class="fb-label">Chapitre 5 / 9</div>
+            <div class="fb-title">The Pursuit of God</div>
+            <div class="fb-author">A.W. Tozer · 1948</div>
+            <div class="fb-tags">
+              <span class="tag tag-r">Croissance</span>
+              <span class="tag tag-g">🎧 Audio</span>
+            </div>
+            <div class="prog-row">
+              <div class="prog-bar"><div class="prog-fill" style="width:62%"></div></div>
+              <div class="prog-pct">62%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec-head">
+          <div class="sec-t">Recommandés pour toi</div>
+          <div class="sec-l">Voir tout</div>
+        </div>
+
+        <div class="book-list">
+          <div class="book-row2">
+            <div class="cover" style="width:58px;height:82px;">
+              <div class="cover-inner" style="width:100%;height:100%;background:linear-gradient(145deg,#1A3A6A,#0A1428);">
+                <div class="cover-t">Experiencing God</div>
+              </div>
+            </div>
+            <div class="bi">
+              <div class="bi-title">Experiencing God</div>
+              <div class="bi-author">Henry Blackaby</div>
+              <div class="bi-meta">
+                <span class="tag tag-r">Foi</span>
+                <span class="tag tag-b">Débutant</span>
+              </div>
+            </div>
+            <div class="bi-arrow">›</div>
+          </div>
+          <div class="book-row2">
+            <div class="cover" style="width:58px;height:82px;">
+              <div class="cover-inner" style="width:100%;height:100%;background:linear-gradient(145deg,#1A4A20,#0A2010);">
+                <div class="cover-t">Prayer</div>
+              </div>
+            </div>
+            <div class="bi">
+              <div class="bi-title">Prayer</div>
+              <div class="bi-author">E.M. Bounds</div>
+              <div class="bi-meta">
+                <span class="tag tag-r">Prière</span>
+                <span class="tag tag-g">🎧 Audio</span>
+              </div>
+            </div>
+            <div class="bi-arrow">›</div>
+          </div>
+          <div class="book-row2">
+            <div class="cover" style="width:58px;height:82px;">
+              <div class="cover-inner" style="width:100%;height:100%;background:linear-gradient(145deg,#3A2A0A,#1A1205);">
+                <div class="cover-t">Knowing God</div>
+              </div>
+            </div>
+            <div class="bi">
+              <div class="bi-title">Knowing God</div>
+              <div class="bi-author">J.I. Packer</div>
+              <div class="bi-meta">
+                <span class="tag tag-r">Théologie</span>
+              </div>
+            </div>
+            <div class="bi-arrow">›</div>
+          </div>
+          <div class="book-row2">
+            <div class="cover" style="width:58px;height:82px;">
+              <div class="cover-inner" style="width:100%;height:100%;background:linear-gradient(145deg,#3A1A3A,#1A0A1A);">
+                <div class="cover-t">Surprised by Joy</div>
+              </div>
+            </div>
+            <div class="bi">
+              <div class="bi-title">Surprised by Joy</div>
+              <div class="bi-author">C.S. Lewis</div>
+              <div class="bi-meta">
+                <span class="tag tag-b">Biographie</span>
+                <span class="tag tag-g">🎧 Audio</span>
+              </div>
+            </div>
+            <div class="bi-arrow">›</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico on">📚</div><div class="ni-bar on"></div><div class="ni-lbl on">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico">🤝</div><div class="ni-bar"></div><div class="ni-lbl">Communauté</div></div>
+        <div class="ni"><div class="ni-ico">✦</div><div class="ni-bar"></div><div class="ni-lbl">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">01 · Liste bibliothèque</div>
+  </div>
+
+  <!-- ── SCREEN 2 : FICHE LIVRE ── -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div class="sc">
+
+        <div class="book-hero">
+          <div class="back-btn">←</div>
+          <div class="save-btn">♡</div>
+          <div class="hero-cover-bg">
+            <div class="hero-cover">
+              <div style="width:100%;height:100%;background:linear-gradient(145deg,#922B21,#3A0A0A);display:flex;flex-direction:column;justify-content:flex-end;padding:10px;">
+                <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.9);line-height:1.3;">The Pursuit<br>of God</div>
+                <div style="font-size:9px;color:rgba(255,255,255,.5);margin-top:5px;">A.W. Tozer</div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-overlay"></div>
+        </div>
+
+        <div class="book-info-block">
+          <div class="bib-cat">Croissance spirituelle</div>
+          <div class="bib-title">The Pursuit of God</div>
+          <div class="bib-author">A.W. Tozer · Publié en 1948</div>
+          <div class="bib-tags">
+            <span class="tag tag-r">Classique</span>
+            <span class="tag tag-g">🎧 Audio dispo</span>
+            <span class="tag tag-b">Téléchargeable</span>
+          </div>
+        </div>
+
+        <div class="stats-strip">
+          <div class="stat-mini">
+            <div class="sm-val">9</div>
+            <div class="sm-lbl">chapitres</div>
+          </div>
+          <div class="stat-mini">
+            <div class="sm-val">3h20</div>
+            <div class="sm-lbl">lecture</div>
+          </div>
+          <div class="stat-mini">
+            <div class="sm-val" style="color:var(--goldf);">4.9</div>
+            <div class="sm-lbl">note</div>
+          </div>
+        </div>
+
+        <div class="desc-block">
+          <div class="desc-title">À propos</div>
+          <div class="desc-text">Un classique intemporel de la spiritualité chrétienne. Tozer invite le lecteur à une quête profonde de Dieu, au-delà des formes religieuses — vers une expérience vivante et transformatrice.</div>
+          <div class="read-more">Lire plus…</div>
+        </div>
+
+        <div class="cta-btns">
+          <div class="btn-main">▶ Continuer — ch.5</div>
+          <div class="btn-sec">🎧</div>
+          <div class="btn-sec">⬇</div>
+        </div>
+
+        <div class="sec-head">
+          <div class="sec-t">Table des matières</div>
+        </div>
+        <div class="toc-block">
+          <div class="toc-item">
+            <div class="toc-num">1</div>
+            <div class="toc-name" style="color:var(--t2);">Suivre Dieu de tout son cœur</div>
+            <div class="toc-dur">18 min</div>
+            <div class="toc-check" style="color:var(--green-f);">✓</div>
+          </div>
+          <div class="toc-item">
+            <div class="toc-num">2</div>
+            <div class="toc-name" style="color:var(--t2);">La blessure de Dieu</div>
+            <div class="toc-dur">22 min</div>
+            <div class="toc-check" style="color:var(--green-f);">✓</div>
+          </div>
+          <div class="toc-item">
+            <div class="toc-num">3</div>
+            <div class="toc-name" style="color:var(--t2);">Contemplation et vision</div>
+            <div class="toc-dur">20 min</div>
+            <div class="toc-check" style="color:var(--green-f);">✓</div>
+          </div>
+          <div class="toc-item">
+            <div class="toc-num">4</div>
+            <div class="toc-name" style="color:var(--t2);">Appréhender Dieu</div>
+            <div class="toc-dur">25 min</div>
+            <div class="toc-check" style="color:var(--green-f);">✓</div>
+          </div>
+          <div class="toc-item" style="background:var(--red-muted);border-radius:10px;padding:11px 10px;border-bottom:none;margin-bottom:6px;">
+            <div class="toc-num" style="color:var(--red-light);">5</div>
+            <div class="toc-name" style="color:var(--t);font-weight:700;">La présence universelle</div>
+            <div class="toc-dur" style="color:var(--red-light);">28 min</div>
+            <div class="toc-check" style="color:var(--red-light);font-size:11px;font-weight:700;">En cours</div>
+          </div>
+          <div class="toc-item">
+            <div class="toc-num">6</div>
+            <div class="toc-name">La parole vive et efficace</div>
+            <div class="toc-dur">21 min</div>
+            <div class="toc-check" style="color:var(--t3);">🔒</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="nav">
+        <div class="ni"><div class="ni-ico">⌂</div><div class="ni-bar"></div><div class="ni-lbl">Accueil</div></div>
+        <div class="ni"><div class="ni-ico on">📚</div><div class="ni-bar on"></div><div class="ni-lbl on">Biblioth.</div></div>
+        <div class="ni"><div class="ni-ico">🤝</div><div class="ni-bar"></div><div class="ni-lbl">Communauté</div></div>
+        <div class="ni"><div class="ni-ico">✦</div><div class="ni-bar"></div><div class="ni-lbl">Découvrir</div></div>
+        <div class="ni"><div class="ni-ico">👤</div><div class="ni-bar"></div><div class="ni-lbl">Profil</div></div>
+      </div>
+    </div>
+    <div class="lbl">02 · Fiche livre</div>
+  </div>
+
+  <!-- ── SCREEN 3 : LECTEUR ── -->
+  <div class="col">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="sb"><span>9:41</span><span>●●● WiFi ■</span></div>
+      <div style="padding-bottom:90px;">
+
+        <div class="reader-top">
+          <div class="reader-back">← Retour</div>
+          <div class="reader-chapter">Chapitre 5 / 9</div>
+          <div class="reader-menu">⋯</div>
+        </div>
+
+        <div class="reader-prog">
+          <div class="reader-prog-bar"><div class="reader-prog-fill"></div></div>
+          <div class="reader-prog-lbl">
+            <span class="rpl">34% lu</span>
+            <span class="rpl">The Pursuit of God</span>
+          </div>
+        </div>
+
+        <div class="reader-content">
+          <div class="chapter-title">La présence universelle de Dieu</div>
+
+          <div class="reader-text">
+            <p>En toutes choses et en tout lieu, Dieu est présent — non pas comme une idée abstraite, mais comme une <span class="highlighted">réalité vivante et agissante</span>. Cette présence n'est pas conditionnée par nos émotions, ni par notre degré de spiritualité.</p>
+          </div>
+
+          <div class="verse-inline">
+            « Où irais-je loin de ton Esprit ? Où fuirais-je loin de ta face ? »
+            <div class="verse-ref">Psaumes 139:7 · LSG</div>
+          </div>
+
+          <div class="reader-text">
+            <p>Tozer affirme que la grande tragédie de l'âme humaine n'est pas le péché en lui-même, mais l'ignorance de la présence divine. Nous cherchons Dieu comme s'il était absent, alors qu'il nous entoure de toutes parts.</p>
+            <p>La pratique de la présence de Dieu — héritée de frère Laurent et des mystiques chrétiens — n'est pas réservée aux moines. Elle est l'appel de tout croyant…</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="reader-bottom-bar">
+        <div class="rbb-btn">
+          <div class="rbb-ico">🔖</div>
+          <div class="rbb-lbl">Marquer</div>
+        </div>
+        <div class="audio-player">
+          <div class="ap-play">▶</div>
+          <div class="ap-info">
+            <div class="ap-title">Chapitre 5 · Audio</div>
+            <div class="ap-bar"><div class="ap-fill"></div></div>
+          </div>
+          <div class="ap-time">18:22</div>
+        </div>
+        <div class="rbb-btn">
+          <div class="rbb-ico on">✏</div>
+          <div class="rbb-lbl" style="color:var(--red-light);">Note</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="lbl">03 · Lecteur in-app</div>
+  </div>
+
+</div>
