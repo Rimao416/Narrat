@@ -1,11 +1,11 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 import { Search, Star, Headphones, Download, BookOpen, ChevronRight, Filter } from 'lucide-react-native';
 import { useState, useMemo } from 'react';
 import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
 import { useThemeColors } from '../../hooks/useThemeColors';
 import { SPACING, RADIUS, TYPOGRAPHY, FONTS } from '../../constants/theme';
-import { MOCK_BOOKS } from '../../data/mockData';
+import { useBooks } from '../../hooks/useBooks';
 
 const { width } = Dimensions.get('window');
 const FILTERS = ['Tous', 'En cours', 'Croissance spirituelle', 'Priere', 'Theologie', 'Biographie'];
@@ -15,13 +15,14 @@ export default function LibraryScreen() {
   const styles = useMemo(() => createStyles(C), [C]);
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('Tous');
+  const { books, loading } = useBooks();
 
-  const featured = MOCK_BOOKS[0];
-  const filtered = MOCK_BOOKS.filter((b) => {
+  const featured = books[0] ?? null;
+  const filtered = books.filter((b) => {
     const matchQuery = !query || b.title.toLowerCase().includes(query.toLowerCase()) || b.author.toLowerCase().includes(query.toLowerCase());
     const matchFilter =
       activeFilter === 'Tous' ||
-      b.category === activeFilter ||
+      b.categoryLabel === activeFilter ||
       b.tags.some((t) => activeFilter.includes(t)) ||
       (activeFilter === 'En cours' && b.progress > 0);
     return matchQuery && matchFilter;
@@ -49,16 +50,20 @@ export default function LibraryScreen() {
         ))}
       </ScrollView>
 
-      {!query && activeFilter === 'Tous' && (
+      {loading && (
+        <ActivityIndicator color={COLORS.primary} style={{ paddingVertical: SPACING.xl }} />
+      )}
+
+      {!loading && !query && activeFilter === 'Tous' && featured && (
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>A la une</Text>
           </View>
-          <TouchableOpacity style={[styles.featuredCard, { backgroundColor: featured.coverGradient[0] }]} activeOpacity={0.85} onPress={() => router.push(`/book/${featured.id}`)}>
+          <TouchableOpacity style={[styles.featuredCard, { backgroundColor: featured.coverGradient[0] }]} activeOpacity={0.85} onPress={() => router.push(`/book/${featured.slug}`)}>
             <View style={styles.featuredOverlay} />
             <View style={styles.featuredContent}>
               <View style={styles.featuredBadge}>
-                <Text style={styles.featuredBadgeText}>{featured.category}</Text>
+                <Text style={styles.featuredBadgeText}>{featured.categoryLabel}</Text>
               </View>
               <Text style={styles.featuredTitle}>{featured.title}</Text>
               <Text style={styles.featuredAuthor}>{featured.author}</Text>
@@ -95,13 +100,13 @@ export default function LibraryScreen() {
         </View>
         <View style={styles.bookList}>
           {filtered.map((book) => (
-            <TouchableOpacity key={book.id} style={styles.bookRow} activeOpacity={0.85} onPress={() => router.push(`/book/${book.id}`)}>
+            <TouchableOpacity key={book.id} style={styles.bookRow} activeOpacity={0.85} onPress={() => router.push(`/book/${book.slug}`)}>
               <View style={[styles.bookCover, { backgroundColor: book.coverGradient[0] }]}>
                 <BookOpen size={18} color="rgba(255,255,255,0.5)" />
               </View>
               <View style={styles.bookInfo}>
                 <Text style={styles.bookTitle} numberOfLines={1}>{book.title}</Text>
-                <Text style={styles.bookAuthor}>{book.author} · {book.year}</Text>
+                <Text style={styles.bookAuthor}>{book.author}{book.year ? ` · ${book.year}` : ''}</Text>
                 <View style={styles.bookTags}>
                   {book.tags.slice(0, 2).map((tag) => (
                     <View key={tag} style={styles.tagChip}>

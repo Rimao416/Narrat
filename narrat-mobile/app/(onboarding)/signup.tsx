@@ -6,10 +6,12 @@ import { ArrowLeft, Eye, EyeOff, User, Mail, Lock } from 'lucide-react-native';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { useThemeColors } from '../../hooks/useThemeColors';
+import { useOnboardingStore } from '../../store/onboardingStore';
 
 export default function Signup() {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
+  const { setSignupCredentials } = useOnboardingStore();
 
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
@@ -31,6 +33,7 @@ export default function Signup() {
       );
       return;
     }
+    setSignupCredentials(firstName.trim(), email.trim(), password);
     router.push('/(onboarding)/language');
   };
 

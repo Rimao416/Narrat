@@ -1,34 +1,42 @@
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 import { Bell, Flame, BookOpen, GraduationCap, Sword, Users, ChevronRight } from 'lucide-react-native';
 import { useMemo } from 'react';
 import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY, SHADOW, FONTS } from '../../constants/theme';
-import {
-  MOCK_USER,
-  VERSE_OF_DAY,
-  WEEK_STREAK,
-  MOCK_BOOKS,
-  MOCK_COURSES,
-  MOCK_CHALLENGES,
-  MOCK_COMMUNITY_POSTS,
-} from '../../data/mockData';
+import { VERSE_OF_DAY, WEEK_STREAK } from '../../data/mockData';
 import { useThemeColors } from '../../hooks/useThemeColors';
+import { useAuthStore } from '../../store/authStore';
+import { useBooks } from '../../hooks/useBooks';
+import { useChallenges } from '../../hooks/useChallenges';
+import { useConfessions } from '../../hooks/useConfessions';
 
 const { width } = Dimensions.get('window');
 
-const POST_TYPE_COLORS: Record<string, string> = {
+const POST_TYPE_COLORS_FALLBACK: Record<string, string> = {
   blue: COLORS.info,
   green: COLORS.success,
   purple: COLORS.purple,
+  orange: COLORS.warning,
 };
 
 export default function HomeScreen() {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
-  const book = MOCK_BOOKS[0];
-  const challenge = MOCK_CHALLENGES[0];
-  const post = MOCK_COMMUNITY_POSTS[0];
+  const { user } = useAuthStore();
+  const { books, loading: booksLoading } = useBooks();
+  const { challenges, loading: challengesLoading } = useChallenges();
+  const { confessions, loading: postsLoading } = useConfessions();
+
+  const book = books[0] ?? null;
+  const challenge = challenges[0] ?? null;
+  const post = confessions[0] ?? null;
+
+  const displayName = user?.firstName ?? 'Ami';
+  const displayChurch = user?.church ?? '';
+  const streakDays = user?.streakDays ?? 0;
+  const xp = user?.xp ?? 0;
+  const activeChallengesCount = user?.activeChallengesCount ?? challenges.filter((c) => c.active).length;
 
   return (
     <ScrollView
@@ -39,13 +47,13 @@ export default function HomeScreen() {
       {/* Top bar */}
       <View style={styles.topBar}>
         <View>
-          <Text style={styles.greeting}>Bonjour, {MOCK_USER.firstName}</Text>
-          <Text style={styles.church}>{MOCK_USER.church}</Text>
+          <Text style={styles.greeting}>Bonjour, {displayName}</Text>
+          {!!displayChurch && <Text style={styles.church}>{displayChurch}</Text>}
         </View>
         <View style={styles.topRight}>
           <View style={styles.streakBadge}>
             <Flame size={14} color={COLORS.warning} />
-            <Text style={styles.streakCount}>{MOCK_USER.streakDays}</Text>
+            <Text style={styles.streakCount}>{streakDays}</Text>
           </View>
           <TouchableOpacity style={styles.bellBtn} activeOpacity={0.7}>
             <Bell size={18} color={C.textMuted} />
@@ -68,9 +76,9 @@ export default function HomeScreen() {
 
       {/* Stats row */}
       <View style={styles.statsRow}>
-        <StatCard icon={<Flame size={16} color={COLORS.warning} />} value={MOCK_USER.streakDays} label="Jours streak" color={COLORS.warningBg} />
-        <StatCard icon={<BookOpen size={16} color={COLORS.info} />} value={`${MOCK_USER.xp}`} label="XP totaux" color={COLORS.infoBg} />
-        <StatCard icon={<Sword size={16} color={COLORS.purple} />} value={MOCK_USER.activeChallenges} label="Defis actifs" color={COLORS.purpleBg} />
+        <StatCard icon={<Flame size={16} color={COLORS.warning} />} value={streakDays} label="Jours streak" color={COLORS.warningBg} />
+        <StatCard icon={<BookOpen size={16} color={COLORS.info} />} value={`${xp}`} label="XP totaux" color={COLORS.infoBg} />
+        <StatCard icon={<Sword size={16} color={COLORS.purple} />} value={activeChallengesCount} label="Defis actifs" color={COLORS.purpleBg} />
       </View>
 
       {/* Weekly streak */}
@@ -96,86 +104,104 @@ export default function HomeScreen() {
       {/* Continue reading */}
       <View style={styles.section}>
         <SectionHeader title="Continuer la lecture" action="Voir tout" />
-        <TouchableOpacity style={styles.bookCard} activeOpacity={0.85} onPress={() => router.push(`/book/${book.id}`)}>
-          <View style={[styles.bookCover, { backgroundColor: book.coverGradient[0] }]}>
-            <View style={styles.bookCoverInner} />
-          </View>
-          <View style={styles.bookInfo}>
-            <View style={styles.bookMeta}>
-              <Text style={styles.bookCategory}>{book.category}</Text>
-              <Text style={styles.bookChapter}>Ch. {book.currentChapter}/{book.chapters}</Text>
+        {booksLoading ? (
+          <ActivityIndicator color={COLORS.primary} style={{ paddingVertical: SPACING.xl }} />
+        ) : book ? (
+          <TouchableOpacity style={styles.bookCard} activeOpacity={0.85} onPress={() => router.push(`/book/${book.slug}`)}>
+            <View style={[styles.bookCover, { backgroundColor: book.coverGradient[0] }]}>
+              <View style={styles.bookCoverInner} />
             </View>
-            <Text style={styles.bookTitle}>{book.title}</Text>
-            <Text style={styles.bookAuthor}>{book.author}</Text>
-            <View style={styles.progressWrap}>
-              <View style={styles.progressBar}>
-                <View style={[styles.progressFill, { width: `${book.progress}%` }]} />
+            <View style={styles.bookInfo}>
+              <View style={styles.bookMeta}>
+                <Text style={styles.bookCategory}>{book.categoryLabel}</Text>
+                <Text style={styles.bookChapter}>Ch. {book.currentChapter}/{book.chapters}</Text>
               </View>
-              <Text style={styles.progressPct}>{book.progress}%</Text>
+              <Text style={styles.bookTitle}>{book.title}</Text>
+              <Text style={styles.bookAuthor}>{book.author}</Text>
+              <View style={styles.progressWrap}>
+                <View style={styles.progressBar}>
+                  <View style={[styles.progressFill, { width: `${book.progress}%` }]} />
+                </View>
+                <Text style={styles.progressPct}>{book.progress}%</Text>
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        ) : (
+          <Text style={{ ...TYPOGRAPHY.body, color: C.textHint }}>Aucun livre disponible</Text>
+        )}
       </View>
 
       {/* Modules grid */}
       <View style={styles.section}>
         <SectionHeader title="Modules" />
         <View style={styles.modulesGrid}>
-          <ModuleCard icon={<BookOpen size={20} color={COLORS.info} />} label="Lectures" bg={COLORS.infoBg} count={MOCK_BOOKS.length} />
-          <ModuleCard icon={<GraduationCap size={20} color={COLORS.gold} />} label="Formations" bg="rgba(212,175,55,0.12)" count={MOCK_COURSES.length} />
-          <ModuleCard icon={<Sword size={20} color={COLORS.purple} />} label="Defis" bg={COLORS.purpleBg} count={MOCK_CHALLENGES.length} />
-          <ModuleCard icon={<Users size={20} color={COLORS.success} />} label="Communaute" bg={COLORS.successBg} count={3} />
+          <ModuleCard icon={<BookOpen size={20} color={COLORS.info} />} label="Lectures" bg={COLORS.infoBg} count={books.length} />
+          <ModuleCard icon={<GraduationCap size={20} color={COLORS.gold} />} label="Formations" bg="rgba(212,175,55,0.12)" count={0} />
+          <ModuleCard icon={<Sword size={20} color={COLORS.purple} />} label="Defis" bg={COLORS.purpleBg} count={challenges.length} />
+          <ModuleCard icon={<Users size={20} color={COLORS.success} />} label="Communaute" bg={COLORS.successBg} count={confessions.length} />
         </View>
       </View>
 
       {/* Active challenge */}
       <View style={styles.section}>
         <SectionHeader title="Defi en cours" action="Tous les defis" />
-        <TouchableOpacity style={styles.challengeCard} activeOpacity={0.85} onPress={() => router.push(`/challenge/${challenge.id}`)}>
-          <View style={styles.challengeHeader}>
-            <View style={styles.challengeIconWrap}>
-              <Sword size={18} color={COLORS.purple} />
+        {challengesLoading ? (
+          <ActivityIndicator color={COLORS.primary} style={{ paddingVertical: SPACING.xl }} />
+        ) : challenge ? (
+          <TouchableOpacity style={styles.challengeCard} activeOpacity={0.85} onPress={() => router.push(`/challenge/${challenge.id}`)}>
+            <View style={styles.challengeHeader}>
+              <View style={styles.challengeIconWrap}>
+                <Sword size={18} color={COLORS.purple} />
+              </View>
+              <View style={styles.challengeInfo}>
+                <Text style={styles.challengeTitle}>{challenge.title}</Text>
+                <Text style={styles.challengeCategory}>{challenge.category}</Text>
+              </View>
+              <View style={styles.challengeDayBadge}>
+                <Text style={styles.challengeDayText}>J.{challenge.currentDay}</Text>
+              </View>
             </View>
-            <View style={styles.challengeInfo}>
-              <Text style={styles.challengeTitle}>{challenge.title}</Text>
-              <Text style={styles.challengeCategory}>{challenge.category}</Text>
+            <View style={styles.progressWrap}>
+              <View style={styles.progressBar}>
+                <View style={[styles.progressFill, styles.progressFillPurple, { width: `${(challenge.currentDay / challenge.days) * 100}%` }]} />
+              </View>
+              <Text style={styles.progressPct}>{challenge.currentDay}/{challenge.days}j</Text>
             </View>
-            <View style={styles.challengeDayBadge}>
-              <Text style={styles.challengeDayText}>J.{challenge.currentDay}</Text>
-            </View>
-          </View>
-          <View style={styles.progressWrap}>
-            <View style={styles.progressBar}>
-              <View style={[styles.progressFill, styles.progressFillPurple, { width: `${(challenge.currentDay / challenge.days) * 100}%` }]} />
-            </View>
-            <Text style={styles.progressPct}>{challenge.currentDay}/{challenge.days}j</Text>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        ) : (
+          <Text style={{ ...TYPOGRAPHY.body, color: C.textHint }}>Aucun défi disponible</Text>
+        )}
       </View>
 
       {/* Community preview */}
       <View style={styles.section}>
         <SectionHeader title="Communaute" action="Voir tout" />
-        <TouchableOpacity style={styles.communityCard} activeOpacity={0.85} onPress={() => router.push(`/community/post/${post.id}`)}>
-          <View style={styles.communityHeader}>
-            <View style={[styles.typeTag, { backgroundColor: `${POST_TYPE_COLORS[post.typeColor]}18` }]}>
-              <Text style={[styles.typeTagText, { color: POST_TYPE_COLORS[post.typeColor] }]}>{post.type}</Text>
+        {postsLoading ? (
+          <ActivityIndicator color={COLORS.primary} style={{ paddingVertical: SPACING.xl }} />
+        ) : post ? (
+          <TouchableOpacity style={styles.communityCard} activeOpacity={0.85} onPress={() => router.push(`/community/post/${post.id}`)}>
+            <View style={styles.communityHeader}>
+              <View style={[styles.typeTag, { backgroundColor: `${POST_TYPE_COLORS_FALLBACK[post.typeColor] ?? COLORS.info}18` }]}>
+                <Text style={[styles.typeTagText, { color: POST_TYPE_COLORS_FALLBACK[post.typeColor] ?? COLORS.info }]}>{post.type}</Text>
+              </View>
+              <Text style={styles.communityTime}>{post.timeAgo}</Text>
             </View>
-            <Text style={styles.communityTime}>{post.timeAgo}</Text>
-          </View>
-          <Text style={styles.communityAuthor}>{post.authorName}</Text>
-          <Text style={styles.communityBody} numberOfLines={2}>{post.body}</Text>
-          {post.verse && (
-            <View style={styles.communityVerse}>
-              <Text style={styles.communityVerseText}>{post.verse}</Text>
-              <Text style={styles.communityVerseRef}>{post.verseRef}</Text>
+            <Text style={styles.communityAuthor}>{post.authorName}</Text>
+            <Text style={styles.communityBody} numberOfLines={2}>{post.body}</Text>
+            {post.verse && (
+              <View style={styles.communityVerse}>
+                <Text style={styles.communityVerseText}>{post.verse}</Text>
+                <Text style={styles.communityVerseRef}>{post.verseRef}</Text>
+              </View>
+            )}
+            <View style={styles.communityFooter}>
+              <Text style={styles.communityPrayers}>{post.prayerCount} prieres</Text>
+              <Text style={styles.communityReplies}>{post.replyCount} reponses</Text>
             </View>
-          )}
-          <View style={styles.communityFooter}>
-            <Text style={styles.communityPrayers}>{post.prayerCount} prieres</Text>
-            <Text style={styles.communityReplies}>{post.replyCount} reponses</Text>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        ) : (
+          <Text style={{ ...TYPOGRAPHY.body, color: C.textHint }}>Aucune publication</Text>
+        )}
       </View>
 
       <View style={{ height: SPACING.xl }} />

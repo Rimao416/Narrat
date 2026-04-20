@@ -1,11 +1,12 @@
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Plus, Heart, MessageCircle, Users, Lock } from 'lucide-react-native';
 import { useState, useMemo } from 'react';
 import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
-import { MOCK_COMMUNITY_POSTS, MOCK_GROUPS } from '../../data/mockData';
 import { useThemeColors } from '../../hooks/useThemeColors';
+import { useConfessions } from '../../hooks/useConfessions';
+import { useGroups } from '../../hooks/useGroups';
 
 const TABS = ['Fil', 'Groupes', 'Priere'];
 
@@ -13,6 +14,7 @@ const POST_TYPE_COLORS: Record<string, string> = {
   blue: COLORS.info,
   green: COLORS.success,
   purple: COLORS.purple,
+  orange: COLORS.warning,
 };
 
 const GROUP_ICON_COLORS = [COLORS.primary, COLORS.purple, COLORS.info, COLORS.warning, COLORS.success];
@@ -21,6 +23,8 @@ export default function CommunityScreen() {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
   const [activeTab, setActiveTab] = useState('Fil');
+  const { confessions, loading: postsLoading } = useConfessions();
+  const { groups, loading: groupsLoading } = useGroups();
 
   return (
     <View style={styles.container}>
@@ -48,9 +52,9 @@ export default function CommunityScreen() {
       </View>
 
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {activeTab === 'Fil' && <FeedTab />}
-        {activeTab === 'Groupes' && <GroupsTab />}
-        {activeTab === 'Priere' && <PrayerTab />}
+        {activeTab === 'Fil' && <FeedTab posts={confessions} loading={postsLoading} />}
+        {activeTab === 'Groupes' && <GroupsTab groups={groups} loading={groupsLoading} />}
+        {activeTab === 'Priere' && <PrayerTab posts={confessions.filter((p) => p.type === 'Prière')} loading={postsLoading} />}
         <View style={{ height: 80 }} />
       </ScrollView>
 
@@ -62,16 +66,17 @@ export default function CommunityScreen() {
   );
 }
 
-function FeedTab() {
+function FeedTab({ posts, loading }: { posts: any[]; loading: boolean }) {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
+  if (loading) return <ActivityIndicator color={COLORS.primary} style={{ paddingVertical: SPACING.xl }} />;
   return (
     <View style={styles.feedList}>
-      {MOCK_COMMUNITY_POSTS.map((post) => (
+      {posts.map((post) => (
         <TouchableOpacity key={post.id} style={styles.postCard} activeOpacity={0.85} onPress={() => router.push(`/community/post/${post.id}`)}>
           <View style={styles.postHeader}>
-            <View style={[styles.typeTag, { backgroundColor: `${POST_TYPE_COLORS[post.typeColor]}18` }]}>
-              <Text style={[styles.typeTagText, { color: POST_TYPE_COLORS[post.typeColor] }]}>{post.type}</Text>
+            <View style={[styles.typeTag, { backgroundColor: `${POST_TYPE_COLORS[post.typeColor] ?? COLORS.info}18` }]}>
+              <Text style={[styles.typeTagText, { color: POST_TYPE_COLORS[post.typeColor] ?? COLORS.info }]}>{post.type}</Text>
             </View>
             <Text style={styles.postTime}>{post.timeAgo}</Text>
           </View>
@@ -100,17 +105,23 @@ function FeedTab() {
           </View>
         </TouchableOpacity>
       ))}
+      {!loading && posts.length === 0 && (
+        <Text style={{ ...TYPOGRAPHY.body, color: C.textHint, textAlign: 'center', paddingVertical: SPACING.xl }}>
+          Aucune publication pour l'instant
+        </Text>
+      )}
     </View>
   );
 }
 
-function GroupsTab() {
+function GroupsTab({ groups, loading }: { groups: any[]; loading: boolean }) {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
+  if (loading) return <ActivityIndicator color={COLORS.primary} style={{ paddingVertical: SPACING.xl }} />;
   return (
     <View style={styles.groupList}>
       <Text style={styles.groupIntro}>Des espaces anonymes et securises pour partager vos combats.</Text>
-      {MOCK_GROUPS.map((group, i) => (
+      {groups.map((group, i) => (
         <TouchableOpacity key={group.id} style={styles.groupCard} activeOpacity={0.85}>
           <View style={[styles.groupIcon, { backgroundColor: `${GROUP_ICON_COLORS[i % GROUP_ICON_COLORS.length]}18` }]}>
             <Users size={18} color={GROUP_ICON_COLORS[i % GROUP_ICON_COLORS.length]} />
@@ -129,21 +140,26 @@ function GroupsTab() {
           </TouchableOpacity>
         </TouchableOpacity>
       ))}
+      {!loading && groups.length === 0 && (
+        <Text style={{ ...TYPOGRAPHY.body, color: C.textHint, textAlign: 'center', paddingVertical: SPACING.xl }}>
+          Aucun groupe disponible
+        </Text>
+      )}
     </View>
   );
 }
 
-function PrayerTab() {
+function PrayerTab({ posts, loading }: { posts: any[]; loading: boolean }) {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
-  const prayerPosts = MOCK_COMMUNITY_POSTS.filter((p) => p.type === 'Priere');
+  if (loading) return <ActivityIndicator color={COLORS.primary} style={{ paddingVertical: SPACING.xl }} />;
   return (
     <View style={styles.feedList}>
       <View style={styles.prayerHeader}>
         <Text style={styles.prayerTitle}>Demandes de priere</Text>
         <Text style={styles.prayerSub}>Intercedez pour vos freres et soeurs</Text>
       </View>
-      {prayerPosts.map((post) => (
+      {posts.map((post) => (
         <TouchableOpacity key={post.id} style={styles.postCard} activeOpacity={0.85} onPress={() => router.push(`/community/post/${post.id}`)}>
           <View style={styles.postAuthorRow}>
             <View style={[styles.avatar, post.isAnonymous && styles.avatarAnon]}>
@@ -161,6 +177,11 @@ function PrayerTab() {
           </TouchableOpacity>
         </TouchableOpacity>
       ))}
+      {!loading && posts.length === 0 && (
+        <Text style={{ ...TYPOGRAPHY.body, color: C.textHint, textAlign: 'center', paddingVertical: SPACING.xl }}>
+          Aucune demande de prière pour l'instant
+        </Text>
+      )}
     </View>
   );
 }

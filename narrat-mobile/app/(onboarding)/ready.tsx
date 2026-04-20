@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator, Alert } from 'react-native';
 import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -12,12 +12,15 @@ import Animated, {
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { useOnboardingStore } from '../../store/onboardingStore';
+import { useAuthStore } from '../../store/authStore';
 import { useThemeColors } from '../../hooks/useThemeColors';
 
 const { height } = Dimensions.get('window');
 
 export default function Ready() {
-  const { completeOnboarding } = useOnboardingStore();
+  const { completeOnboarding, signupFirstName, signupEmail, signupPassword } = useOnboardingStore();
+  const { register } = useAuthStore();
+  const [registering, setRegistering] = useState(false);
   const C = useThemeColors();
   const styles = createStyles(C);
 
@@ -53,9 +56,18 @@ export default function Ready() {
     transform: [{ translateY: buttonY.value }],
   }));
 
-  const handleEnter = () => {
-    completeOnboarding();
-    router.replace('/(tabs)');
+  const handleEnter = async () => {
+    setRegistering(true);
+    try {
+      if (signupEmail && signupPassword && signupFirstName) {
+        await register(signupFirstName, signupEmail, signupPassword);
+      }
+      completeOnboarding();
+      router.replace('/(tabs)');
+    } catch (e: any) {
+      setRegistering(false);
+      Alert.alert('Erreur', e.message ?? 'Impossible de créer le compte. Réessayez.');
+    }
   };
 
   return (
@@ -91,8 +103,16 @@ export default function Ready() {
 
       {/* CTA */}
       <Animated.View style={[styles.footer, buttonStyle]}>
-        <TouchableOpacity style={styles.enterButton} onPress={handleEnter} activeOpacity={0.85}>
-          <Text style={styles.enterButtonText}>Entrer dans Narrat</Text>
+        <TouchableOpacity
+          style={[styles.enterButton, registering && { opacity: 0.7 }]}
+          onPress={handleEnter}
+          activeOpacity={0.85}
+          disabled={registering}
+        >
+          {registering
+            ? <ActivityIndicator color="#FFFFFF" />
+            : <Text style={styles.enterButtonText}>Entrer dans Narrat</Text>
+          }
         </TouchableOpacity>
       </Animated.View>
     </View>
