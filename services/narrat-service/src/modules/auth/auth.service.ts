@@ -19,7 +19,8 @@ export class AuthService {
     });
 
     const token = this.generateToken(user.id);
-    return { token, user: this.sanitize(user) };
+    const refreshToken = this.generateRefreshToken(user.id);
+    return { token, refreshToken, user: this.sanitize(user) };
   }
 
   static async login(data: LoginDto) {
@@ -27,16 +28,50 @@ export class AuthService {
     if (!user || !user.passwordHash || !(await bcrypt.compare(data.password, user.passwordHash))) {
       throw new Error('Identifiants invalides');
     }
+    if (user.isBanned) throw new Error('Compte suspendu');
 
     const token = this.generateToken(user.id);
-    return { token, user: this.sanitize(user) };
+    const refreshToken = this.generateRefreshToken(user.id);
+    return { token, refreshToken, user: this.sanitize(user) };
+  }
+
+  static async me(userId: string) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        _count: {
+          select: { confessions: true, prayerRequests: true, enrollments: true },
+        },
+      },
+    });
+    if (!user) throw new Error('Utilisateur introuvable');
+    return this.sanitize(user);
+  }
+
+  static async refresh(refreshToken: string) {
+    let decoded: { userId: string };
+    try {
+      decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET ?? process.env.JWT_SECRET!) as { userId: string };
+    } catch {
+      throw new Error('Refresh token invalide');
+    }
+    const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
+    if (!user || user.isBanned) throw new Error('Utilisateur introuvable ou suspendu');
+
+    const token = this.generateToken(user.id);
+    const newRefreshToken = this.generateRefreshToken(user.id);
+    return { token, refreshToken: newRefreshToken, user: this.sanitize(user) };
   }
 
   private static generateToken(userId: string) {
     return jwt.sign({ userId }, process.env.JWT_SECRET!, { expiresIn: '7d' });
   }
 
-  private static sanitize(user: any) {
+  private static generateRefreshToken(userId: string) {
+    return jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET ?? process.env.JWT_SECRET!, { expiresIn: '30d' });
+  }
+
+  static sanitize(user: any) {
     const { passwordHash, ...rest } = user;
     return rest;
   }

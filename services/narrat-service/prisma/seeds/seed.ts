@@ -4,6 +4,7 @@ import { seedLibrary } from './01_library';
 import { seedCommunity } from './02_community';
 import { seedEducation } from './03_education';
 import { seedChallenges } from './05_challenges';
+import { seedAdmin } from './99_admin';
 
 const prisma = new PrismaClient();
 
@@ -57,6 +58,9 @@ async function main() {
 
   // STEP 5: Challenges (Module 5)
   await seedChallenges(prisma, users);
+
+  // STEP 99: Admin users + feature flags + app config
+  await seedAdmin(prisma);
 
   console.log('\n=======================================');
   console.log('✅✅ SEEDING TERMINÉ AVEC SUCCÈS ! ✅✅');

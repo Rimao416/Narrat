@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(node -e \"const p = require\\('c:/Users/Guide Info/Documents/essaie/Narrat/narrat-admin/node_modules/sonner/package.json'\\); console.log\\(JSON.stringify\\({exports: p.exports, types: p.types, main: p.main}, null, 2\\)\\)\")",
+      "Bash(npx tsc *)",
+      "Bash(grep -v \"//\")"
     ]
   }
 }

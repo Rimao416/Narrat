@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useCourses } from "@/hooks/useContent";
 import { ContentKanban } from "@/components/content/ContentKanban";
+import { CourseForm } from "@/components/content/CourseForm";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -13,26 +14,20 @@ import type { ContentStatus, Course } from "@/types";
 import { Search, Plus, List, LayoutGrid } from "lucide-react";
 import { timeAgo } from "@/lib/utils";
 
-const LEVELS = [
-  { value: "", label: "Tous les niveaux" },
-  { value: "BEGINNER", label: "Débutant" },
-  { value: "INTERMEDIATE", label: "Intermédiaire" },
-  { value: "ADVANCED", label: "Avancé" },
-];
-
-const STATUS_OPTIONS: ContentStatus[] = ["DRAFT", "REVIEW", "PUBLISHED", "ARCHIVED", "REJECTED"];
-
 const LEVEL_BADGE: Record<string, { label: string; variant: "default" | "warning" | "destructive" | "success" }> = {
   BEGINNER: { label: "Débutant", variant: "success" },
   INTERMEDIATE: { label: "Intermédiaire", variant: "warning" },
   ADVANCED: { label: "Avancé", variant: "destructive" },
 };
 
+const STATUS_OPTIONS: ContentStatus[] = ["DRAFT", "REVIEW", "PUBLISHED", "ARCHIVED", "REJECTED"];
+
 export default function CoursesPage() {
   const { courses, total, totalPages, loading, page, search, statusFilter,
-    setPage, setSearch, setStatusFilter, updateStatus, reorder } = useCourses();
+    setPage, setSearch, setStatusFilter, updateStatus, reorder, deleteCourse, refresh } = useCourses();
 
   const [viewMode, setViewMode] = useState<"list" | "kanban">("list");
+  const [showForm, setShowForm] = useState(false);
 
   const kanbanItems = courses.map((c) => ({
     id: c.id,
@@ -48,7 +43,9 @@ export default function CoursesPage() {
       header: "Formation",
       cell: (row) => (
         <div className="flex items-center gap-3">
-          {row.coverUrl && <img src={row.coverUrl} alt="" className="w-10 h-10 rounded object-cover bg-muted" />}
+          {row.coverUrl
+            ? <img src={row.coverUrl} alt="" className="w-10 h-10 rounded object-cover bg-muted" />
+            : <div className="w-10 h-10 rounded bg-muted" />}
           <div>
             <p className="font-medium text-sm">{row.title}</p>
             <p className="text-xs text-muted-foreground">{row.moduleCount} modules · {row.estimatedHours}h</p>
@@ -64,30 +61,13 @@ export default function CoursesPage() {
         return <Badge variant={info?.variant ?? "secondary"}>{info?.label ?? row.level}</Badge>;
       },
     },
+    { key: "status", header: "Statut", cell: (row) => <StatusBadge status={row.status} /> },
+    { key: "enrollments", header: "Inscrits", cell: (row) => <span className="text-sm font-mono">{row.enrollCount}</span> },
+    { key: "updatedAt", header: "Modifié", cell: (row) => <span className="text-xs text-muted-foreground">{timeAgo(row.updatedAt)}</span> },
     {
-      key: "status",
-      header: "Statut",
-      cell: (row) => <StatusBadge status={row.status} />,
-    },
-    {
-      key: "enrollments",
-      header: "Inscrits",
-      cell: (row) => <span className="text-sm font-mono">{row.enrollCount}</span>,
-    },
-    {
-      key: "updatedAt",
-      header: "Modifié",
-      cell: (row) => <span className="text-xs text-muted-foreground">{timeAgo(row.updatedAt)}</span>,
-    },
-    {
-      key: "actions",
-      header: "",
+      key: "actions", header: "",
       cell: (row) => (
-        <Select
-          value={row.status}
-          onChange={(e) => updateStatus(row.id, e.target.value as ContentStatus)}
-          className="h-7 text-xs w-32 py-0"
-        >
+        <Select value={row.status} onChange={(e) => updateStatus(row.id, e.target.value as ContentStatus)} className="h-7 text-xs w-32 py-0">
           {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
         </Select>
       ),
@@ -100,21 +80,12 @@ export default function CoursesPage() {
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-48 max-w-sm">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-          <Input
-            placeholder="Rechercher une formation..."
-            value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-            className="pl-8"
-          />
+          <Input placeholder="Rechercher..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-8" />
         </div>
-        <Select
-          value=""
-          onChange={(e) => {}}
-          className="w-44"
-        >
-          {LEVELS.map((l) => <option key={l.value} value={l.value}>{l.label}</option>)}
+        <Select value={statusFilter ?? ""} onChange={(e) => setStatusFilter((e.target.value as ContentStatus) || undefined)} className="w-44">
+          <option value="">Tous les statuts</option>
+          {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
         </Select>
-
         <div className="flex items-center gap-1 bg-muted rounded-lg p-0.5 ml-auto">
           <button onClick={() => setViewMode("list")} className={`p-1.5 rounded-md transition-colors ${viewMode === "list" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
             <List className="w-3.5 h-3.5" />
@@ -123,32 +94,18 @@ export default function CoursesPage() {
             <LayoutGrid className="w-3.5 h-3.5" />
           </button>
         </div>
-
-        <Button size="sm"><Plus className="w-3.5 h-3.5" />Nouvelle formation</Button>
+        <Button size="sm" onClick={() => setShowForm(true)}><Plus className="w-3.5 h-3.5" />Nouvelle formation</Button>
       </div>
 
       <p className="text-xs text-muted-foreground">{total} formation{total !== 1 ? "s" : ""}</p>
 
       {viewMode === "list" ? (
-        <DataTable
-          columns={columns}
-          data={courses}
-          loading={loading}
-          emptyMessage="Aucune formation trouvée"
-          page={page}
-          totalPages={totalPages}
-          total={total}
-          pageSize={20}
-          onPageChange={setPage}
-        />
+        <DataTable columns={columns} data={courses} loading={loading} emptyMessage="Aucune formation" page={page} totalPages={totalPages} total={total} pageSize={20} onPageChange={setPage} />
       ) : (
-        <ContentKanban
-          items={kanbanItems}
-          loading={loading}
-          onStatusChange={updateStatus}
-          onReorder={reorder}
-        />
+        <ContentKanban items={kanbanItems} loading={loading} onStatusChange={updateStatus} onReorder={reorder} onDelete={deleteCourse} />
       )}
+
+      <CourseForm open={showForm} onClose={() => setShowForm(false)} onSuccess={refresh} />
     </div>
   );
 }

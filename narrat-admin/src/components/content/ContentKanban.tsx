@@ -20,7 +20,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import type { ContentStatus } from "@/types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Pencil, Trash2, Star, StarOff } from "lucide-react";
 
 interface ContentItem {
@@ -54,6 +54,11 @@ export function ContentKanban({
 }: ContentKanbanProps) {
   const [localItems, setLocalItems] = useState(items);
 
+  // Sync when external data refreshes
+  useEffect(() => {
+    setLocalItems(items);
+  }, [items]);
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -80,13 +85,21 @@ export function ContentKanban({
     );
   }
 
+  if (localItems.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-32 text-sm text-muted-foreground border border-dashed border-border rounded-lg">
+        Aucun élément
+      </div>
+    );
+  }
+
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={localItems.map((i) => i.id)} strategy={verticalListSortingStrategy}>
         <div className="space-y-1.5">
           {localItems.map((item) => (
             <SortableItem key={item.id} id={item.id}>
-              <div className="flex items-center gap-3 bg-card border border-border rounded-lg px-3 py-2.5 hover:border-border/80 transition-colors group">
+              <div className="flex items-center gap-3 bg-card border border-border rounded-lg px-3 py-2.5 hover:border-primary/30 transition-colors group">
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-sm text-foreground truncate">{item.title}</p>
                   {item.meta && (

@@ -14,4 +14,17 @@ export class AuthController {
     const result = await AuthService.login(data);
     res.status(200).json(result);
   }
+
+  static async me(req: Request, res: Response) {
+    const userId = (req as any).user.id;
+    const user = await AuthService.me(userId);
+    res.status(200).json(user);
+  }
+
+  static async refresh(req: Request, res: Response) {
+    const { refreshToken } = req.body;
+    if (!refreshToken) return res.status(400).json({ message: 'refreshToken requis' });
+    const result = await AuthService.refresh(refreshToken);
+    res.status(200).json(result);
+  }
 }

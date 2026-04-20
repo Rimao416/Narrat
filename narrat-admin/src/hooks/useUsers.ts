@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { usersService } from "@/services/users.service";
+import { useDebounce } from "./useDebounce";
 import type { AdminUser, PaginatedResponse, UserRole } from "@/types";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/services/api";
@@ -16,19 +17,29 @@ export function useUsers({ initialPage = 1, pageSize = 20 }: UseUsersOptions = {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<UserRole | undefined>();
 
+  const debouncedSearch = useDebounce(search, 400);
+
   const fetch = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await usersService.list({ page, pageSize, search: search || undefined, role: roleFilter });
+      const res = await usersService.list({
+        page,
+        pageSize,
+        search: debouncedSearch || undefined,
+        role: roleFilter,
+      });
       setData(res);
     } catch (err) {
       toast.error(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, search, roleFilter]);
+  }, [page, pageSize, debouncedSearch, roleFilter]);
 
   useEffect(() => { fetch(); }, [fetch]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => { setPage(1); }, [debouncedSearch, roleFilter]);
 
   const banUser = async (id: string, reason: string) => {
     try {

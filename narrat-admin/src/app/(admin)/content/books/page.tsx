@@ -3,17 +3,15 @@
 import { useState } from "react";
 import { useBooks } from "@/hooks/useContent";
 import { ContentKanban } from "@/components/content/ContentKanban";
+import { BookForm } from "@/components/content/BookForm";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Modal } from "@/components/ui/modal";
-import type { ContentStatus } from "@/types";
-import { Search, Plus, List, LayoutGrid } from "lucide-react";
-import { CATEGORY_LABELS } from "@/lib/utils";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { StatusBadge } from "@/components/ui/status-badge";
-import type { Book } from "@/types";
-import { timeAgo } from "@/lib/utils";
+import type { ContentStatus, Book } from "@/types";
+import { Search, Plus, List, LayoutGrid } from "lucide-react";
+import { CATEGORY_LABELS, timeAgo } from "@/lib/utils";
 
 const STATUS_FILTERS: { value: ContentStatus | ""; label: string }[] = [
   { value: "", label: "Tous les statuts" },
@@ -23,11 +21,14 @@ const STATUS_FILTERS: { value: ContentStatus | ""; label: string }[] = [
   { value: "ARCHIVED", label: "Archivé" },
 ];
 
+const STATUS_OPTIONS: ContentStatus[] = ["DRAFT", "REVIEW", "PUBLISHED", "ARCHIVED", "REJECTED"];
+
 export default function BooksPage() {
   const { books, total, totalPages, loading, page, search, statusFilter,
-    setPage, setSearch, setStatusFilter, updateStatus, reorder, deleteBook } = useBooks();
+    setPage, setSearch, setStatusFilter, updateStatus, reorder, deleteBook, refresh } = useBooks();
 
   const [viewMode, setViewMode] = useState<"list" | "kanban">("list");
+  const [showForm, setShowForm] = useState(false);
 
   const kanbanItems = books.map((b) => ({
     id: b.id,
@@ -43,9 +44,9 @@ export default function BooksPage() {
       header: "Titre",
       cell: (row) => (
         <div className="flex items-center gap-3">
-          {row.coverUrl && (
-            <img src={row.coverUrl} alt="" className="w-8 h-10 rounded object-cover shrink-0 bg-muted" />
-          )}
+          {row.coverUrl
+            ? <img src={row.coverUrl} alt="" className="w-8 h-10 rounded object-cover shrink-0 bg-muted" />
+            : <div className="w-8 h-10 rounded bg-muted shrink-0" />}
           <div>
             <p className="font-medium text-sm">{row.title}</p>
             <p className="text-xs text-muted-foreground">{row.author?.firstName} {row.author?.lastName}</p>
@@ -82,8 +83,8 @@ export default function BooksPage() {
           onChange={(e) => updateStatus(row.id, e.target.value as ContentStatus)}
           className="h-7 text-xs w-32 py-0"
         >
-          {STATUS_FILTERS.filter((s) => s.value).map((s) => (
-            <option key={s.value} value={s.value}>{s.label}</option>
+          {STATUS_OPTIONS.map((s) => (
+            <option key={s} value={s}>{s}</option>
           ))}
         </Select>
       ),
@@ -99,13 +100,13 @@ export default function BooksPage() {
           <Input
             placeholder="Rechercher un livre..."
             value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            onChange={(e) => setSearch(e.target.value)}
             className="pl-8"
           />
         </div>
         <Select
           value={statusFilter ?? ""}
-          onChange={(e) => { setStatusFilter((e.target.value as ContentStatus) || undefined); setPage(1); }}
+          onChange={(e) => setStatusFilter((e.target.value as ContentStatus) || undefined)}
           className="w-44"
         >
           {STATUS_FILTERS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
@@ -126,7 +127,7 @@ export default function BooksPage() {
           </button>
         </div>
 
-        <Button size="sm">
+        <Button size="sm" onClick={() => setShowForm(true)}>
           <Plus className="w-3.5 h-3.5" />
           Nouveau livre
         </Button>
@@ -155,6 +156,8 @@ export default function BooksPage() {
           onDelete={deleteBook}
         />
       )}
+
+      <BookForm open={showForm} onClose={() => setShowForm(false)} onSuccess={refresh} />
     </div>
   );
 }

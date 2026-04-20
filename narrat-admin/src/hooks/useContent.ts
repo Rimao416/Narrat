@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { booksService, coursesService, songsService } from "@/services/content.service";
+import { useDebounce } from "./useDebounce";
 import type { Book, Course, Song, ContentStatus, PaginatedResponse } from "@/types";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/services/api";
@@ -10,20 +11,27 @@ export function useBooks(initialPageSize = 20) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<ContentStatus | undefined>();
+  const debouncedSearch = useDebounce(search, 400);
 
   const fetch = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await booksService.list({ page, pageSize: initialPageSize, search: search || undefined, status: statusFilter });
+      const res = await booksService.list({
+        page,
+        pageSize: initialPageSize,
+        search: debouncedSearch || undefined,
+        status: statusFilter,
+      });
       setData(res);
     } catch (err) {
       toast.error(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
-  }, [page, initialPageSize, search, statusFilter]);
+  }, [page, initialPageSize, debouncedSearch, statusFilter]);
 
   useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => { setPage(1); }, [debouncedSearch, statusFilter]);
 
   const updateStatus = async (id: string, status: ContentStatus) => {
     try {
@@ -69,20 +77,27 @@ export function useCourses(initialPageSize = 20) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<ContentStatus | undefined>();
+  const debouncedSearch = useDebounce(search, 400);
 
   const fetch = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await coursesService.list({ page, pageSize: initialPageSize, search: search || undefined, status: statusFilter });
+      const res = await coursesService.list({
+        page,
+        pageSize: initialPageSize,
+        search: debouncedSearch || undefined,
+        status: statusFilter,
+      });
       setData(res);
     } catch (err) {
       toast.error(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
-  }, [page, initialPageSize, search, statusFilter]);
+  }, [page, initialPageSize, debouncedSearch, statusFilter]);
 
   useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => { setPage(1); }, [debouncedSearch, statusFilter]);
 
   const updateStatus = async (id: string, status: ContentStatus) => {
     try {
@@ -102,13 +117,23 @@ export function useCourses(initialPageSize = 20) {
     }
   };
 
+  const deleteCourse = async (id: string) => {
+    try {
+      await coursesService.delete(id);
+      toast.success("Formation supprimée");
+      fetch();
+    } catch (err) {
+      toast.error(extractErrorMessage(err));
+    }
+  };
+
   return {
     courses: data?.data ?? [],
     total: data?.total ?? 0,
     totalPages: data?.totalPages ?? 0,
     loading, page, search, statusFilter,
     setPage, setSearch, setStatusFilter,
-    updateStatus, reorder, refresh: fetch,
+    updateStatus, reorder, deleteCourse, refresh: fetch,
   };
 }
 
@@ -117,20 +142,26 @@ export function useSongs(initialPageSize = 20) {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 400);
 
   const fetch = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await songsService.list({ page, pageSize: initialPageSize, search: search || undefined });
+      const res = await songsService.list({
+        page,
+        pageSize: initialPageSize,
+        search: debouncedSearch || undefined,
+      });
       setData(res);
     } catch (err) {
       toast.error(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
-  }, [page, initialPageSize, search]);
+  }, [page, initialPageSize, debouncedSearch]);
 
   useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => { setPage(1); }, [debouncedSearch]);
 
   const updateStatus = async (id: string, status: ContentStatus) => {
     try {
