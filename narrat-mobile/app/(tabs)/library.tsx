@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
 import { useThemeColors } from '../../hooks/useThemeColors';
-import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
+import { SPACING, RADIUS, TYPOGRAPHY, FONTS } from '../../constants/theme';
 import { MOCK_BOOKS } from '../../data/mockData';
 
 const { width } = Dimensions.get('window');
@@ -153,13 +153,13 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     filtersContent: { gap: SPACING.sm, paddingRight: SPACING.xl },
     filterChip: { paddingHorizontal: SPACING.md, paddingVertical: 7, borderRadius: RADIUS.full, backgroundColor: C.surface, borderWidth: 1, borderColor: C.border2 },
     filterChipActive: { backgroundColor: COLORS.primaryMuted, borderColor: COLORS.primaryBorder },
-    filterChipText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '500' },
-    filterChipTextActive: { color: COLORS.primary, fontWeight: '700' },
+    filterChipText: { ...TYPOGRAPHY.caption, color: C.textMuted },
+    filterChipTextActive: { fontFamily: FONTS.bold, color: COLORS.primary },
     section: { marginBottom: SPACING.xl },
     sectionHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: SPACING.md },
     sectionTitle: { ...TYPOGRAPHY.h4, color: C.text },
     seeAllBtn: { flexDirection: 'row', alignItems: 'center', gap: 2 },
-    seeAllText: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '600' },
+    seeAllText: { ...TYPOGRAPHY.caption, fontFamily: FONTS.semiBold, color: COLORS.primary },
     featuredCard: { height: 200, borderRadius: RADIUS.card, overflow: 'hidden', justifyContent: 'flex-end' },
     featuredOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.45)' },
     featuredContent: { padding: SPACING.lg, gap: SPACING.xs },
@@ -169,7 +169,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     featuredAuthor: { ...TYPOGRAPHY.caption, color: 'rgba(255,255,255,0.7)' },
     metaRow: { flexDirection: 'row', gap: SPACING.sm, alignItems: 'center' },
     ratingRow: { flexDirection: 'row', alignItems: 'center', gap: 3 },
-    ratingText: { ...TYPOGRAPHY.caption, color: COLORS.gold, fontWeight: '600' },
+    ratingText: { ...TYPOGRAPHY.caption, fontFamily: FONTS.semiBold, color: COLORS.gold },
     audioBadge: { flexDirection: 'row', alignItems: 'center', gap: 3, backgroundColor: COLORS.infoBg, borderRadius: RADIUS.full, paddingHorizontal: 6, paddingVertical: 2 },
     audioBadgeText: { ...TYPOGRAPHY.micro, color: COLORS.info },
     progressRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginTop: SPACING.xs },
@@ -180,13 +180,13 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     bookRow: { flexDirection: 'row', alignItems: 'center', backgroundColor: C.surface, borderRadius: RADIUS.card, borderWidth: 1, borderColor: C.border, padding: SPACING.md, gap: SPACING.md },
     bookCover: { width: 48, height: 64, borderRadius: RADIUS.sm, alignItems: 'center', justifyContent: 'center' },
     bookInfo: { flex: 1, gap: 4 },
-    bookTitle: { ...TYPOGRAPHY.bodyLarge, color: C.text },
+    bookTitle: { ...TYPOGRAPHY.h5, color: C.text },
     bookAuthor: { ...TYPOGRAPHY.caption, color: C.textMuted },
     bookTags: { flexDirection: 'row', gap: SPACING.xs, marginTop: 2 },
     tagChip: { backgroundColor: C.surfaceElevated, borderRadius: RADIUS.full, paddingHorizontal: SPACING.xs + 2, paddingVertical: 2 },
     tagText: { ...TYPOGRAPHY.micro, color: C.textHint },
     bookRight: { alignItems: 'flex-end', gap: SPACING.xs },
-    ratingSmall: { ...TYPOGRAPHY.micro, color: COLORS.gold, fontWeight: '600' },
+    ratingSmall: { ...TYPOGRAPHY.micro, fontFamily: FONTS.semiBold, color: COLORS.gold },
     bookIcons: { flexDirection: 'row', gap: SPACING.xs },
     progressDot: { backgroundColor: COLORS.primaryMuted, borderRadius: RADIUS.full, paddingHorizontal: 5, paddingVertical: 2 },
     progressDotText: { ...TYPOGRAPHY.micro, color: COLORS.primary },

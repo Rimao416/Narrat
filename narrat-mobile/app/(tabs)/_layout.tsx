@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 import { Platform, View, StyleSheet } from 'react-native';
 import { Home, BookOpen, Users, Compass, User } from 'lucide-react-native';
 import { COLORS } from '../../constants/Colors';
-import { RADIUS } from '../../constants/theme';
+import { RADIUS, FONTS } from '../../constants/theme';
 import { useThemeColors } from '../../hooks/useThemeColors';
 
 export default function TabLayout() {
@@ -22,8 +22,8 @@ export default function TabLayout() {
           paddingTop: 8,
         },
         tabBarLabelStyle: {
+          fontFamily: FONTS.semiBold,
           fontSize: 10,
-          fontWeight: '600',
           letterSpacing: 0.2,
           marginTop: 2,
         },

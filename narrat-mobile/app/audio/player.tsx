@@ -6,7 +6,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useState, useEffect, useMemo } from 'react';
 import { COLORS } from '../../constants/Colors';
-import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
+import { SPACING, RADIUS, TYPOGRAPHY, FONTS } from '../../constants/theme';
 import { MOCK_BOOKS, MOCK_BOOK_CHAPTERS } from '../../data/mockData';
 import { useThemeColors } from '../../hooks/useThemeColors';
 
@@ -163,7 +163,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       justifyContent: 'center',
     },
     headerCenter: { flex: 1, alignItems: 'center' },
-    headerLabel: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '600' },
+    headerLabel: { ...TYPOGRAPHY.caption, fontFamily: FONTS.semiBold, color: C.textMuted },
     artworkSection: { alignItems: 'center', paddingVertical: SPACING.xl, gap: SPACING.sm },
     artworkWrap: {},
     artwork: {
@@ -213,7 +213,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       borderWidth: 1,
       borderColor: C.border2,
     },
-    speedText: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '700' },
+    speedText: { ...TYPOGRAPHY.caption, fontFamily: FONTS.bold, color: COLORS.primary },
     controls: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -223,7 +223,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       marginBottom: SPACING.xl,
     },
     ctrlBtn: { flexDirection: 'row', alignItems: 'center', gap: 3 },
-    skipLabel: { ...TYPOGRAPHY.micro, color: C.textHint },
+    skipLabel: { ...TYPOGRAPHY.micro, fontFamily: FONTS.bold, color: C.textHint },
     prevBtn: { padding: SPACING.sm },
     nextBtn: { padding: SPACING.sm },
     playBtn: {

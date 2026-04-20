@@ -1,5 +1,14 @@
 // Design System Narrat — Tokens
 
+export const FONTS = {
+  light: 'Inter_300Light',
+  regular: 'Inter_400Regular',
+  medium: 'Inter_500Medium',
+  semiBold: 'Inter_600SemiBold',
+  bold: 'Inter_700Bold',
+  extraBold: 'Inter_800ExtraBold',
+} as const;
+
 export const SPACING = {
   xs: 4,
   sm: 8,
@@ -23,15 +32,121 @@ export const RADIUS = {
 };
 
 export const TYPOGRAPHY = {
-  h1: { fontSize: 28, fontWeight: '700' as const, letterSpacing: -0.4 },
-  h2: { fontSize: 22, fontWeight: '700' as const, letterSpacing: -0.3 },
-  h3: { fontSize: 18, fontWeight: '700' as const },
-  h4: { fontSize: 15, fontWeight: '600' as const },
-  bodyLarge: { fontSize: 15, fontWeight: '600' as const },
-  body: { fontSize: 13, fontWeight: '400' as const, lineHeight: 21 },
-  caption: { fontSize: 11, fontWeight: '400' as const },
-  label: { fontSize: 10, fontWeight: '700' as const, letterSpacing: 1, textTransform: 'uppercase' as const },
-  micro: { fontSize: 9, fontWeight: '600' as const, letterSpacing: 0.4 },
+  // ── Display ──────────────────────────────────────────────────────
+  display: {
+    fontFamily: FONTS.extraBold,
+    fontSize: 48,
+    letterSpacing: -1.5,
+    lineHeight: 58,
+  },
+
+  // ── Headings ─────────────────────────────────────────────────────
+  h1: {
+    fontFamily: FONTS.bold,
+    fontSize: 30,
+    letterSpacing: -0.5,
+    lineHeight: 38,
+  },
+  h2: {
+    fontFamily: FONTS.bold,
+    fontSize: 24,
+    letterSpacing: -0.3,
+    lineHeight: 32,
+  },
+  h3: {
+    fontFamily: FONTS.semiBold,
+    fontSize: 20,
+    letterSpacing: -0.2,
+    lineHeight: 28,
+  },
+  h4: {
+    fontFamily: FONTS.semiBold,
+    fontSize: 17,
+    letterSpacing: 0,
+    lineHeight: 24,
+  },
+  h5: {
+    fontFamily: FONTS.semiBold,
+    fontSize: 15,
+    letterSpacing: 0,
+    lineHeight: 22,
+  },
+
+  // ── Subtitles ─────────────────────────────────────────────────────
+  subtitle1: {
+    fontFamily: FONTS.medium,
+    fontSize: 15,
+    letterSpacing: 0.1,
+    lineHeight: 24,
+  },
+  subtitle2: {
+    fontFamily: FONTS.medium,
+    fontSize: 13,
+    letterSpacing: 0.1,
+    lineHeight: 20,
+  },
+
+  // ── Body ──────────────────────────────────────────────────────────
+  bodyLarge: {
+    fontFamily: FONTS.regular,
+    fontSize: 16,
+    letterSpacing: 0.15,
+    lineHeight: 26,
+  },
+  body: {
+    fontFamily: FONTS.regular,
+    fontSize: 14,
+    letterSpacing: 0.25,
+    lineHeight: 22,
+  },
+  bodySmall: {
+    fontFamily: FONTS.regular,
+    fontSize: 12,
+    letterSpacing: 0.4,
+    lineHeight: 18,
+  },
+
+  // ── UI ────────────────────────────────────────────────────────────
+  button: {
+    fontFamily: FONTS.semiBold,
+    fontSize: 14,
+    letterSpacing: 0.5,
+  },
+  buttonSmall: {
+    fontFamily: FONTS.semiBold,
+    fontSize: 12,
+    letterSpacing: 0.5,
+  },
+  label: {
+    fontFamily: FONTS.bold,
+    fontSize: 10,
+    letterSpacing: 2,
+    textTransform: 'uppercase' as const,
+  },
+  labelMd: {
+    fontFamily: FONTS.semiBold,
+    fontSize: 12,
+    letterSpacing: 0.5,
+  },
+
+  // ── Small ─────────────────────────────────────────────────────────
+  caption: {
+    fontFamily: FONTS.medium,
+    fontSize: 11,
+    letterSpacing: 0.4,
+    lineHeight: 16,
+  },
+  overline: {
+    fontFamily: FONTS.bold,
+    fontSize: 10,
+    letterSpacing: 1.5,
+    textTransform: 'uppercase' as const,
+  },
+  micro: {
+    fontFamily: FONTS.semiBold,
+    fontSize: 9,
+    letterSpacing: 0.4,
+  },
 };
 
 export const ANIMATION = {

@@ -3,7 +3,7 @@ import { GraduationCap, Sword, Star, Headphones, Users, ChevronRight, Award } fr
 import { useState, useMemo } from 'react';
 import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
-import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
+import { SPACING, RADIUS, TYPOGRAPHY, FONTS } from '../../constants/theme';
 import { MOCK_COURSES, MOCK_CHALLENGES, MOCK_REVIVAL_FIGURES } from '../../data/mockData';
 import { useThemeColors } from '../../hooks/useThemeColors';
 
@@ -241,8 +241,8 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       borderColor: C.border,
     },
     sectionTabActive: { backgroundColor: COLORS.primaryMuted, borderColor: COLORS.primaryBorder },
-    sectionTabText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '600' },
-    sectionTabTextActive: { color: COLORS.primary, fontWeight: '700' },
+    sectionTabText: { ...TYPOGRAPHY.caption, fontFamily: FONTS.semiBold, color: C.textMuted },
+    sectionTabTextActive: { fontFamily: FONTS.bold, color: COLORS.primary },
     scroll: { flex: 1 },
     scrollContent: { paddingHorizontal: SPACING.xl },
     list: { gap: SPACING.md },
@@ -262,7 +262,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       padding: SPACING.md,
     },
     levelTag: { paddingHorizontal: SPACING.sm, paddingVertical: 3, borderRadius: RADIUS.full },
-    levelTagText: { ...TYPOGRAPHY.micro, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
+    levelTagText: { ...TYPOGRAPHY.micro, fontFamily: FONTS.bold, textTransform: 'uppercase', letterSpacing: 0.5 },
     audioBadge: {
       width: 28,
       height: 28,
@@ -288,7 +288,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       paddingVertical: 4,
       alignSelf: 'flex-start',
     },
-    certText: { ...TYPOGRAPHY.micro, color: COLORS.gold, fontWeight: '600' },
+    certText: { ...TYPOGRAPHY.micro, fontFamily: FONTS.semiBold, color: COLORS.gold },
     progressRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },
     progressBar: { flex: 1, height: 4, backgroundColor: C.surfaceElevated, borderRadius: 2, overflow: 'hidden' },
     progressFill: { height: '100%', backgroundColor: COLORS.primary, borderRadius: 2 },
@@ -305,13 +305,13 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     challengeTop: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md },
     challengeIconWrap: { width: 44, height: 44, borderRadius: RADIUS.sm, alignItems: 'center', justifyContent: 'center' },
     challengeInfo: { flex: 1 },
-    challengeTitle: { ...TYPOGRAPHY.bodyLarge, color: C.text },
+    challengeTitle: { ...TYPOGRAPHY.h5, color: C.text },
     challengeCategory: { ...TYPOGRAPHY.caption, color: C.textMuted, marginTop: 2 },
     intensityTag: { paddingHorizontal: SPACING.sm, paddingVertical: 3, borderRadius: RADIUS.full },
-    intensityText: { ...TYPOGRAPHY.micro, fontWeight: '700', textTransform: 'uppercase' },
+    intensityText: { ...TYPOGRAPHY.micro, fontFamily: FONTS.bold, textTransform: 'uppercase' },
     challengeDesc: { ...TYPOGRAPHY.body, color: C.textMuted, lineHeight: 20 },
     challengeMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-    successRate: { ...TYPOGRAPHY.caption, color: COLORS.success, fontWeight: '600' },
+    successRate: { ...TYPOGRAPHY.caption, fontFamily: FONTS.semiBold, color: COLORS.success },
     startBtn: {
       backgroundColor: COLORS.primaryMuted,
       borderRadius: RADIUS.full,
@@ -320,7 +320,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       paddingVertical: 10,
       alignItems: 'center',
     },
-    startBtnText: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '700' },
+    startBtnText: { ...TYPOGRAPHY.caption, fontFamily: FONTS.bold, color: COLORS.primary },
     figureCardFeatured: {
       backgroundColor: C.surface,
       borderRadius: RADIUS.card,
@@ -342,7 +342,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     },
     figureAvatarText: { ...TYPOGRAPHY.label, color: COLORS.primary, fontSize: 13 },
     figureHeaderInfo: { flex: 1 },
-    figureName: { ...TYPOGRAPHY.bodyLarge, color: C.text },
+    figureName: { ...TYPOGRAPHY.h5, color: C.text },
     figureEra: { ...TYPOGRAPHY.caption, color: COLORS.primary, marginTop: 2 },
     figureOrigin: { ...TYPOGRAPHY.caption, color: C.textMuted },
     featuredBadge: {
@@ -354,7 +354,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       paddingHorizontal: SPACING.sm,
       paddingVertical: 4,
     },
-    featuredBadgeText: { ...TYPOGRAPHY.micro, color: COLORS.gold, fontWeight: '600' },
+    featuredBadgeText: { ...TYPOGRAPHY.micro, fontFamily: FONTS.semiBold, color: COLORS.gold },
     quoteWrap: {
       backgroundColor: C.surfaceElevated,
       borderRadius: RADIUS.md,
@@ -364,7 +364,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     },
     quoteText: { ...TYPOGRAPHY.body, color: C.textMuted, fontStyle: 'italic', lineHeight: 21 },
     verseRow: { gap: 3 },
-    verseRef: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '600' },
+    verseRef: { ...TYPOGRAPHY.caption, fontFamily: FONTS.semiBold, color: COLORS.primary },
     verseText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontStyle: 'italic' },
     figureTags: { flexDirection: 'row', gap: SPACING.xs, flexWrap: 'wrap' },
     figureTag: {

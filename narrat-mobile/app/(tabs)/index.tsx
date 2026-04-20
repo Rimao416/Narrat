@@ -3,7 +3,7 @@ import { Bell, Flame, BookOpen, GraduationCap, Sword, Users, ChevronRight } from
 import { useMemo } from 'react';
 import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
-import { SPACING, RADIUS, TYPOGRAPHY, SHADOW } from '../../constants/theme';
+import { SPACING, RADIUS, TYPOGRAPHY, SHADOW, FONTS } from '../../constants/theme';
 import {
   MOCK_USER,
   VERSE_OF_DAY,
@@ -235,7 +235,7 @@ const moduleCardStyle: any = {
   padding: SPACING.lg,
   gap: SPACING.sm,
 };
-const moduleLabelStyle: any = { ...TYPOGRAPHY.bodyLarge, color: '#FFFFFF' };
+const moduleLabelStyle: any = { ...TYPOGRAPHY.h5, color: '#FFFFFF' };
 const moduleCountStyle: any = { ...TYPOGRAPHY.micro, color: 'rgba(255,255,255,0.7)' };
 
 function createStyles(C: ReturnType<typeof useThemeColors>) {
@@ -341,8 +341,8 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     },
     verseRef: {
       ...TYPOGRAPHY.caption,
+      fontFamily: FONTS.semiBold,
       color: COLORS.primary,
-      fontWeight: '600',
     },
     statsRow: {
       flexDirection: 'row',
@@ -369,8 +369,8 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     },
     sectionActionText: {
       ...TYPOGRAPHY.caption,
+      fontFamily: FONTS.semiBold,
       color: COLORS.primary,
-      fontWeight: '600',
     },
     weekRow: {
       flexDirection: 'row',
@@ -422,8 +422,8 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       color: C.textHint,
     },
     dayLabelToday: {
+      fontFamily: FONTS.bold,
       color: COLORS.primary,
-      fontWeight: '700',
     },
     bookCard: {
       backgroundColor: C.surface,
@@ -464,7 +464,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       color: C.textHint,
     },
     bookTitle: {
-      ...TYPOGRAPHY.bodyLarge,
+      ...TYPOGRAPHY.h5,
       color: C.text,
     },
     bookAuthor: {
@@ -528,7 +528,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       flex: 1,
     },
     challengeTitle: {
-      ...TYPOGRAPHY.bodyLarge,
+      ...TYPOGRAPHY.h5,
       color: C.text,
     },
     challengeCategory: {
@@ -567,7 +567,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     },
     typeTagText: {
       ...TYPOGRAPHY.micro,
-      fontWeight: '600',
+      fontFamily: FONTS.semiBold,
       textTransform: 'uppercase',
       letterSpacing: 0.5,
     },
@@ -609,11 +609,12 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     },
     communityPrayers: {
       ...TYPOGRAPHY.caption,
+      fontFamily: FONTS.semiBold,
       color: COLORS.info,
-      fontWeight: '600',
     },
     communityReplies: {
       ...TYPOGRAPHY.caption,
+      fontFamily: FONTS.semiBold,
       color: C.textMuted,
     },
   });

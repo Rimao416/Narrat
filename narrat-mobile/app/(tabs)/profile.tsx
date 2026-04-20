@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Switch } from 're
 import { Settings, Bell, Moon, Shield, HelpCircle, LogOut, ChevronRight, BookOpen, Sword, GraduationCap, Flame } from 'lucide-react-native';
 import { useMemo } from 'react';
 import { COLORS } from '../../constants/Colors';
-import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
+import { SPACING, RADIUS, TYPOGRAPHY, FONTS } from '../../constants/theme';
 import { MOCK_USER, MOCK_BADGES, MOCK_BOOKS, MOCK_COURSES } from '../../data/mockData';
 import { useThemeStore } from '../../store/themeStore';
 import { useOnboardingStore } from '../../store/onboardingStore';
@@ -242,7 +242,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       gap: SPACING.xs,
       marginTop: 2,
     },
-    levelBadgeText: { ...TYPOGRAPHY.caption, color: COLORS.gold, fontWeight: '600' },
+    levelBadgeText: { ...TYPOGRAPHY.caption, fontFamily: FONTS.semiBold, color: COLORS.gold },
     levelNum: {
       ...TYPOGRAPHY.micro,
       color: C.textHint,
@@ -262,7 +262,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     },
     xpHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
     xpLabel: { ...TYPOGRAPHY.label, color: C.textMuted },
-    xpValues: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '600' },
+    xpValues: { ...TYPOGRAPHY.caption, fontFamily: FONTS.semiBold, color: COLORS.primary },
     xpBar: { height: 8, backgroundColor: C.surfaceElevated, borderRadius: 4, overflow: 'hidden' },
     xpFill: { height: '100%', backgroundColor: COLORS.primary, borderRadius: 4 },
     xpSub: { ...TYPOGRAPHY.caption, color: C.textHint },
@@ -318,7 +318,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     },
     progressIcon: { width: 36, height: 36, borderRadius: RADIUS.sm, alignItems: 'center', justifyContent: 'center' },
     progressInfo: { flex: 1, gap: 6 },
-    progressTitle: { ...TYPOGRAPHY.caption, color: C.text, fontWeight: '500' },
+    progressTitle: { ...TYPOGRAPHY.caption, fontFamily: FONTS.semiBold, color: C.text },
     progressBarWrap: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs },
     progressBar: { flex: 1, height: 4, backgroundColor: C.surfaceElevated, borderRadius: 2, overflow: 'hidden' },
     progressFill: { height: '100%', backgroundColor: COLORS.primary, borderRadius: 2 },
@@ -349,7 +349,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       justifyContent: 'center',
     },
     dangerIconWrap: { backgroundColor: COLORS.primaryMuted },
-    settingLabel: { ...TYPOGRAPHY.body, color: C.text, fontWeight: '500' },
+    settingLabel: { ...TYPOGRAPHY.body, fontFamily: FONTS.medium, color: C.text },
     dangerLabel: { color: COLORS.primary },
   });
 }

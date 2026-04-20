@@ -4,7 +4,7 @@ import { ArrowLeft, BookOpen, Headphones, Download, Star, Play, CheckCircle, Loc
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withDelay, Easing } from 'react-native-reanimated';
 import { useEffect, useMemo } from 'react';
 import { COLORS } from '../../constants/Colors';
-import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
+import { SPACING, RADIUS, TYPOGRAPHY, FONTS } from '../../constants/theme';
 import { MOCK_BOOKS, MOCK_BOOK_CHAPTERS } from '../../data/mockData';
 import { useThemeColors } from '../../hooks/useThemeColors';
 
@@ -206,7 +206,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     heroAuthor: { ...TYPOGRAPHY.caption, color: 'rgba(255,255,255,0.7)' },
     heroMeta: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, marginTop: 2 },
     ratingRow: { flexDirection: 'row', alignItems: 'center', gap: 3 },
-    ratingText: { ...TYPOGRAPHY.caption, color: COLORS.gold, fontWeight: '600' },
+    ratingText: { ...TYPOGRAPHY.caption, fontFamily: FONTS.semiBold, color: COLORS.gold },
     heroDot: { color: 'rgba(255,255,255,0.4)', fontSize: 10 },
     heroCategory: { ...TYPOGRAPHY.caption, color: 'rgba(255,255,255,0.6)' },
     statsStrip: {
@@ -217,7 +217,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       paddingVertical: SPACING.md,
     },
     statItem: { flex: 1, alignItems: 'center', gap: 4 },
-    statVal: { ...TYPOGRAPHY.label, color: C.text, fontWeight: '700', fontSize: 13 },
+    statVal: { ...TYPOGRAPHY.label, fontFamily: FONTS.bold, color: C.text, fontSize: 13 },
     statLbl: { ...TYPOGRAPHY.micro, color: C.textMuted },
     divider: { width: 1, backgroundColor: C.border },
     progressCard: {
@@ -232,7 +232,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     },
     progressHeader: { flexDirection: 'row', justifyContent: 'space-between' },
     progressLabel: { ...TYPOGRAPHY.label, color: C.textMuted },
-    progressPct: { ...TYPOGRAPHY.label, color: COLORS.primary, fontWeight: '700' },
+    progressPct: { ...TYPOGRAPHY.label, fontFamily: FONTS.bold, color: COLORS.primary },
     progressTrack: { height: 6, backgroundColor: C.surfaceElevated, borderRadius: 3, overflow: 'hidden' },
     progressFill: { height: '100%', backgroundColor: COLORS.primary, borderRadius: 3 },
     progressSub: { ...TYPOGRAPHY.caption, color: C.textHint },
@@ -250,7 +250,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       borderRadius: RADIUS.full,
       paddingVertical: 13,
     },
-    ctaPrimaryText: { ...TYPOGRAPHY.body, color: '#FFF', fontWeight: '700' },
+    ctaPrimaryText: { ...TYPOGRAPHY.body, fontFamily: FONTS.bold, color: '#FFF' },
     ctaSecondary: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -263,7 +263,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       borderWidth: 1,
       borderColor: COLORS.primaryBorder,
     },
-    ctaSecondaryText: { ...TYPOGRAPHY.body, color: COLORS.primary, fontWeight: '700' },
+    ctaSecondaryText: { ...TYPOGRAPHY.body, fontFamily: FONTS.bold, color: COLORS.primary },
     chapList: { gap: 2 },
     chapRow: {
       flexDirection: 'row',
@@ -287,7 +287,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     chapStateDone: { backgroundColor: 'rgba(39,174,96,0.12)' },
     chapStateCurrent: { backgroundColor: COLORS.primaryMuted },
     chapInfo: { flex: 1, gap: 3 },
-    chapTitle: { ...TYPOGRAPHY.caption, color: C.text, fontWeight: '500' },
+    chapTitle: { ...TYPOGRAPHY.caption, fontFamily: FONTS.semiBold, color: C.text },
     chapTitleLocked: { color: C.textHint },
     chapDuration: { ...TYPOGRAPHY.micro, color: C.textHint },
     currentBadge: {
@@ -296,6 +296,6 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       paddingHorizontal: SPACING.sm,
       paddingVertical: 3,
     },
-    currentBadgeText: { ...TYPOGRAPHY.micro, color: COLORS.primary, fontWeight: '700' },
+    currentBadgeText: { ...TYPOGRAPHY.micro, fontFamily: FONTS.bold, color: COLORS.primary },
   });
 }
