@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { GraduationCap, Sword, Star, Headphones, Users, ChevronRight, Award } from 'lucide-react-native';
 import { useState } from 'react';
+import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { MOCK_COURSES, MOCK_CHALLENGES, MOCK_REVIVAL_FIGURES } from '../../data/mockData';
@@ -53,7 +54,7 @@ function FormationSection() {
   return (
     <View style={styles.list}>
       {MOCK_COURSES.map((course) => (
-        <TouchableOpacity key={course.id} style={styles.courseCard} activeOpacity={0.85}>
+        <TouchableOpacity key={course.id} style={styles.courseCard} activeOpacity={0.85} onPress={() => router.push(`/course/${course.id}`)}>
           <View style={[styles.courseHero, { backgroundColor: course.heroGradient[0] }]}>
             <View style={styles.courseHeroOverlay} />
             <View style={styles.courseHeroContent}>
@@ -110,7 +111,7 @@ function DefisSection() {
   return (
     <View style={styles.list}>
       {MOCK_CHALLENGES.map((challenge) => (
-        <TouchableOpacity key={challenge.id} style={styles.challengeCard} activeOpacity={0.85}>
+        <TouchableOpacity key={challenge.id} style={styles.challengeCard} activeOpacity={0.85} onPress={() => router.push(`/challenge/${challenge.id}`)}>
           <View style={styles.challengeTop}>
             <View style={[styles.challengeIconWrap, { backgroundColor: challenge.iconBg }]}>
               <Sword size={20} color={COLORS.purple} />
@@ -139,7 +140,7 @@ function DefisSection() {
               <Text style={styles.progressPct}>Jour {challenge.currentDay}/{challenge.days}</Text>
             </View>
           ) : (
-            <TouchableOpacity style={styles.startBtn} activeOpacity={0.85}>
+            <TouchableOpacity style={styles.startBtn} activeOpacity={0.85} onPress={() => router.push(`/challenge/${challenge.id}`)}>
               <Text style={styles.startBtnText}>Commencer ce defi</Text>
             </TouchableOpacity>
           )}
@@ -157,7 +158,7 @@ function ReveilSection() {
     <View style={styles.list}>
       {/* Featured figure */}
       {featured && (
-        <TouchableOpacity style={styles.figureCardFeatured} activeOpacity={0.85}>
+        <TouchableOpacity style={styles.figureCardFeatured} activeOpacity={0.85} onPress={() => router.push(`/revival/${featured.id}`)}>
           <View style={styles.figureHeaderRow}>
             <View style={styles.figureAvatar}>
               <Text style={styles.figureAvatarText}>{featured.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}</Text>
@@ -191,7 +192,7 @@ function ReveilSection() {
 
       {/* Other figures */}
       {rest.map((figure) => (
-        <TouchableOpacity key={figure.id} style={styles.figureCard} activeOpacity={0.85}>
+        <TouchableOpacity key={figure.id} style={styles.figureCard} activeOpacity={0.85} onPress={() => router.push(`/revival/${figure.id}`)}>
           <View style={styles.figureAvatarSm}>
             <Text style={styles.figureAvatarSmText}>{figure.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}</Text>
           </View>

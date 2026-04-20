@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { Plus, Heart, MessageCircle, Users, Lock } from 'lucide-react-native';
 import { useState } from 'react';
+import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { MOCK_COMMUNITY_POSTS, MOCK_GROUPS } from '../../data/mockData';
@@ -53,7 +54,7 @@ export default function CommunityScreen() {
       </ScrollView>
 
       {/* FAB */}
-      <TouchableOpacity style={styles.fab} activeOpacity={0.85}>
+      <TouchableOpacity style={styles.fab} activeOpacity={0.85} onPress={() => router.push('/community/new-post')}>
         <Plus size={22} color="#FFF" />
       </TouchableOpacity>
     </View>
@@ -64,7 +65,7 @@ function FeedTab() {
   return (
     <View style={styles.feedList}>
       {MOCK_COMMUNITY_POSTS.map((post) => (
-        <TouchableOpacity key={post.id} style={styles.postCard} activeOpacity={0.85}>
+        <TouchableOpacity key={post.id} style={styles.postCard} activeOpacity={0.85} onPress={() => router.push(`/community/post/${post.id}`)}>
           <View style={styles.postHeader}>
             <View style={[styles.typeTag, { backgroundColor: `${POST_TYPE_COLORS[post.typeColor]}18` }]}>
               <Text style={[styles.typeTagText, { color: POST_TYPE_COLORS[post.typeColor] }]}>{post.type}</Text>
@@ -136,7 +137,7 @@ function PrayerTab() {
         <Text style={styles.prayerSub}>Intercedez pour vos freres et soeurs</Text>
       </View>
       {prayerPosts.map((post) => (
-        <TouchableOpacity key={post.id} style={styles.postCard} activeOpacity={0.85}>
+        <TouchableOpacity key={post.id} style={styles.postCard} activeOpacity={0.85} onPress={() => router.push(`/community/post/${post.id}`)}>
           <View style={styles.postAuthorRow}>
             <View style={[styles.avatar, post.isAnonymous && styles.avatarAnon]}>
               <Text style={styles.avatarText}>{post.isAnonymous ? '?' : post.authorName[0]}</Text>

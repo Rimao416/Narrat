@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Dimensions } from 'react-native';
 import { Search, Star, Headphones, Download, BookOpen, ChevronRight, Filter } from 'lucide-react-native';
 import { useState } from 'react';
+import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { MOCK_BOOKS } from '../../data/mockData';
@@ -66,7 +67,7 @@ export default function LibraryScreen() {
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>A la une</Text>
           </View>
-          <TouchableOpacity style={[styles.featuredCard, { backgroundColor: featured.coverGradient[0] }]} activeOpacity={0.85}>
+          <TouchableOpacity style={[styles.featuredCard, { backgroundColor: featured.coverGradient[0] }]} activeOpacity={0.85} onPress={() => router.push(`/book/${featured.id}`)}>
             <View style={styles.featuredOverlay} />
             <View style={styles.featuredContent}>
               <View style={styles.featuredBadge}>
@@ -108,7 +109,7 @@ export default function LibraryScreen() {
         </View>
         <View style={styles.bookList}>
           {filtered.map((book) => (
-            <TouchableOpacity key={book.id} style={styles.bookRow} activeOpacity={0.85}>
+            <TouchableOpacity key={book.id} style={styles.bookRow} activeOpacity={0.85} onPress={() => router.push(`/book/${book.id}`)}>
               <View style={[styles.bookCover, { backgroundColor: book.coverGradient[0] }]}>
                 <BookOpen size={18} color="rgba(255,255,255,0.5)" />
               </View>

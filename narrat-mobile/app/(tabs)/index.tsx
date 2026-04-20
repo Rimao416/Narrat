@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { Bell, Flame, BookOpen, GraduationCap, Sword, Users, ChevronRight } from 'lucide-react-native';
+import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY, SHADOW } from '../../constants/theme';
 import {
@@ -92,7 +93,7 @@ export default function HomeScreen() {
       {/* Continue reading */}
       <View style={styles.section}>
         <SectionHeader title="Continuer la lecture" action="Voir tout" />
-        <TouchableOpacity style={styles.bookCard} activeOpacity={0.85}>
+        <TouchableOpacity style={styles.bookCard} activeOpacity={0.85} onPress={() => router.push(`/book/${book.id}`)}>
           <View style={[styles.bookCover, { backgroundColor: book.coverGradient[0] }]}>
             <View style={styles.bookCoverInner} />
           </View>
@@ -127,7 +128,7 @@ export default function HomeScreen() {
       {/* Active challenge */}
       <View style={styles.section}>
         <SectionHeader title="Defi en cours" action="Tous les defis" />
-        <TouchableOpacity style={styles.challengeCard} activeOpacity={0.85}>
+        <TouchableOpacity style={styles.challengeCard} activeOpacity={0.85} onPress={() => router.push(`/challenge/${challenge.id}`)}>
           <View style={styles.challengeHeader}>
             <View style={styles.challengeIconWrap}>
               <Sword size={18} color={COLORS.purple} />
@@ -152,7 +153,7 @@ export default function HomeScreen() {
       {/* Community preview */}
       <View style={styles.section}>
         <SectionHeader title="Communaute" action="Voir tout" />
-        <TouchableOpacity style={styles.communityCard} activeOpacity={0.85}>
+        <TouchableOpacity style={styles.communityCard} activeOpacity={0.85} onPress={() => router.push(`/community/post/${post.id}`)}>
           <View style={styles.communityHeader}>
             <View style={[styles.typeTag, { backgroundColor: `${POST_TYPE_COLORS[post.typeColor]}18` }]}>
               <Text style={[styles.typeTagText, { color: POST_TYPE_COLORS[post.typeColor] }]}>{post.type}</Text>

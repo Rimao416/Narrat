@@ -38,7 +38,7 @@ export default function ProfileScreen() {
       {/* Header */}
       <View style={styles.pageHeader}>
         <Text style={styles.pageTitle}>Profil</Text>
-        <TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
+        <TouchableOpacity style={styles.iconBtn} activeOpacity={0.7} onPress={() => router.push('/profile/settings')}>
           <Settings size={18} color={C.textMuted} />
         </TouchableOpacity>
       </View>
