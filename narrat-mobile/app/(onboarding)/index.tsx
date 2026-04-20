@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { router } from 'expo-router';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo } from 'react';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -12,11 +12,14 @@ import Animated, {
 } from 'react-native-reanimated';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
+import { useThemeColors } from '../../hooks/useThemeColors';
 
 const { width, height } = Dimensions.get('window');
-const C = COLORS.dark;
 
 export default function OnboardingIndex() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
+
   const ring1Opacity = useSharedValue(0);
   const ring2Opacity = useSharedValue(0);
   const ring3Opacity = useSharedValue(0);
@@ -144,137 +147,139 @@ export default function OnboardingIndex() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: C.bg,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 80,
-  },
-  ring: {
-    position: 'absolute',
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: COLORS.primary,
-  },
-  ring1: {
-    width: 260,
-    height: 260,
-    top: height * 0.18 - 130,
-    left: width / 2 - 130,
-  },
-  ring2: {
-    width: 360,
-    height: 360,
-    top: height * 0.18 - 180,
-    left: width / 2 - 180,
-  },
-  ring3: {
-    width: 480,
-    height: 480,
-    top: height * 0.18 - 240,
-    left: width / 2 - 240,
-  },
-  logoSection: {
-    alignItems: 'center',
-    gap: SPACING.xl,
-    marginTop: height * 0.08,
-  },
-  logoWrap: {
-    width: 80,
-    height: 80,
-    borderRadius: RADIUS.xl,
-    backgroundColor: COLORS.primaryMuted,
-    borderWidth: 1,
-    borderColor: COLORS.primaryBorder,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  crossContainer: {
-    width: 36,
-    height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  crossVertical: {
-    position: 'absolute',
-    width: 5,
-    height: 36,
-    backgroundColor: COLORS.primary,
-    borderRadius: 3,
-  },
-  crossHorizontal: {
-    position: 'absolute',
-    width: 30,
-    height: 5,
-    backgroundColor: COLORS.primary,
-    borderRadius: 3,
-    top: 8,
-  },
-  appName: {
-    ...TYPOGRAPHY.h1,
-    color: C.text,
-    textAlign: 'center',
-    fontSize: 38,
-    letterSpacing: -1,
-  },
-  tagline: {
-    ...TYPOGRAPHY.body,
-    color: C.textMuted,
-    textAlign: 'center',
-    marginTop: SPACING.xs,
-  },
-  buttonsSection: {
-    width: '100%',
-    paddingHorizontal: SPACING.xl,
-    gap: SPACING.md,
-    alignItems: 'center',
-  },
-  primaryButton: {
-    width: '100%',
-    height: 54,
-    backgroundColor: COLORS.primary,
-    borderRadius: RADIUS.full,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  primaryButtonText: {
-    ...TYPOGRAPHY.bodyLarge,
-    color: '#FFFFFF',
-    fontWeight: '700',
-  },
-  googleButton: {
-    width: '100%',
-    height: 54,
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.full,
-    borderWidth: 1,
-    borderColor: C.border2,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: SPACING.sm,
-  },
-  googleIconPlaceholder: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: C.textMuted,
-  },
-  googleButtonText: {
-    ...TYPOGRAPHY.bodyLarge,
-    color: C.text,
-  },
-  loginLink: {
-    paddingVertical: SPACING.sm,
-  },
-  loginLinkText: {
-    ...TYPOGRAPHY.body,
-    color: C.textMuted,
-  },
-  loginLinkAccent: {
-    color: COLORS.primary,
-    fontWeight: '600',
-  },
-});
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: C.bg,
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: 80,
+    },
+    ring: {
+      position: 'absolute',
+      borderRadius: 999,
+      borderWidth: 1,
+      borderColor: COLORS.primary,
+    },
+    ring1: {
+      width: 260,
+      height: 260,
+      top: height * 0.18 - 130,
+      left: width / 2 - 130,
+    },
+    ring2: {
+      width: 360,
+      height: 360,
+      top: height * 0.18 - 180,
+      left: width / 2 - 180,
+    },
+    ring3: {
+      width: 480,
+      height: 480,
+      top: height * 0.18 - 240,
+      left: width / 2 - 240,
+    },
+    logoSection: {
+      alignItems: 'center',
+      gap: SPACING.xl,
+      marginTop: height * 0.08,
+    },
+    logoWrap: {
+      width: 80,
+      height: 80,
+      borderRadius: RADIUS.xl,
+      backgroundColor: COLORS.primaryMuted,
+      borderWidth: 1,
+      borderColor: COLORS.primaryBorder,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    crossContainer: {
+      width: 36,
+      height: 36,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    crossVertical: {
+      position: 'absolute',
+      width: 5,
+      height: 36,
+      backgroundColor: COLORS.primary,
+      borderRadius: 3,
+    },
+    crossHorizontal: {
+      position: 'absolute',
+      width: 30,
+      height: 5,
+      backgroundColor: COLORS.primary,
+      borderRadius: 3,
+      top: 8,
+    },
+    appName: {
+      ...TYPOGRAPHY.h1,
+      color: C.text,
+      textAlign: 'center',
+      fontSize: 38,
+      letterSpacing: -1,
+    },
+    tagline: {
+      ...TYPOGRAPHY.body,
+      color: C.textMuted,
+      textAlign: 'center',
+      marginTop: SPACING.xs,
+    },
+    buttonsSection: {
+      width: '100%',
+      paddingHorizontal: SPACING.xl,
+      gap: SPACING.md,
+      alignItems: 'center',
+    },
+    primaryButton: {
+      width: '100%',
+      height: 54,
+      backgroundColor: COLORS.primary,
+      borderRadius: RADIUS.full,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    primaryButtonText: {
+      ...TYPOGRAPHY.bodyLarge,
+      color: '#FFFFFF',
+      fontWeight: '700',
+    },
+    googleButton: {
+      width: '100%',
+      height: 54,
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.full,
+      borderWidth: 1,
+      borderColor: C.border2,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: SPACING.sm,
+    },
+    googleIconPlaceholder: {
+      width: 20,
+      height: 20,
+      borderRadius: 10,
+      backgroundColor: C.textMuted,
+    },
+    googleButtonText: {
+      ...TYPOGRAPHY.bodyLarge,
+      color: C.text,
+    },
+    loginLink: {
+      paddingVertical: SPACING.sm,
+    },
+    loginLinkText: {
+      ...TYPOGRAPHY.body,
+      color: C.textMuted,
+    },
+    loginLinkAccent: {
+      color: COLORS.primary,
+      fontWeight: '600',
+    },
+  });
+}

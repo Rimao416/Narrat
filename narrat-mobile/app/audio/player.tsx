@@ -4,12 +4,12 @@ import { ChevronDown, List, SkipBack, SkipForward, Play, Pause, Volume2 } from '
 import Animated, {
   useSharedValue, useAnimatedStyle, withTiming, withRepeat, withSequence, withDelay, Easing,
 } from 'react-native-reanimated';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { MOCK_BOOKS, MOCK_BOOK_CHAPTERS } from '../../data/mockData';
+import { useThemeColors } from '../../hooks/useThemeColors';
 
-const C = COLORS.dark;
 const book = MOCK_BOOKS[0];
 const chapter = MOCK_BOOK_CHAPTERS[4];
 
@@ -20,6 +20,8 @@ const WAVEFORM_BARS = Array.from({ length: 40 }, (_, i) => ({
 }));
 
 export default function AudioPlayerScreen() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1.0);
   const artScale = useSharedValue(1);
@@ -142,127 +144,129 @@ export default function AudioPlayerScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: C.bg, paddingBottom: 36 },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 52,
-    paddingHorizontal: SPACING.xl,
-    paddingBottom: SPACING.md,
-  },
-  iconBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: C.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerCenter: { flex: 1, alignItems: 'center' },
-  headerLabel: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '600' },
-  artworkSection: { alignItems: 'center', paddingVertical: SPACING.xl, gap: SPACING.sm },
-  artworkWrap: {},
-  artwork: {
-    width: 180,
-    height: 180,
-    borderRadius: RADIUS.card,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: SPACING.sm,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-  artworkInitials: { ...TYPOGRAPHY.h2, color: 'rgba(255,255,255,0.6)', fontSize: 48 },
-  bookTitle: { ...TYPOGRAPHY.h4, color: C.text },
-  chapterTitle: { ...TYPOGRAPHY.body, color: C.textMuted, textAlign: 'center', paddingHorizontal: SPACING.xl },
-  chapterMeta: { ...TYPOGRAPHY.micro, color: C.textHint },
-  waveformSection: { paddingHorizontal: SPACING.xl, marginBottom: SPACING.lg },
-  waveform: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 48,
-    gap: 2,
-    position: 'relative',
-  },
-  bar: { flex: 1, borderRadius: 2 },
-  barActive: { backgroundColor: COLORS.primary },
-  barInactive: { backgroundColor: C.surfaceElevated },
-  playhead: {
-    position: 'absolute',
-    top: -4,
-    bottom: -4,
-    width: 2,
-    backgroundColor: '#FFF',
-    borderRadius: 1,
-  },
-  timeRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: SPACING.sm },
-  timeText: { ...TYPOGRAPHY.micro, color: C.textHint },
-  speedRow: { alignItems: 'center', marginBottom: SPACING.lg },
-  speedBadge: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.full,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: 6,
-    borderWidth: 1,
-    borderColor: C.border2,
-  },
-  speedText: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '700' },
-  controls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: SPACING.xl,
-    paddingHorizontal: SPACING.xl,
-    marginBottom: SPACING.xl,
-  },
-  ctrlBtn: { flexDirection: 'row', alignItems: 'center', gap: 3 },
-  skipLabel: { ...TYPOGRAPHY.micro, color: C.textHint },
-  prevBtn: { padding: SPACING.sm },
-  nextBtn: { padding: SPACING.sm },
-  playBtn: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-  volumeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: SPACING.xl * 2,
-    gap: SPACING.md,
-  },
-  volumeTrack: {
-    flex: 1,
-    height: 4,
-    backgroundColor: C.surfaceElevated,
-    borderRadius: 2,
-    position: 'relative',
-  },
-  volumeFill: { width: '70%', height: '100%', backgroundColor: COLORS.primary, borderRadius: 2 },
-  volumeThumb: {
-    position: 'absolute',
-    left: '70%',
-    top: -5,
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    backgroundColor: '#FFF',
-    transform: [{ translateX: -7 }],
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-});
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    root: { flex: 1, backgroundColor: C.bg, paddingBottom: 36 },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingTop: 52,
+      paddingHorizontal: SPACING.xl,
+      paddingBottom: SPACING.md,
+    },
+    iconBtn: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: C.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    headerCenter: { flex: 1, alignItems: 'center' },
+    headerLabel: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '600' },
+    artworkSection: { alignItems: 'center', paddingVertical: SPACING.xl, gap: SPACING.sm },
+    artworkWrap: {},
+    artwork: {
+      width: 180,
+      height: 180,
+      borderRadius: RADIUS.card,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: SPACING.sm,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.4,
+      shadowRadius: 20,
+      elevation: 10,
+    },
+    artworkInitials: { ...TYPOGRAPHY.h2, color: 'rgba(255,255,255,0.6)', fontSize: 48 },
+    bookTitle: { ...TYPOGRAPHY.h4, color: C.text },
+    chapterTitle: { ...TYPOGRAPHY.body, color: C.textMuted, textAlign: 'center', paddingHorizontal: SPACING.xl },
+    chapterMeta: { ...TYPOGRAPHY.micro, color: C.textHint },
+    waveformSection: { paddingHorizontal: SPACING.xl, marginBottom: SPACING.lg },
+    waveform: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      height: 48,
+      gap: 2,
+      position: 'relative',
+    },
+    bar: { flex: 1, borderRadius: 2 },
+    barActive: { backgroundColor: COLORS.primary },
+    barInactive: { backgroundColor: C.surfaceElevated },
+    playhead: {
+      position: 'absolute',
+      top: -4,
+      bottom: -4,
+      width: 2,
+      backgroundColor: '#FFF',
+      borderRadius: 1,
+    },
+    timeRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: SPACING.sm },
+    timeText: { ...TYPOGRAPHY.micro, color: C.textHint },
+    speedRow: { alignItems: 'center', marginBottom: SPACING.lg },
+    speedBadge: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.full,
+      paddingHorizontal: SPACING.md,
+      paddingVertical: 6,
+      borderWidth: 1,
+      borderColor: C.border2,
+    },
+    speedText: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '700' },
+    controls: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: SPACING.xl,
+      paddingHorizontal: SPACING.xl,
+      marginBottom: SPACING.xl,
+    },
+    ctrlBtn: { flexDirection: 'row', alignItems: 'center', gap: 3 },
+    skipLabel: { ...TYPOGRAPHY.micro, color: C.textHint },
+    prevBtn: { padding: SPACING.sm },
+    nextBtn: { padding: SPACING.sm },
+    playBtn: {
+      width: 64,
+      height: 64,
+      borderRadius: 32,
+      backgroundColor: COLORS.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: COLORS.primary,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.5,
+      shadowRadius: 12,
+      elevation: 8,
+    },
+    volumeRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: SPACING.xl * 2,
+      gap: SPACING.md,
+    },
+    volumeTrack: {
+      flex: 1,
+      height: 4,
+      backgroundColor: C.surfaceElevated,
+      borderRadius: 2,
+      position: 'relative',
+    },
+    volumeFill: { width: '70%', height: '100%', backgroundColor: COLORS.primary, borderRadius: 2 },
+    volumeThumb: {
+      position: 'absolute',
+      left: '70%',
+      top: -5,
+      width: 14,
+      height: 14,
+      borderRadius: 7,
+      backgroundColor: '#FFF',
+      transform: [{ translateX: -7 }],
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+  });
+}

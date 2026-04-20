@@ -2,11 +2,11 @@ import { View, Text, ScrollView, TouchableOpacity, TextInput, Switch, StyleSheet
 import { router } from 'expo-router';
 import { X, Heart, BookOpen, HelpCircle, MessageCircle } from 'lucide-react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withSpring } from 'react-native-reanimated';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
+import { useThemeColors } from '../../hooks/useThemeColors';
 
-const C = COLORS.dark;
 const MAX_CHARS = 500;
 
 const POST_TYPES = [
@@ -23,6 +23,8 @@ const VISIBILITY = [
 ];
 
 export default function NewPostScreen() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [body, setBody] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -65,7 +67,6 @@ export default function NewPostScreen() {
             <Text style={styles.sectionTitle}>Type de message</Text>
             <View style={styles.typeGrid}>
               {POST_TYPES.map((type) => {
-                const Icon = type.icon;
                 const isSelected = selectedType === type.id;
                 return (
                   <TypeCard
@@ -150,6 +151,8 @@ export default function NewPostScreen() {
 }
 
 function TypeCard({ type, isSelected, onPress }: { type: any; isSelected: boolean; onPress: () => void }) {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const scale = useSharedValue(1);
   const scaleStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
   const Icon = type.icon;
@@ -175,106 +178,108 @@ function TypeCard({ type, isSelected, onPress }: { type: any; isSelected: boolea
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: C.bg },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 52,
-    paddingHorizontal: SPACING.xl,
-    paddingBottom: SPACING.md,
-    borderBottomWidth: 1,
-    borderBottomColor: C.border,
-  },
-  closeBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: C.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: { ...TYPOGRAPHY.h4, color: C.text },
-  publishBtn: {
-    backgroundColor: COLORS.primary,
-    borderRadius: RADIUS.full,
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: 8,
-  },
-  publishBtnDisabled: { backgroundColor: C.surfaceElevated },
-  publishBtnText: { ...TYPOGRAPHY.caption, color: '#FFF', fontWeight: '700' },
-  publishBtnTextDisabled: { color: C.textHint },
-  scroll: { flex: 1 },
-  scrollContent: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.xl },
-  section: { marginBottom: SPACING.xl },
-  sectionTitle: { ...TYPOGRAPHY.h4, color: C.text, marginBottom: SPACING.md },
-  typeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm },
-  typeCard: {
-    width: '47%',
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    padding: SPACING.lg,
-    gap: SPACING.sm,
-    alignItems: 'center',
-  },
-  typeCardActive: { backgroundColor: C.surfaceElevated },
-  typeIconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: RADIUS.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  typeCardLabel: { ...TYPOGRAPHY.label, color: C.textMuted, fontWeight: '600' },
-  toggleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    padding: SPACING.lg,
-  },
-  toggleInfo: { flex: 1, gap: 3 },
-  toggleLabel: { ...TYPOGRAPHY.body, color: C.text, fontWeight: '500' },
-  toggleSub: { ...TYPOGRAPHY.caption, color: C.textHint },
-  textarea: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    padding: SPACING.lg,
-    ...TYPOGRAPHY.body,
-    color: C.text,
-    minHeight: 130,
-    lineHeight: 22,
-  },
-  charCount: { ...TYPOGRAPHY.micro, color: C.textHint, textAlign: 'right', marginTop: 6 },
-  verseInput: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
-    borderColor: C.border,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: 12,
-    ...TYPOGRAPHY.body,
-    color: C.text,
-  },
-  visibilityRow: { flexDirection: 'row', gap: SPACING.sm },
-  visBtn: {
-    flex: 1,
-    paddingVertical: 10,
-    borderRadius: RADIUS.full,
-    backgroundColor: C.surface,
-    borderWidth: 1,
-    borderColor: C.border,
-    alignItems: 'center',
-  },
-  visBtnActive: { backgroundColor: COLORS.primaryMuted, borderColor: COLORS.primaryBorder },
-  visBtnText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '600' },
-  visBtnTextActive: { color: COLORS.primary },
-});
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    root: { flex: 1, backgroundColor: C.bg },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingTop: 52,
+      paddingHorizontal: SPACING.xl,
+      paddingBottom: SPACING.md,
+      borderBottomWidth: 1,
+      borderBottomColor: C.border,
+    },
+    closeBtn: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: C.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    headerTitle: { ...TYPOGRAPHY.h4, color: C.text },
+    publishBtn: {
+      backgroundColor: COLORS.primary,
+      borderRadius: RADIUS.full,
+      paddingHorizontal: SPACING.lg,
+      paddingVertical: 8,
+    },
+    publishBtnDisabled: { backgroundColor: C.surfaceElevated },
+    publishBtnText: { ...TYPOGRAPHY.caption, color: '#FFF', fontWeight: '700' },
+    publishBtnTextDisabled: { color: C.textHint },
+    scroll: { flex: 1 },
+    scrollContent: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.xl },
+    section: { marginBottom: SPACING.xl },
+    sectionTitle: { ...TYPOGRAPHY.h4, color: C.text, marginBottom: SPACING.md },
+    typeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm },
+    typeCard: {
+      width: '47%',
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      padding: SPACING.lg,
+      gap: SPACING.sm,
+      alignItems: 'center',
+    },
+    typeCardActive: { backgroundColor: C.surfaceElevated },
+    typeIconWrap: {
+      width: 44,
+      height: 44,
+      borderRadius: RADIUS.md,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    typeCardLabel: { ...TYPOGRAPHY.label, color: C.textMuted, fontWeight: '600' },
+    toggleRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      padding: SPACING.lg,
+    },
+    toggleInfo: { flex: 1, gap: 3 },
+    toggleLabel: { ...TYPOGRAPHY.body, color: C.text, fontWeight: '500' },
+    toggleSub: { ...TYPOGRAPHY.caption, color: C.textHint },
+    textarea: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      padding: SPACING.lg,
+      ...TYPOGRAPHY.body,
+      color: C.text,
+      minHeight: 130,
+      lineHeight: 22,
+    },
+    charCount: { ...TYPOGRAPHY.micro, color: C.textHint, textAlign: 'right', marginTop: 6 },
+    verseInput: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.md,
+      borderWidth: 1,
+      borderColor: C.border,
+      paddingHorizontal: SPACING.md,
+      paddingVertical: 12,
+      ...TYPOGRAPHY.body,
+      color: C.text,
+    },
+    visibilityRow: { flexDirection: 'row', gap: SPACING.sm },
+    visBtn: {
+      flex: 1,
+      paddingVertical: 10,
+      borderRadius: RADIUS.full,
+      backgroundColor: C.surface,
+      borderWidth: 1,
+      borderColor: C.border,
+      alignItems: 'center',
+    },
+    visBtnActive: { backgroundColor: COLORS.primaryMuted, borderColor: COLORS.primaryBorder },
+    visBtnText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '600' },
+    visBtnTextActive: { color: COLORS.primary },
+  });
+}

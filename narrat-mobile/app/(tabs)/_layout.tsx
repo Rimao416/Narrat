@@ -3,10 +3,10 @@ import { Platform, View, StyleSheet } from 'react-native';
 import { Home, BookOpen, Users, Compass, User } from 'lucide-react-native';
 import { COLORS } from '../../constants/Colors';
 import { RADIUS } from '../../constants/theme';
-
-const C = COLORS.dark;
+import { useThemeColors } from '../../hooks/useThemeColors';
 
 export default function TabLayout() {
+  const C = useThemeColors();
   return (
     <Tabs
       screenOptions={{

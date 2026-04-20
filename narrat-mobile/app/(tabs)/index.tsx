@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { Bell, Flame, BookOpen, GraduationCap, Sword, Users, ChevronRight } from 'lucide-react-native';
+import { useMemo } from 'react';
 import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY, SHADOW } from '../../constants/theme';
@@ -12,8 +13,8 @@ import {
   MOCK_CHALLENGES,
   MOCK_COMMUNITY_POSTS,
 } from '../../data/mockData';
+import { useThemeColors } from '../../hooks/useThemeColors';
 
-const C = COLORS.dark;
 const { width } = Dimensions.get('window');
 
 const POST_TYPE_COLORS: Record<string, string> = {
@@ -23,6 +24,8 @@ const POST_TYPE_COLORS: Record<string, string> = {
 };
 
 export default function HomeScreen() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const book = MOCK_BOOKS[0];
   const challenge = MOCK_CHALLENGES[0];
   const post = MOCK_COMMUNITY_POSTS[0];
@@ -181,6 +184,8 @@ export default function HomeScreen() {
 }
 
 function SectionHeader({ title, action }: { title: string; action?: string }) {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   return (
     <View style={styles.sectionHeader}>
       <Text style={styles.sectionTitle}>{title}</Text>
@@ -196,431 +201,420 @@ function SectionHeader({ title, action }: { title: string; action?: string }) {
 
 function StatCard({ icon, value, label, color }: { icon: React.ReactNode; value: string | number; label: string; color: string }) {
   return (
-    <View style={[styles.statCard, { backgroundColor: color }]}>
+    <View style={[statCardStyle, { backgroundColor: color }]}>
       {icon}
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={styles.statLabel}>{label}</Text>
+      <Text style={statValueStyle}>{value}</Text>
+      <Text style={statLabelStyle}>{label}</Text>
     </View>
   );
 }
 
 function ModuleCard({ icon, label, bg, count }: { icon: React.ReactNode; label: string; bg: string; count: number }) {
   return (
-    <TouchableOpacity style={[styles.moduleCard, { backgroundColor: bg }]} activeOpacity={0.8}>
-      <View style={styles.moduleIconWrap}>{icon}</View>
-      <Text style={styles.moduleLabel}>{label}</Text>
-      <Text style={styles.moduleCount}>{count}</Text>
+    <TouchableOpacity style={[moduleCardStyle, { backgroundColor: bg }]} activeOpacity={0.8}>
+      <View>{icon}</View>
+      <Text style={moduleLabelStyle}>{label}</Text>
+      <Text style={moduleCountStyle}>{count}</Text>
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: C.bg,
-  },
-  content: {
-    paddingTop: 56,
-    paddingHorizontal: SPACING.xl,
-  },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    marginBottom: SPACING.xl,
-  },
-  greeting: {
-    ...TYPOGRAPHY.h3,
-    color: C.text,
-  },
-  church: {
-    ...TYPOGRAPHY.caption,
-    color: C.textMuted,
-    marginTop: 2,
-  },
-  topRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-  },
-  streakBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: COLORS.warningBg,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 5,
-    borderRadius: RADIUS.full,
-  },
-  streakCount: {
-    ...TYPOGRAPHY.label,
-    color: COLORS.warning,
-    fontSize: 11,
-  },
-  bellBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: RADIUS.full,
-    backgroundColor: C.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bellDot: {
-    position: 'absolute',
-    top: 6,
-    right: 6,
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: COLORS.primary,
-    borderWidth: 1.5,
-    borderColor: C.bg,
-  },
-  verseCard: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    borderLeftWidth: 3,
-    borderLeftColor: COLORS.primary,
-    padding: SPACING.lg,
-    marginBottom: SPACING.xl,
-    gap: SPACING.sm,
-  },
-  verseHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  verseLabelWrap: {
-    backgroundColor: COLORS.primaryMuted,
-    borderRadius: RADIUS.full,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 3,
-  },
-  verseLabel: {
-    ...TYPOGRAPHY.micro,
-    color: COLORS.primary,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-  },
-  verseTranslation: {
-    ...TYPOGRAPHY.micro,
-    color: C.textHint,
-  },
-  verseText: {
-    ...TYPOGRAPHY.body,
-    color: C.textMuted,
-    fontStyle: 'italic',
-    lineHeight: 22,
-  },
-  verseRef: {
-    ...TYPOGRAPHY.caption,
-    color: COLORS.primary,
-    fontWeight: '600',
-  },
-  statsRow: {
-    flexDirection: 'row',
-    gap: SPACING.sm,
-    marginBottom: SPACING.xl,
-  },
-  statCard: {
-    flex: 1,
-    borderRadius: RADIUS.md,
-    padding: SPACING.md,
-    gap: 4,
-    alignItems: 'center',
-  },
-  statValue: {
-    ...TYPOGRAPHY.h3,
-    color: C.text,
-    fontSize: 20,
-  },
-  statLabel: {
-    ...TYPOGRAPHY.micro,
-    color: C.textMuted,
-    textAlign: 'center',
-  },
-  section: {
-    marginBottom: SPACING.xl,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: SPACING.md,
-  },
-  sectionTitle: {
-    ...TYPOGRAPHY.h4,
-    color: C.text,
-  },
-  sectionAction: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-  },
-  sectionActionText: {
-    ...TYPOGRAPHY.caption,
-    color: COLORS.primary,
-    fontWeight: '600',
-  },
-  weekRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    padding: SPACING.md,
-  },
-  dayItem: {
-    alignItems: 'center',
-    gap: SPACING.xs,
-  },
-  dayCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: C.surfaceElevated,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: C.border,
-  },
-  dayCircleDone: {
-    backgroundColor: COLORS.successBg,
-    borderColor: COLORS.success,
-  },
-  dayCircleToday: {
-    backgroundColor: COLORS.primaryMuted,
-    borderColor: COLORS.primaryBorder,
-  },
-  dayCheck: {
-    width: 12,
-    height: 8,
-    borderLeftWidth: 2,
-    borderBottomWidth: 2,
-    borderColor: COLORS.success,
-    transform: [{ rotate: '-45deg' }, { translateY: -1 }],
-  },
-  dayTodayDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: COLORS.primary,
-  },
-  dayLabel: {
-    ...TYPOGRAPHY.micro,
-    color: C.textHint,
-  },
-  dayLabelToday: {
-    color: COLORS.primary,
-    fontWeight: '700',
-  },
-  bookCard: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    flexDirection: 'row',
-    overflow: 'hidden',
-  },
-  bookCover: {
-    width: 72,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bookCoverInner: {
-    width: 40,
-    height: 56,
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 4,
-  },
-  bookInfo: {
-    flex: 1,
-    padding: SPACING.md,
-    gap: SPACING.xs,
-  },
-  bookMeta: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  bookCategory: {
-    ...TYPOGRAPHY.micro,
-    color: COLORS.primary,
-    textTransform: 'uppercase',
-    letterSpacing: 0.6,
-  },
-  bookChapter: {
-    ...TYPOGRAPHY.micro,
-    color: C.textHint,
-  },
-  bookTitle: {
-    ...TYPOGRAPHY.bodyLarge,
-    color: C.text,
-  },
-  bookAuthor: {
-    ...TYPOGRAPHY.caption,
-    color: C.textMuted,
-  },
-  progressWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.xs,
-    marginTop: 4,
-  },
-  progressBar: {
-    flex: 1,
-    height: 4,
-    backgroundColor: C.surfaceElevated,
-    borderRadius: 2,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: COLORS.primary,
-    borderRadius: 2,
-  },
-  progressFillPurple: {
-    backgroundColor: COLORS.purple,
-  },
-  progressPct: {
-    ...TYPOGRAPHY.micro,
-    color: C.textHint,
-    width: 30,
-    textAlign: 'right',
-  },
-  modulesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: SPACING.sm,
-  },
-  moduleCard: {
-    width: (width - SPACING.xl * 2 - SPACING.sm) / 2,
-    borderRadius: RADIUS.card,
-    padding: SPACING.lg,
-    gap: SPACING.sm,
-  },
-  moduleIconWrap: {},
-  moduleLabel: {
-    ...TYPOGRAPHY.bodyLarge,
-    color: C.text,
-  },
-  moduleCount: {
-    ...TYPOGRAPHY.micro,
-    color: C.textMuted,
-  },
-  challengeCard: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    padding: SPACING.lg,
-    gap: SPACING.md,
-  },
-  challengeHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.md,
-  },
-  challengeIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: RADIUS.sm,
-    backgroundColor: COLORS.purpleBg,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  challengeInfo: {
-    flex: 1,
-  },
-  challengeTitle: {
-    ...TYPOGRAPHY.bodyLarge,
-    color: C.text,
-  },
-  challengeCategory: {
-    ...TYPOGRAPHY.caption,
-    color: C.textMuted,
-    marginTop: 2,
-  },
-  challengeDayBadge: {
-    backgroundColor: COLORS.purpleBg,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 4,
-    borderRadius: RADIUS.full,
-  },
-  challengeDayText: {
-    ...TYPOGRAPHY.label,
-    color: COLORS.purple,
-    fontSize: 10,
-  },
-  communityCard: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    padding: SPACING.lg,
-    gap: SPACING.sm,
-  },
-  communityHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  typeTag: {
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 3,
-    borderRadius: RADIUS.full,
-  },
-  typeTagText: {
-    ...TYPOGRAPHY.micro,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  communityTime: {
-    ...TYPOGRAPHY.micro,
-    color: C.textHint,
-  },
-  communityAuthor: {
-    ...TYPOGRAPHY.label,
-    color: C.textMuted,
-    fontSize: 10,
-  },
-  communityBody: {
-    ...TYPOGRAPHY.body,
-    color: C.text,
-    lineHeight: 20,
-  },
-  communityVerse: {
-    backgroundColor: C.surfaceElevated,
-    borderRadius: RADIUS.sm,
-    padding: SPACING.sm,
-    gap: 2,
-  },
-  communityVerseText: {
-    ...TYPOGRAPHY.caption,
-    color: C.textMuted,
-    fontStyle: 'italic',
-  },
-  communityVerseRef: {
-    ...TYPOGRAPHY.micro,
-    color: COLORS.primary,
-  },
-  communityFooter: {
-    flexDirection: 'row',
-    gap: SPACING.md,
-    borderTopWidth: 1,
-    borderTopColor: C.border,
-    paddingTop: SPACING.sm,
-  },
-  communityPrayers: {
-    ...TYPOGRAPHY.caption,
-    color: COLORS.info,
-    fontWeight: '600',
-  },
-  communityReplies: {
-    ...TYPOGRAPHY.caption,
-    color: C.textMuted,
-  },
-});
+// Static styles for pure display sub-components (StatCard, ModuleCard)
+const statCardStyle: any = {
+  flex: 1,
+  borderRadius: RADIUS.md,
+  padding: SPACING.md,
+  gap: 4,
+  alignItems: 'center',
+};
+const statValueStyle: any = { ...TYPOGRAPHY.h3, color: '#FFFFFF', fontSize: 20 };
+const statLabelStyle: any = { ...TYPOGRAPHY.micro, color: 'rgba(255,255,255,0.7)', textAlign: 'center' };
+const moduleCardStyle: any = {
+  width: (width - SPACING.xl * 2 - SPACING.sm) / 2,
+  borderRadius: RADIUS.card,
+  padding: SPACING.lg,
+  gap: SPACING.sm,
+};
+const moduleLabelStyle: any = { ...TYPOGRAPHY.bodyLarge, color: '#FFFFFF' };
+const moduleCountStyle: any = { ...TYPOGRAPHY.micro, color: 'rgba(255,255,255,0.7)' };
+
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: C.bg,
+    },
+    content: {
+      paddingTop: 56,
+      paddingHorizontal: SPACING.xl,
+    },
+    topBar: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      marginBottom: SPACING.xl,
+    },
+    greeting: {
+      ...TYPOGRAPHY.h3,
+      color: C.text,
+    },
+    church: {
+      ...TYPOGRAPHY.caption,
+      color: C.textMuted,
+      marginTop: 2,
+    },
+    topRight: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: SPACING.sm,
+    },
+    streakBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      backgroundColor: COLORS.warningBg,
+      paddingHorizontal: SPACING.sm,
+      paddingVertical: 5,
+      borderRadius: RADIUS.full,
+    },
+    streakCount: {
+      ...TYPOGRAPHY.label,
+      color: COLORS.warning,
+      fontSize: 11,
+    },
+    bellBtn: {
+      width: 36,
+      height: 36,
+      borderRadius: RADIUS.full,
+      backgroundColor: C.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    bellDot: {
+      position: 'absolute',
+      top: 6,
+      right: 6,
+      width: 7,
+      height: 7,
+      borderRadius: 4,
+      backgroundColor: COLORS.primary,
+      borderWidth: 1.5,
+      borderColor: C.bg,
+    },
+    verseCard: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      borderLeftWidth: 3,
+      borderLeftColor: COLORS.primary,
+      padding: SPACING.lg,
+      marginBottom: SPACING.xl,
+      gap: SPACING.sm,
+    },
+    verseHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    verseLabelWrap: {
+      backgroundColor: COLORS.primaryMuted,
+      borderRadius: RADIUS.full,
+      paddingHorizontal: SPACING.sm,
+      paddingVertical: 3,
+    },
+    verseLabel: {
+      ...TYPOGRAPHY.micro,
+      color: COLORS.primary,
+      textTransform: 'uppercase',
+      letterSpacing: 0.8,
+    },
+    verseTranslation: {
+      ...TYPOGRAPHY.micro,
+      color: C.textHint,
+    },
+    verseText: {
+      ...TYPOGRAPHY.body,
+      color: C.textMuted,
+      fontStyle: 'italic',
+      lineHeight: 22,
+    },
+    verseRef: {
+      ...TYPOGRAPHY.caption,
+      color: COLORS.primary,
+      fontWeight: '600',
+    },
+    statsRow: {
+      flexDirection: 'row',
+      gap: SPACING.sm,
+      marginBottom: SPACING.xl,
+    },
+    section: {
+      marginBottom: SPACING.xl,
+    },
+    sectionHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: SPACING.md,
+    },
+    sectionTitle: {
+      ...TYPOGRAPHY.h4,
+      color: C.text,
+    },
+    sectionAction: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 2,
+    },
+    sectionActionText: {
+      ...TYPOGRAPHY.caption,
+      color: COLORS.primary,
+      fontWeight: '600',
+    },
+    weekRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      padding: SPACING.md,
+    },
+    dayItem: {
+      alignItems: 'center',
+      gap: SPACING.xs,
+    },
+    dayCircle: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      backgroundColor: C.surfaceElevated,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderColor: C.border,
+    },
+    dayCircleDone: {
+      backgroundColor: COLORS.successBg,
+      borderColor: COLORS.success,
+    },
+    dayCircleToday: {
+      backgroundColor: COLORS.primaryMuted,
+      borderColor: COLORS.primaryBorder,
+    },
+    dayCheck: {
+      width: 12,
+      height: 8,
+      borderLeftWidth: 2,
+      borderBottomWidth: 2,
+      borderColor: COLORS.success,
+      transform: [{ rotate: '-45deg' }, { translateY: -1 }],
+    },
+    dayTodayDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: COLORS.primary,
+    },
+    dayLabel: {
+      ...TYPOGRAPHY.micro,
+      color: C.textHint,
+    },
+    dayLabelToday: {
+      color: COLORS.primary,
+      fontWeight: '700',
+    },
+    bookCard: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      flexDirection: 'row',
+      overflow: 'hidden',
+    },
+    bookCover: {
+      width: 72,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    bookCoverInner: {
+      width: 40,
+      height: 56,
+      backgroundColor: 'rgba(255,255,255,0.08)',
+      borderRadius: 4,
+    },
+    bookInfo: {
+      flex: 1,
+      padding: SPACING.md,
+      gap: SPACING.xs,
+    },
+    bookMeta: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    bookCategory: {
+      ...TYPOGRAPHY.micro,
+      color: COLORS.primary,
+      textTransform: 'uppercase',
+      letterSpacing: 0.6,
+    },
+    bookChapter: {
+      ...TYPOGRAPHY.micro,
+      color: C.textHint,
+    },
+    bookTitle: {
+      ...TYPOGRAPHY.bodyLarge,
+      color: C.text,
+    },
+    bookAuthor: {
+      ...TYPOGRAPHY.caption,
+      color: C.textMuted,
+    },
+    progressWrap: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: SPACING.xs,
+      marginTop: 4,
+    },
+    progressBar: {
+      flex: 1,
+      height: 4,
+      backgroundColor: C.surfaceElevated,
+      borderRadius: 2,
+      overflow: 'hidden',
+    },
+    progressFill: {
+      height: '100%',
+      backgroundColor: COLORS.primary,
+      borderRadius: 2,
+    },
+    progressFillPurple: {
+      backgroundColor: COLORS.purple,
+    },
+    progressPct: {
+      ...TYPOGRAPHY.micro,
+      color: C.textHint,
+      width: 30,
+      textAlign: 'right',
+    },
+    modulesGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: SPACING.sm,
+    },
+    challengeCard: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      padding: SPACING.lg,
+      gap: SPACING.md,
+    },
+    challengeHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: SPACING.md,
+    },
+    challengeIconWrap: {
+      width: 40,
+      height: 40,
+      borderRadius: RADIUS.sm,
+      backgroundColor: COLORS.purpleBg,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    challengeInfo: {
+      flex: 1,
+    },
+    challengeTitle: {
+      ...TYPOGRAPHY.bodyLarge,
+      color: C.text,
+    },
+    challengeCategory: {
+      ...TYPOGRAPHY.caption,
+      color: C.textMuted,
+      marginTop: 2,
+    },
+    challengeDayBadge: {
+      backgroundColor: COLORS.purpleBg,
+      paddingHorizontal: SPACING.sm,
+      paddingVertical: 4,
+      borderRadius: RADIUS.full,
+    },
+    challengeDayText: {
+      ...TYPOGRAPHY.label,
+      color: COLORS.purple,
+      fontSize: 10,
+    },
+    communityCard: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      padding: SPACING.lg,
+      gap: SPACING.sm,
+    },
+    communityHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    typeTag: {
+      paddingHorizontal: SPACING.sm,
+      paddingVertical: 3,
+      borderRadius: RADIUS.full,
+    },
+    typeTagText: {
+      ...TYPOGRAPHY.micro,
+      fontWeight: '600',
+      textTransform: 'uppercase',
+      letterSpacing: 0.5,
+    },
+    communityTime: {
+      ...TYPOGRAPHY.micro,
+      color: C.textHint,
+    },
+    communityAuthor: {
+      ...TYPOGRAPHY.label,
+      color: C.textMuted,
+      fontSize: 10,
+    },
+    communityBody: {
+      ...TYPOGRAPHY.body,
+      color: C.text,
+      lineHeight: 20,
+    },
+    communityVerse: {
+      backgroundColor: C.surfaceElevated,
+      borderRadius: RADIUS.sm,
+      padding: SPACING.sm,
+      gap: 2,
+    },
+    communityVerseText: {
+      ...TYPOGRAPHY.caption,
+      color: C.textMuted,
+      fontStyle: 'italic',
+    },
+    communityVerseRef: {
+      ...TYPOGRAPHY.micro,
+      color: COLORS.primary,
+    },
+    communityFooter: {
+      flexDirection: 'row',
+      gap: SPACING.md,
+      borderTopWidth: 1,
+      borderTopColor: C.border,
+      paddingTop: SPACING.sm,
+    },
+    communityPrayers: {
+      ...TYPOGRAPHY.caption,
+      color: COLORS.info,
+      fontWeight: '600',
+    },
+    communityReplies: {
+      ...TYPOGRAPHY.caption,
+      color: C.textMuted,
+    },
+  });
+}

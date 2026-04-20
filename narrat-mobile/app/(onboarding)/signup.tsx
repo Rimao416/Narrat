@@ -1,14 +1,16 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { router } from 'expo-router';
-import { useState, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withSequence } from 'react-native-reanimated';
 import { ArrowLeft, Eye, EyeOff, User, Mail, Lock } from 'lucide-react-native';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
-
-const C = COLORS.dark;
+import { useThemeColors } from '../../hooks/useThemeColors';
 
 export default function Signup() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
+
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -134,110 +136,112 @@ export default function Signup() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: C.bg,
-  },
-  scroll: {
-    flexGrow: 1,
-    paddingHorizontal: SPACING.xl,
-    paddingTop: 60,
-    paddingBottom: 40,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: SPACING.xxxl,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: RADIUS.full,
-    backgroundColor: C.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stepIndicator: {
-    flexDirection: 'row',
-    gap: SPACING.xs,
-  },
-  stepDot: {
-    width: 24,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: C.border2,
-  },
-  stepDotActive: {
-    backgroundColor: COLORS.primary,
-    width: 32,
-  },
-  titleSection: {
-    marginBottom: SPACING.xxxl,
-  },
-  title: {
-    ...TYPOGRAPHY.h2,
-    color: C.text,
-    marginBottom: SPACING.xs,
-  },
-  subtitle: {
-    ...TYPOGRAPHY.body,
-    color: C.textMuted,
-  },
-  form: {
-    gap: SPACING.lg,
-    marginBottom: SPACING.xl,
-  },
-  inputGroup: {
-    gap: SPACING.xs,
-  },
-  inputLabel: {
-    ...TYPOGRAPHY.label,
-    color: C.textMuted,
-    marginLeft: SPACING.xs,
-  },
-  inputWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
-    borderColor: C.border,
-    paddingHorizontal: SPACING.md,
-    height: 52,
-    gap: SPACING.sm,
-  },
-  inputWrapFocused: {
-    borderColor: COLORS.primaryBorder,
-    backgroundColor: COLORS.primaryMuted,
-  },
-  input: {
-    flex: 1,
-    ...TYPOGRAPHY.body,
-    color: C.text,
-    height: '100%',
-  },
-  terms: {
-    ...TYPOGRAPHY.caption,
-    color: C.textHint,
-    textAlign: 'center',
-    lineHeight: 18,
-    marginBottom: SPACING.xl,
-  },
-  termsLink: {
-    color: COLORS.primary,
-  },
-  continueButton: {
-    height: 54,
-    backgroundColor: COLORS.primary,
-    borderRadius: RADIUS.full,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  continueButtonText: {
-    ...TYPOGRAPHY.bodyLarge,
-    color: '#FFFFFF',
-    fontWeight: '700',
-  },
-});
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: C.bg,
+    },
+    scroll: {
+      flexGrow: 1,
+      paddingHorizontal: SPACING.xl,
+      paddingTop: 60,
+      paddingBottom: 40,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: SPACING.xxxl,
+    },
+    backBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: RADIUS.full,
+      backgroundColor: C.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    stepIndicator: {
+      flexDirection: 'row',
+      gap: SPACING.xs,
+    },
+    stepDot: {
+      width: 24,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: C.border2,
+    },
+    stepDotActive: {
+      backgroundColor: COLORS.primary,
+      width: 32,
+    },
+    titleSection: {
+      marginBottom: SPACING.xxxl,
+    },
+    title: {
+      ...TYPOGRAPHY.h2,
+      color: C.text,
+      marginBottom: SPACING.xs,
+    },
+    subtitle: {
+      ...TYPOGRAPHY.body,
+      color: C.textMuted,
+    },
+    form: {
+      gap: SPACING.lg,
+      marginBottom: SPACING.xl,
+    },
+    inputGroup: {
+      gap: SPACING.xs,
+    },
+    inputLabel: {
+      ...TYPOGRAPHY.label,
+      color: C.textMuted,
+      marginLeft: SPACING.xs,
+    },
+    inputWrap: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.md,
+      borderWidth: 1,
+      borderColor: C.border,
+      paddingHorizontal: SPACING.md,
+      height: 52,
+      gap: SPACING.sm,
+    },
+    inputWrapFocused: {
+      borderColor: COLORS.primaryBorder,
+      backgroundColor: COLORS.primaryMuted,
+    },
+    input: {
+      flex: 1,
+      ...TYPOGRAPHY.body,
+      color: C.text,
+      height: '100%',
+    },
+    terms: {
+      ...TYPOGRAPHY.caption,
+      color: C.textHint,
+      textAlign: 'center',
+      lineHeight: 18,
+      marginBottom: SPACING.xl,
+    },
+    termsLink: {
+      color: COLORS.primary,
+    },
+    continueButton: {
+      height: 54,
+      backgroundColor: COLORS.primary,
+      borderRadius: RADIUS.full,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    continueButtonText: {
+      ...TYPOGRAPHY.bodyLarge,
+      color: '#FFFFFF',
+      fontWeight: '700',
+    },
+  });
+}

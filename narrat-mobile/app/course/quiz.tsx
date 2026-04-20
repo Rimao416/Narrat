@@ -2,14 +2,15 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { router } from 'expo-router';
 import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withSpring } from 'react-native-reanimated';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { MOCK_QUIZ } from '../../data/mockData';
-
-const C = COLORS.dark;
+import { useThemeColors } from '../../hooks/useThemeColors';
 
 export default function QuizScreen() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
@@ -145,6 +146,8 @@ export default function QuizScreen() {
 }
 
 function QuizResult({ score, total }: { score: number; total: number }) {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const scale = useSharedValue(0.7);
   const op = useSharedValue(0);
 
@@ -173,145 +176,147 @@ function QuizResult({ score, total }: { score: number; total: number }) {
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: C.bg },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 52,
-    paddingHorizontal: SPACING.xl,
-    paddingBottom: SPACING.md,
-    gap: SPACING.md,
-  },
-  backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: C.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerCenter: { flex: 1 },
-  headerLabel: { ...TYPOGRAPHY.label, color: C.text, fontWeight: '600' },
-  headerSub: { ...TYPOGRAPHY.micro, color: C.textHint },
-  dotsRow: {
-    flexDirection: 'row',
-    paddingHorizontal: SPACING.xl,
-    gap: SPACING.xs,
-    marginBottom: SPACING.lg,
-  },
-  dot: {
-    flex: 1,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: C.surfaceElevated,
-  },
-  dotActive: { backgroundColor: COLORS.primary },
-  dotDone: { backgroundColor: 'rgba(192,57,43,0.4)' },
-  scroll: { flex: 1 },
-  scrollContent: { paddingHorizontal: SPACING.xl },
-  questionNum: { ...TYPOGRAPHY.micro, color: C.textHint, marginBottom: SPACING.sm },
-  questionText: { ...TYPOGRAPHY.h4, color: C.text, lineHeight: 26, marginBottom: SPACING.md },
-  verseContext: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.md,
-    padding: SPACING.md,
-    borderLeftWidth: 2,
-    borderLeftColor: COLORS.primary,
-    marginBottom: SPACING.xl,
-  },
-  verseContextText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontStyle: 'italic' },
-  optionsList: { gap: SPACING.sm, marginBottom: SPACING.xl },
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
-    borderColor: C.border,
-    padding: SPACING.md,
-    gap: SPACING.md,
-  },
-  optionCorrect: { borderColor: COLORS.success, backgroundColor: 'rgba(39,174,96,0.08)' },
-  optionWrong: { borderColor: COLORS.primary, backgroundColor: 'rgba(192,57,43,0.08)' },
-  optionDimmed: { opacity: 0.45 },
-  optionLetter: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: C.surfaceElevated,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  optionLetterCorrect: { backgroundColor: COLORS.success },
-  optionLetterWrong: { backgroundColor: COLORS.primary },
-  optionLetterText: { ...TYPOGRAPHY.caption, color: C.text, fontWeight: '700' },
-  optionText: { flex: 1, ...TYPOGRAPHY.body, color: C.text },
-  optionTextCorrect: { color: COLORS.success, fontWeight: '600' },
-  optionTextWrong: { color: COLORS.primary, fontWeight: '600' },
-  optionTextDimmed: { color: C.textHint },
-  explanationBox: {
-    borderRadius: RADIUS.card,
-    padding: SPACING.lg,
-    gap: SPACING.sm,
-    marginBottom: SPACING.xl,
-  },
-  explanationCorrect: { backgroundColor: 'rgba(39,174,96,0.08)', borderWidth: 1, borderColor: 'rgba(39,174,96,0.2)' },
-  explanationWrong: { backgroundColor: 'rgba(192,57,43,0.06)', borderWidth: 1, borderColor: COLORS.primaryBorder },
-  explanationTitle: { ...TYPOGRAPHY.label, fontWeight: '700' },
-  explanationTitleCorrect: { color: COLORS.success },
-  explanationTitleWrong: { color: COLORS.primary },
-  explanationText: { ...TYPOGRAPHY.body, color: C.textMuted, lineHeight: 22 },
-  navBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: SPACING.xl,
-    paddingBottom: 28,
-    paddingTop: SPACING.md,
-    borderTopWidth: 1,
-    borderTopColor: C.border,
-    gap: SPACING.md,
-  },
-  skipBtn: { paddingVertical: 12, paddingHorizontal: SPACING.md },
-  skipBtnText: { ...TYPOGRAPHY.caption, color: C.textHint },
-  nextBtn: {
-    flex: 1,
-    backgroundColor: COLORS.primary,
-    borderRadius: RADIUS.full,
-    paddingVertical: 13,
-    alignItems: 'center',
-  },
-  nextBtnDisabled: { backgroundColor: C.surfaceElevated },
-  nextBtnText: { ...TYPOGRAPHY.body, color: '#FFF', fontWeight: '700' },
-  resultRoot: {
-    flex: 1,
-    backgroundColor: C.bg,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: SPACING.xl,
-    gap: SPACING.lg,
-  },
-  resultBadge: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: COLORS.primaryMuted,
-    borderWidth: 2,
-    borderColor: COLORS.primaryBorder,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-  },
-  resultScore: { ...TYPOGRAPHY.h2, color: COLORS.primary },
-  resultLabel: { ...TYPOGRAPHY.micro, color: C.textMuted },
-  resultTitle: { ...TYPOGRAPHY.h3, color: C.text, textAlign: 'center' },
-  resultSub: { ...TYPOGRAPHY.body, color: COLORS.gold, fontWeight: '600' },
-  resultBtn: {
-    backgroundColor: COLORS.primary,
-    borderRadius: RADIUS.full,
-    paddingVertical: 14,
-    paddingHorizontal: SPACING.xl * 2,
-    marginTop: SPACING.md,
-  },
-  resultBtnText: { ...TYPOGRAPHY.body, color: '#FFF', fontWeight: '700' },
-});
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    root: { flex: 1, backgroundColor: C.bg },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingTop: 52,
+      paddingHorizontal: SPACING.xl,
+      paddingBottom: SPACING.md,
+      gap: SPACING.md,
+    },
+    backBtn: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: C.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    headerCenter: { flex: 1 },
+    headerLabel: { ...TYPOGRAPHY.label, color: C.text, fontWeight: '600' },
+    headerSub: { ...TYPOGRAPHY.micro, color: C.textHint },
+    dotsRow: {
+      flexDirection: 'row',
+      paddingHorizontal: SPACING.xl,
+      gap: SPACING.xs,
+      marginBottom: SPACING.lg,
+    },
+    dot: {
+      flex: 1,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: C.surfaceElevated,
+    },
+    dotActive: { backgroundColor: COLORS.primary },
+    dotDone: { backgroundColor: 'rgba(192,57,43,0.4)' },
+    scroll: { flex: 1 },
+    scrollContent: { paddingHorizontal: SPACING.xl },
+    questionNum: { ...TYPOGRAPHY.micro, color: C.textHint, marginBottom: SPACING.sm },
+    questionText: { ...TYPOGRAPHY.h4, color: C.text, lineHeight: 26, marginBottom: SPACING.md },
+    verseContext: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.md,
+      padding: SPACING.md,
+      borderLeftWidth: 2,
+      borderLeftColor: COLORS.primary,
+      marginBottom: SPACING.xl,
+    },
+    verseContextText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontStyle: 'italic' },
+    optionsList: { gap: SPACING.sm, marginBottom: SPACING.xl },
+    option: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.md,
+      borderWidth: 1,
+      borderColor: C.border,
+      padding: SPACING.md,
+      gap: SPACING.md,
+    },
+    optionCorrect: { borderColor: COLORS.success, backgroundColor: 'rgba(39,174,96,0.08)' },
+    optionWrong: { borderColor: COLORS.primary, backgroundColor: 'rgba(192,57,43,0.08)' },
+    optionDimmed: { opacity: 0.45 },
+    optionLetter: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: C.surfaceElevated,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    optionLetterCorrect: { backgroundColor: COLORS.success },
+    optionLetterWrong: { backgroundColor: COLORS.primary },
+    optionLetterText: { ...TYPOGRAPHY.caption, color: C.text, fontWeight: '700' },
+    optionText: { flex: 1, ...TYPOGRAPHY.body, color: C.text },
+    optionTextCorrect: { color: COLORS.success, fontWeight: '600' },
+    optionTextWrong: { color: COLORS.primary, fontWeight: '600' },
+    optionTextDimmed: { color: C.textHint },
+    explanationBox: {
+      borderRadius: RADIUS.card,
+      padding: SPACING.lg,
+      gap: SPACING.sm,
+      marginBottom: SPACING.xl,
+    },
+    explanationCorrect: { backgroundColor: 'rgba(39,174,96,0.08)', borderWidth: 1, borderColor: 'rgba(39,174,96,0.2)' },
+    explanationWrong: { backgroundColor: 'rgba(192,57,43,0.06)', borderWidth: 1, borderColor: COLORS.primaryBorder },
+    explanationTitle: { ...TYPOGRAPHY.label, fontWeight: '700' },
+    explanationTitleCorrect: { color: COLORS.success },
+    explanationTitleWrong: { color: COLORS.primary },
+    explanationText: { ...TYPOGRAPHY.body, color: C.textMuted, lineHeight: 22 },
+    navBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: SPACING.xl,
+      paddingBottom: 28,
+      paddingTop: SPACING.md,
+      borderTopWidth: 1,
+      borderTopColor: C.border,
+      gap: SPACING.md,
+    },
+    skipBtn: { paddingVertical: 12, paddingHorizontal: SPACING.md },
+    skipBtnText: { ...TYPOGRAPHY.caption, color: C.textHint },
+    nextBtn: {
+      flex: 1,
+      backgroundColor: COLORS.primary,
+      borderRadius: RADIUS.full,
+      paddingVertical: 13,
+      alignItems: 'center',
+    },
+    nextBtnDisabled: { backgroundColor: C.surfaceElevated },
+    nextBtnText: { ...TYPOGRAPHY.body, color: '#FFF', fontWeight: '700' },
+    resultRoot: {
+      flex: 1,
+      backgroundColor: C.bg,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: SPACING.xl,
+      gap: SPACING.lg,
+    },
+    resultBadge: {
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      backgroundColor: COLORS.primaryMuted,
+      borderWidth: 2,
+      borderColor: COLORS.primaryBorder,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 4,
+    },
+    resultScore: { ...TYPOGRAPHY.h2, color: COLORS.primary },
+    resultLabel: { ...TYPOGRAPHY.micro, color: C.textMuted },
+    resultTitle: { ...TYPOGRAPHY.h3, color: C.text, textAlign: 'center' },
+    resultSub: { ...TYPOGRAPHY.body, color: COLORS.gold, fontWeight: '600' },
+    resultBtn: {
+      backgroundColor: COLORS.primary,
+      borderRadius: RADIUS.full,
+      paddingVertical: 14,
+      paddingHorizontal: SPACING.xl * 2,
+      marginTop: SPACING.md,
+    },
+    resultBtnText: { ...TYPOGRAPHY.body, color: '#FFF', fontWeight: '700' },
+  });
+}

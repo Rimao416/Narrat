@@ -7,6 +7,7 @@ import 'react-native-reanimated';
 import { useThemeStore } from '../store/themeStore';
 import { useOnboardingStore } from '../store/onboardingStore';
 import { getThemeColors } from '../constants/Colors';
+import { useSystemThemeSync } from '../hooks/useThemeColors';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -14,6 +15,7 @@ export default function RootLayout() {
   const { isDarkMode } = useThemeStore();
   const { isCompleted } = useOnboardingStore();
   const themeColors = getThemeColors(isDarkMode);
+  useSystemThemeSync();
 
   const baseTheme = isDarkMode ? DarkTheme : DefaultTheme;
   const customTheme = {

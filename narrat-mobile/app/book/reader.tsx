@@ -2,16 +2,18 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { router } from 'expo-router';
 import { ArrowLeft, Headphones, ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { MOCK_READER_CONTENT, MOCK_BOOKS } from '../../data/mockData';
+import { useThemeColors } from '../../hooks/useThemeColors';
 
-const C = COLORS.dark;
 const book = MOCK_BOOKS[0];
 const content = MOCK_READER_CONTENT;
 
 export default function ReaderScreen() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const [isPlaying, setIsPlaying] = useState(false);
   const progressOp = useSharedValue(0);
   const contentOp = useSharedValue(0);
@@ -111,100 +113,102 @@ export default function ReaderScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: C.bg },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 52,
-    paddingHorizontal: SPACING.xl,
-    paddingBottom: SPACING.md,
-    gap: SPACING.md,
-    backgroundColor: C.bg,
-  },
-  backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: C.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  chapterInfo: { flex: 1 },
-  chapterLabel: { ...TYPOGRAPHY.micro, color: C.textHint },
-  chapterTitle: { ...TYPOGRAPHY.label, color: C.text, fontWeight: '600' },
-  audioBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: COLORS.primaryMuted,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  progressTrack: { height: 2, backgroundColor: C.surfaceElevated },
-  progressFill: { height: '100%', backgroundColor: COLORS.primary },
-  scroll: { flex: 1 },
-  scrollContent: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.xl },
-  bookName: { ...TYPOGRAPHY.caption, color: C.textHint, marginBottom: SPACING.xs },
-  mainTitle: { ...TYPOGRAPHY.h3, color: C.text, marginBottom: SPACING.xl },
-  bodyText: {
-    ...TYPOGRAPHY.body,
-    color: C.textMuted,
-    lineHeight: 26,
-    marginBottom: SPACING.lg,
-  },
-  verseBlock: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.md,
-    borderLeftWidth: 3,
-    borderLeftColor: COLORS.primary,
-    padding: SPACING.lg,
-    marginVertical: SPACING.lg,
-    gap: 6,
-  },
-  verseText: { ...TYPOGRAPHY.body, color: C.text, fontStyle: 'italic', lineHeight: 24 },
-  verseRef: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '600' },
-  navBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: SPACING.md,
-    paddingBottom: 28,
-    paddingTop: SPACING.sm,
-    backgroundColor: C.bg,
-    borderTopWidth: 1,
-    borderTopColor: C.border,
-    gap: SPACING.sm,
-  },
-  navBtn: { flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: SPACING.sm },
-  navBtnText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '500' },
-  miniPlayer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
-    borderColor: C.border,
-    padding: SPACING.sm,
-    gap: SPACING.sm,
-  },
-  miniPlayerArt: {
-    width: 32,
-    height: 32,
-    borderRadius: RADIUS.sm,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  miniPlayerInfo: { flex: 1 },
-  miniPlayerTitle: { ...TYPOGRAPHY.micro, color: C.text, fontWeight: '600' },
-  miniPlayerSub: { ...TYPOGRAPHY.micro, color: C.textHint },
-  miniPlayBtn: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    root: { flex: 1, backgroundColor: C.bg },
+    topBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingTop: 52,
+      paddingHorizontal: SPACING.xl,
+      paddingBottom: SPACING.md,
+      gap: SPACING.md,
+      backgroundColor: C.bg,
+    },
+    backBtn: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: C.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    chapterInfo: { flex: 1 },
+    chapterLabel: { ...TYPOGRAPHY.micro, color: C.textHint },
+    chapterTitle: { ...TYPOGRAPHY.label, color: C.text, fontWeight: '600' },
+    audioBtn: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: COLORS.primaryMuted,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    progressTrack: { height: 2, backgroundColor: C.surfaceElevated },
+    progressFill: { height: '100%', backgroundColor: COLORS.primary },
+    scroll: { flex: 1 },
+    scrollContent: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.xl },
+    bookName: { ...TYPOGRAPHY.caption, color: C.textHint, marginBottom: SPACING.xs },
+    mainTitle: { ...TYPOGRAPHY.h3, color: C.text, marginBottom: SPACING.xl },
+    bodyText: {
+      ...TYPOGRAPHY.body,
+      color: C.textMuted,
+      lineHeight: 26,
+      marginBottom: SPACING.lg,
+    },
+    verseBlock: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.md,
+      borderLeftWidth: 3,
+      borderLeftColor: COLORS.primary,
+      padding: SPACING.lg,
+      marginVertical: SPACING.lg,
+      gap: 6,
+    },
+    verseText: { ...TYPOGRAPHY.body, color: C.text, fontStyle: 'italic', lineHeight: 24 },
+    verseRef: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '600' },
+    navBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: SPACING.md,
+      paddingBottom: 28,
+      paddingTop: SPACING.sm,
+      backgroundColor: C.bg,
+      borderTopWidth: 1,
+      borderTopColor: C.border,
+      gap: SPACING.sm,
+    },
+    navBtn: { flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: SPACING.sm },
+    navBtnText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '500' },
+    miniPlayer: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.md,
+      borderWidth: 1,
+      borderColor: C.border,
+      padding: SPACING.sm,
+      gap: SPACING.sm,
+    },
+    miniPlayerArt: {
+      width: 32,
+      height: 32,
+      borderRadius: RADIUS.sm,
+      backgroundColor: COLORS.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    miniPlayerInfo: { flex: 1 },
+    miniPlayerTitle: { ...TYPOGRAPHY.micro, color: C.text, fontWeight: '600' },
+    miniPlayerSub: { ...TYPOGRAPHY.micro, color: C.textHint },
+    miniPlayBtn: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: COLORS.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
+}

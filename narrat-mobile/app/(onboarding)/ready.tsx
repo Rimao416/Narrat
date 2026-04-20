@@ -12,12 +12,14 @@ import Animated, {
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { useOnboardingStore } from '../../store/onboardingStore';
+import { useThemeColors } from '../../hooks/useThemeColors';
 
-const C = COLORS.dark;
 const { height } = Dimensions.get('window');
 
 export default function Ready() {
   const { completeOnboarding } = useOnboardingStore();
+  const C = useThemeColors();
+  const styles = createStyles(C);
 
   const iconScale = useSharedValue(0);
   const iconOpacity = useSharedValue(0);
@@ -97,7 +99,8 @@ export default function Ready() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: C.bg,
@@ -215,4 +218,5 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '700',
   },
-});
+  });
+}

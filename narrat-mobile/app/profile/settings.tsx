@@ -1,13 +1,12 @@
 import { View, Text, ScrollView, TouchableOpacity, Switch, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { ArrowLeft, Bell, Moon, Globe, ChevronRight, Shield, HelpCircle, LogOut, Trash2 } from 'lucide-react-native';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { useThemeStore } from '../../store/themeStore';
 import { useOnboardingStore } from '../../store/onboardingStore';
-
-const C = COLORS.dark;
+import { useThemeColors } from '../../hooks/useThemeColors';
 
 const LANGUAGES = [
   { id: 'fr', label: 'Francais' },
@@ -17,6 +16,8 @@ const LANGUAGES = [
 ];
 
 export default function SettingsScreen() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const { isDarkMode, toggleTheme } = useThemeStore();
   const { reset } = useOnboardingStore();
 
@@ -169,6 +170,8 @@ function SettingRow({
   last?: boolean;
   children?: React.ReactNode;
 }) {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   return (
     <TouchableOpacity
       style={[styles.settingRow, last && styles.settingRowLast]}
@@ -200,6 +203,8 @@ function ToggleRow({
   onToggle: () => void;
   last?: boolean;
 }) {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   return (
     <View style={[styles.settingRow, last && styles.settingRowLast]}>
       <View style={styles.settingLeft}>
@@ -221,102 +226,104 @@ function ToggleRow({
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: C.bg },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 52,
-    paddingHorizontal: SPACING.xl,
-    paddingBottom: SPACING.md,
-    borderBottomWidth: 1,
-    borderBottomColor: C.border,
-  },
-  backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: C.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: { ...TYPOGRAPHY.h4, color: C.text },
-  scroll: { flex: 1 },
-  scrollContent: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.xl },
-  groupLabel: { ...TYPOGRAPHY.micro, color: C.textHint, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: SPACING.sm },
-  group: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    overflow: 'hidden',
-    marginBottom: SPACING.xl,
-  },
-  settingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: SPACING.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: C.border,
-    gap: SPACING.md,
-    flexWrap: 'wrap',
-  },
-  settingRowLast: { borderBottomWidth: 0 },
-  settingLeft: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md, flex: 1 },
-  settingIconWrap: {
-    width: 30,
-    height: 30,
-    borderRadius: RADIUS.sm,
-    backgroundColor: C.surfaceElevated,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  settingLabel: { ...TYPOGRAPHY.body, color: C.text, fontWeight: '500' },
-  settingSubLabel: { ...TYPOGRAPHY.micro, color: C.textHint },
-  toggleTextWrap: { flex: 1, gap: 2 },
-  langRow: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.xs, paddingTop: SPACING.sm, width: '100%' },
-  langChip: {
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 5,
-    borderRadius: RADIUS.full,
-    backgroundColor: C.surfaceElevated,
-    borderWidth: 1,
-    borderColor: C.border2,
-  },
-  langChipActive: { backgroundColor: COLORS.primaryMuted, borderColor: COLORS.primaryBorder },
-  langChipText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '500' },
-  langChipTextActive: { color: COLORS.primary, fontWeight: '700' },
-  fontSizeRow: { flexDirection: 'row', gap: SPACING.xs },
-  fontSizeBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: RADIUS.sm,
-    backgroundColor: C.surfaceElevated,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: C.border2,
-  },
-  fontSizeBtnActive: { backgroundColor: COLORS.primaryMuted, borderColor: COLORS.primaryBorder },
-  fontSizeBtnText: { color: C.textMuted, fontWeight: '600' },
-  fontSizeBtnTextActive: { color: COLORS.primary },
-  dangerGroup: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    overflow: 'hidden',
-    marginBottom: SPACING.xl,
-  },
-  dangerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.md,
-    padding: SPACING.lg,
-  },
-  dangerDivider: { height: 1, backgroundColor: C.border },
-  dangerText: { ...TYPOGRAPHY.body, color: COLORS.primary, fontWeight: '500' },
-  versionText: { ...TYPOGRAPHY.micro, color: C.textHint, textAlign: 'center', marginBottom: SPACING.md },
-});
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    root: { flex: 1, backgroundColor: C.bg },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingTop: 52,
+      paddingHorizontal: SPACING.xl,
+      paddingBottom: SPACING.md,
+      borderBottomWidth: 1,
+      borderBottomColor: C.border,
+    },
+    backBtn: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: C.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    headerTitle: { ...TYPOGRAPHY.h4, color: C.text },
+    scroll: { flex: 1 },
+    scrollContent: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.xl },
+    groupLabel: { ...TYPOGRAPHY.micro, color: C.textHint, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: SPACING.sm },
+    group: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      overflow: 'hidden',
+      marginBottom: SPACING.xl,
+    },
+    settingRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: SPACING.lg,
+      borderBottomWidth: 1,
+      borderBottomColor: C.border,
+      gap: SPACING.md,
+      flexWrap: 'wrap',
+    },
+    settingRowLast: { borderBottomWidth: 0 },
+    settingLeft: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md, flex: 1 },
+    settingIconWrap: {
+      width: 30,
+      height: 30,
+      borderRadius: RADIUS.sm,
+      backgroundColor: C.surfaceElevated,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    settingLabel: { ...TYPOGRAPHY.body, color: C.text, fontWeight: '500' },
+    settingSubLabel: { ...TYPOGRAPHY.micro, color: C.textHint },
+    toggleTextWrap: { flex: 1, gap: 2 },
+    langRow: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.xs, paddingTop: SPACING.sm, width: '100%' },
+    langChip: {
+      paddingHorizontal: SPACING.sm,
+      paddingVertical: 5,
+      borderRadius: RADIUS.full,
+      backgroundColor: C.surfaceElevated,
+      borderWidth: 1,
+      borderColor: C.border2,
+    },
+    langChipActive: { backgroundColor: COLORS.primaryMuted, borderColor: COLORS.primaryBorder },
+    langChipText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '500' },
+    langChipTextActive: { color: COLORS.primary, fontWeight: '700' },
+    fontSizeRow: { flexDirection: 'row', gap: SPACING.xs },
+    fontSizeBtn: {
+      width: 34,
+      height: 34,
+      borderRadius: RADIUS.sm,
+      backgroundColor: C.surfaceElevated,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderColor: C.border2,
+    },
+    fontSizeBtnActive: { backgroundColor: COLORS.primaryMuted, borderColor: COLORS.primaryBorder },
+    fontSizeBtnText: { color: C.textMuted, fontWeight: '600' },
+    fontSizeBtnTextActive: { color: COLORS.primary },
+    dangerGroup: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      overflow: 'hidden',
+      marginBottom: SPACING.xl,
+    },
+    dangerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: SPACING.md,
+      padding: SPACING.lg,
+    },
+    dangerDivider: { height: 1, backgroundColor: C.border },
+    dangerText: { ...TYPOGRAPHY.body, color: COLORS.primary, fontWeight: '500' },
+    versionText: { ...TYPOGRAPHY.micro, color: C.textHint, textAlign: 'center', marginBottom: SPACING.md },
+  });
+}

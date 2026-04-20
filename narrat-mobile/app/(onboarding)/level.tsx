@@ -1,13 +1,12 @@
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { ArrowLeft, Check } from 'lucide-react-native';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { useOnboardingStore } from '../../store/onboardingStore';
-
-const C = COLORS.dark;
+import { useThemeColors } from '../../hooks/useThemeColors';
 
 const LEVELS = [
   {
@@ -37,6 +36,8 @@ const LEVELS = [
 ];
 
 function LevelCard({ item, selected, onPress }: { item: typeof LEVELS[0]; selected: boolean; onPress: () => void }) {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const scale = useSharedValue(1);
   const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
 
@@ -72,6 +73,8 @@ function LevelCard({ item, selected, onPress }: { item: typeof LEVELS[0]; select
 }
 
 export default function Level() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const { selectedLevel, setLevel } = useOnboardingStore();
   const [selected, setSelected] = useState(selectedLevel || '');
 
@@ -128,136 +131,138 @@ export default function Level() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: C.bg,
-  },
-  scroll: {
-    flexGrow: 1,
-    paddingHorizontal: SPACING.xl,
-    paddingTop: 60,
-    paddingBottom: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: SPACING.xxxl,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: RADIUS.full,
-    backgroundColor: C.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stepIndicator: {
-    flexDirection: 'row',
-    gap: SPACING.xs,
-  },
-  stepDot: {
-    width: 24,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: C.border2,
-  },
-  stepDotActive: {
-    backgroundColor: COLORS.primary,
-    width: 32,
-  },
-  titleSection: {
-    marginBottom: SPACING.xxxl,
-  },
-  title: {
-    ...TYPOGRAPHY.h2,
-    color: C.text,
-    marginBottom: SPACING.xs,
-  },
-  subtitle: {
-    ...TYPOGRAPHY.body,
-    color: C.textMuted,
-  },
-  list: {
-    gap: SPACING.md,
-  },
-  levelCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    padding: SPACING.lg,
-    gap: SPACING.md,
-  },
-  levelCardSelected: {
-    borderColor: COLORS.primaryBorder,
-    backgroundColor: COLORS.primaryMuted,
-  },
-  levelNum: {
-    width: 44,
-    height: 44,
-    borderRadius: RADIUS.sm,
-    backgroundColor: C.surfaceElevated,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  levelNumSelected: {
-    backgroundColor: COLORS.primaryMuted,
-    borderWidth: 1,
-    borderColor: COLORS.primaryBorder,
-  },
-  levelNumText: {
-    ...TYPOGRAPHY.label,
-    color: C.textMuted,
-  },
-  levelNumTextSelected: {
-    color: COLORS.primary,
-  },
-  levelInfo: {
-    flex: 1,
-  },
-  levelLabel: {
-    ...TYPOGRAPHY.bodyLarge,
-    color: C.text,
-  },
-  levelLabelSelected: {
-    color: COLORS.primary,
-  },
-  levelDesc: {
-    ...TYPOGRAPHY.caption,
-    color: C.textMuted,
-    marginTop: 3,
-    lineHeight: 16,
-  },
-  checkCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  footer: {
-    paddingHorizontal: SPACING.xl,
-    paddingBottom: 40,
-    paddingTop: SPACING.md,
-  },
-  continueButton: {
-    height: 54,
-    backgroundColor: COLORS.primary,
-    borderRadius: RADIUS.full,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  continueButtonDisabled: {
-    opacity: 0.4,
-  },
-  continueButtonText: {
-    ...TYPOGRAPHY.bodyLarge,
-    color: '#FFFFFF',
-    fontWeight: '700',
-  },
-});
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: C.bg,
+    },
+    scroll: {
+      flexGrow: 1,
+      paddingHorizontal: SPACING.xl,
+      paddingTop: 60,
+      paddingBottom: 20,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: SPACING.xxxl,
+    },
+    backBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: RADIUS.full,
+      backgroundColor: C.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    stepIndicator: {
+      flexDirection: 'row',
+      gap: SPACING.xs,
+    },
+    stepDot: {
+      width: 24,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: C.border2,
+    },
+    stepDotActive: {
+      backgroundColor: COLORS.primary,
+      width: 32,
+    },
+    titleSection: {
+      marginBottom: SPACING.xxxl,
+    },
+    title: {
+      ...TYPOGRAPHY.h2,
+      color: C.text,
+      marginBottom: SPACING.xs,
+    },
+    subtitle: {
+      ...TYPOGRAPHY.body,
+      color: C.textMuted,
+    },
+    list: {
+      gap: SPACING.md,
+    },
+    levelCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      padding: SPACING.lg,
+      gap: SPACING.md,
+    },
+    levelCardSelected: {
+      borderColor: COLORS.primaryBorder,
+      backgroundColor: COLORS.primaryMuted,
+    },
+    levelNum: {
+      width: 44,
+      height: 44,
+      borderRadius: RADIUS.sm,
+      backgroundColor: C.surfaceElevated,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    levelNumSelected: {
+      backgroundColor: COLORS.primaryMuted,
+      borderWidth: 1,
+      borderColor: COLORS.primaryBorder,
+    },
+    levelNumText: {
+      ...TYPOGRAPHY.label,
+      color: C.textMuted,
+    },
+    levelNumTextSelected: {
+      color: COLORS.primary,
+    },
+    levelInfo: {
+      flex: 1,
+    },
+    levelLabel: {
+      ...TYPOGRAPHY.bodyLarge,
+      color: C.text,
+    },
+    levelLabelSelected: {
+      color: COLORS.primary,
+    },
+    levelDesc: {
+      ...TYPOGRAPHY.caption,
+      color: C.textMuted,
+      marginTop: 3,
+      lineHeight: 16,
+    },
+    checkCircle: {
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: COLORS.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    footer: {
+      paddingHorizontal: SPACING.xl,
+      paddingBottom: 40,
+      paddingTop: SPACING.md,
+    },
+    continueButton: {
+      height: 54,
+      backgroundColor: COLORS.primary,
+      borderRadius: RADIUS.full,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    continueButtonDisabled: {
+      opacity: 0.4,
+    },
+    continueButtonText: {
+      ...TYPOGRAPHY.bodyLarge,
+      color: '#FFFFFF',
+      fontWeight: '700',
+    },
+  });
+}

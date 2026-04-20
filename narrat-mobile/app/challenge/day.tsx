@@ -2,16 +2,18 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { router } from 'expo-router';
 import { ArrowLeft, CheckCircle, Circle } from 'lucide-react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withSpring } from 'react-native-reanimated';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { MOCK_CHALLENGE_DAYS, MOCK_CHALLENGES } from '../../data/mockData';
+import { useThemeColors } from '../../hooks/useThemeColors';
 
-const C = COLORS.dark;
 const challenge = MOCK_CHALLENGES[0];
 const dayData = MOCK_CHALLENGE_DAYS[0];
 
 export default function ChallengeDayScreen() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const [tasks, setTasks] = useState(dayData.tasks);
   const contentOp = useSharedValue(0);
   const contentStyle = useAnimatedStyle(() => ({
@@ -102,6 +104,8 @@ export default function ChallengeDayScreen() {
 }
 
 function TaskItem({ task, onToggle }: { task: { id: string; text: string; done: boolean }; onToggle: () => void }) {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const scale = useSharedValue(1);
   const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
 
@@ -126,75 +130,77 @@ function TaskItem({ task, onToggle }: { task: { id: string; text: string; done: 
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: C.bg },
-  progressTrack: { height: 2, backgroundColor: C.surfaceElevated },
-  progressFill: { height: '100%', backgroundColor: COLORS.primary },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 52,
-    paddingHorizontal: SPACING.xl,
-    paddingBottom: SPACING.md,
-    gap: SPACING.md,
-  },
-  backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: C.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerCenter: { flex: 1 },
-  dayLabel: { ...TYPOGRAPHY.micro, color: C.textHint },
-  challengeName: { ...TYPOGRAPHY.label, color: C.text, fontWeight: '600' },
-  scroll: { flex: 1 },
-  scrollContent: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.lg },
-  dayTitle: { ...TYPOGRAPHY.h3, color: C.text, marginBottom: SPACING.xl },
-  section: { marginBottom: SPACING.xl },
-  sectionTitle: { ...TYPOGRAPHY.h4, color: C.text, marginBottom: SPACING.md },
-  bodyText: { ...TYPOGRAPHY.body, color: C.textMuted, lineHeight: 24 },
-  verseBlock: {
-    backgroundColor: COLORS.primaryMuted,
-    borderRadius: RADIUS.md,
-    borderLeftWidth: 3,
-    borderLeftColor: COLORS.primary,
-    padding: SPACING.lg,
-    marginBottom: SPACING.xl,
-    gap: 8,
-  },
-  verseText: { ...TYPOGRAPHY.body, color: C.text, fontStyle: 'italic', lineHeight: 24 },
-  verseRef: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '700' },
-  taskList: { gap: SPACING.sm },
-  taskRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
-    borderColor: C.border,
-    padding: SPACING.md,
-    gap: SPACING.md,
-  },
-  taskRowDone: { borderColor: 'rgba(39,174,96,0.3)', backgroundColor: 'rgba(39,174,96,0.05)' },
-  taskText: { flex: 1, ...TYPOGRAPHY.body, color: C.text, lineHeight: 22 },
-  taskTextDone: { color: C.textHint, textDecorationLine: 'line-through' },
-  prayerBlock: {
-    backgroundColor: COLORS.primaryMuted,
-    borderRadius: RADIUS.card,
-    padding: SPACING.lg,
-    gap: SPACING.sm,
-  },
-  prayerLabel: { ...TYPOGRAPHY.label, color: COLORS.primary, fontWeight: '700' },
-  prayerText: { ...TYPOGRAPHY.body, color: C.textMuted, lineHeight: 22, fontStyle: 'italic' },
-  ctaSection: { marginBottom: SPACING.xl },
-  ctaPrimary: {
-    backgroundColor: COLORS.primary,
-    borderRadius: RADIUS.full,
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-  ctaPrimaryDisabled: { backgroundColor: C.surfaceElevated },
-  ctaPrimaryText: { ...TYPOGRAPHY.body, color: '#FFF', fontWeight: '700' },
-});
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    root: { flex: 1, backgroundColor: C.bg },
+    progressTrack: { height: 2, backgroundColor: C.surfaceElevated },
+    progressFill: { height: '100%', backgroundColor: COLORS.primary },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingTop: 52,
+      paddingHorizontal: SPACING.xl,
+      paddingBottom: SPACING.md,
+      gap: SPACING.md,
+    },
+    backBtn: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: C.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    headerCenter: { flex: 1 },
+    dayLabel: { ...TYPOGRAPHY.micro, color: C.textHint },
+    challengeName: { ...TYPOGRAPHY.label, color: C.text, fontWeight: '600' },
+    scroll: { flex: 1 },
+    scrollContent: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.lg },
+    dayTitle: { ...TYPOGRAPHY.h3, color: C.text, marginBottom: SPACING.xl },
+    section: { marginBottom: SPACING.xl },
+    sectionTitle: { ...TYPOGRAPHY.h4, color: C.text, marginBottom: SPACING.md },
+    bodyText: { ...TYPOGRAPHY.body, color: C.textMuted, lineHeight: 24 },
+    verseBlock: {
+      backgroundColor: COLORS.primaryMuted,
+      borderRadius: RADIUS.md,
+      borderLeftWidth: 3,
+      borderLeftColor: COLORS.primary,
+      padding: SPACING.lg,
+      marginBottom: SPACING.xl,
+      gap: 8,
+    },
+    verseText: { ...TYPOGRAPHY.body, color: C.text, fontStyle: 'italic', lineHeight: 24 },
+    verseRef: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '700' },
+    taskList: { gap: SPACING.sm },
+    taskRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.md,
+      borderWidth: 1,
+      borderColor: C.border,
+      padding: SPACING.md,
+      gap: SPACING.md,
+    },
+    taskRowDone: { borderColor: 'rgba(39,174,96,0.3)', backgroundColor: 'rgba(39,174,96,0.05)' },
+    taskText: { flex: 1, ...TYPOGRAPHY.body, color: C.text, lineHeight: 22 },
+    taskTextDone: { color: C.textHint, textDecorationLine: 'line-through' },
+    prayerBlock: {
+      backgroundColor: COLORS.primaryMuted,
+      borderRadius: RADIUS.card,
+      padding: SPACING.lg,
+      gap: SPACING.sm,
+    },
+    prayerLabel: { ...TYPOGRAPHY.label, color: COLORS.primary, fontWeight: '700' },
+    prayerText: { ...TYPOGRAPHY.body, color: C.textMuted, lineHeight: 22, fontStyle: 'italic' },
+    ctaSection: { marginBottom: SPACING.xl },
+    ctaPrimary: {
+      backgroundColor: COLORS.primary,
+      borderRadius: RADIUS.full,
+      paddingVertical: 14,
+      alignItems: 'center',
+    },
+    ctaPrimaryDisabled: { backgroundColor: C.surfaceElevated },
+    ctaPrimaryText: { ...TYPOGRAPHY.body, color: '#FFF', fontWeight: '700' },
+  });
+}

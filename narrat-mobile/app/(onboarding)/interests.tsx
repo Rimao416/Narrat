@@ -1,13 +1,13 @@
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { ArrowLeft, Check } from 'lucide-react-native';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { useOnboardingStore } from '../../store/onboardingStore';
+import { useThemeColors } from '../../hooks/useThemeColors';
 
-const C = COLORS.dark;
 const MIN_SELECT = 3;
 
 const INTERESTS = [
@@ -21,7 +21,17 @@ const INTERESTS = [
   { id: 'guerison', label: 'Guerison interieure', color: COLORS.purple },
 ];
 
-function InterestChip({ item, selected, onPress }: { item: typeof INTERESTS[0]; selected: boolean; onPress: () => void }) {
+function InterestChip({
+  item,
+  selected,
+  onPress,
+  styles,
+}: {
+  item: typeof INTERESTS[0];
+  selected: boolean;
+  onPress: () => void;
+  styles: ReturnType<typeof createStyles>;
+}) {
   const scale = useSharedValue(1);
   const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
 
@@ -50,6 +60,8 @@ function InterestChip({ item, selected, onPress }: { item: typeof INTERESTS[0]; 
 }
 
 export default function Interests() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const { selectedInterests, toggleInterest } = useOnboardingStore();
   const [selected, setSelected] = useState<string[]>(selectedInterests || []);
 
@@ -108,6 +120,7 @@ export default function Interests() {
               item={item}
               selected={selected.includes(item.id)}
               onPress={() => toggle(item.id)}
+              styles={styles}
             />
           ))}
         </View>
@@ -128,7 +141,8 @@ export default function Interests() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: C.bg,
@@ -238,4 +252,5 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '700',
   },
-});
+  });
+}

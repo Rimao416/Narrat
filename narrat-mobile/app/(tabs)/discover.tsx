@@ -1,12 +1,12 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { GraduationCap, Sword, Star, Headphones, Users, ChevronRight, Award } from 'lucide-react-native';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { MOCK_COURSES, MOCK_CHALLENGES, MOCK_REVIVAL_FIGURES } from '../../data/mockData';
+import { useThemeColors } from '../../hooks/useThemeColors';
 
-const C = COLORS.dark;
 const { width } = Dimensions.get('window');
 const SECTIONS = ['Formation', 'Defis', 'Reveil'];
 
@@ -17,6 +17,8 @@ const INTENSITY_COLORS: Record<string, string> = {
 };
 
 export default function DiscoverScreen() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const [activeSection, setActiveSection] = useState('Formation');
 
   return (
@@ -51,6 +53,8 @@ export default function DiscoverScreen() {
 }
 
 function FormationSection() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   return (
     <View style={styles.list}>
       {MOCK_COURSES.map((course) => (
@@ -108,6 +112,8 @@ function FormationSection() {
 }
 
 function DefisSection() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   return (
     <View style={styles.list}>
       {MOCK_CHALLENGES.map((challenge) => (
@@ -151,6 +157,8 @@ function DefisSection() {
 }
 
 function ReveilSection() {
+  const C = useThemeColors();
+  const styles = useMemo(() => createStyles(C), [C]);
   const featured = MOCK_REVIVAL_FIGURES.find((f) => f.featured);
   const rest = MOCK_REVIVAL_FIGURES.filter((f) => !f.featured);
 
@@ -208,182 +216,184 @@ function ReveilSection() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: C.bg },
-  pageHeader: {
-    paddingHorizontal: SPACING.xl,
-    paddingTop: 56,
-    paddingBottom: SPACING.md,
-  },
-  pageTitle: { ...TYPOGRAPHY.h2, color: C.text },
-  sectionRow: {
-    flexDirection: 'row',
-    paddingHorizontal: SPACING.xl,
-    gap: SPACING.sm,
-    marginBottom: SPACING.lg,
-  },
-  sectionTab: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderRadius: RADIUS.md,
-    backgroundColor: C.surface,
-    borderWidth: 1,
-    borderColor: C.border,
-  },
-  sectionTabActive: { backgroundColor: COLORS.primaryMuted, borderColor: COLORS.primaryBorder },
-  sectionTabText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '600' },
-  sectionTabTextActive: { color: COLORS.primary, fontWeight: '700' },
-  scroll: { flex: 1 },
-  scrollContent: { paddingHorizontal: SPACING.xl },
-  list: { gap: SPACING.md },
-  courseCard: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    overflow: 'hidden',
-  },
-  courseHero: { height: 100, justifyContent: 'flex-end' },
-  courseHeroOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.3)' },
-  courseHeroContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: SPACING.md,
-  },
-  levelTag: { paddingHorizontal: SPACING.sm, paddingVertical: 3, borderRadius: RADIUS.full },
-  levelTagText: { ...TYPOGRAPHY.micro, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
-  audioBadge: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: COLORS.infoBg,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  courseBody: { padding: SPACING.lg, gap: SPACING.sm },
-  courseTitle: { ...TYPOGRAPHY.h4, color: C.text },
-  courseTeacher: { ...TYPOGRAPHY.caption, color: C.textMuted },
-  courseDesc: { ...TYPOGRAPHY.body, color: C.textMuted, lineHeight: 20 },
-  courseMeta: { flexDirection: 'row', gap: SPACING.md, alignItems: 'center' },
-  metaItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  metaText: { ...TYPOGRAPHY.caption, color: C.textHint },
-  certBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(212,175,55,0.1)',
-    borderRadius: RADIUS.full,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 4,
-    alignSelf: 'flex-start',
-  },
-  certText: { ...TYPOGRAPHY.micro, color: COLORS.gold, fontWeight: '600' },
-  progressRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },
-  progressBar: { flex: 1, height: 4, backgroundColor: C.surfaceElevated, borderRadius: 2, overflow: 'hidden' },
-  progressFill: { height: '100%', backgroundColor: COLORS.primary, borderRadius: 2 },
-  progressFillPurple: { backgroundColor: COLORS.purple },
-  progressPct: { ...TYPOGRAPHY.micro, color: C.textHint },
-  challengeCard: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    padding: SPACING.lg,
-    gap: SPACING.md,
-  },
-  challengeTop: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md },
-  challengeIconWrap: { width: 44, height: 44, borderRadius: RADIUS.sm, alignItems: 'center', justifyContent: 'center' },
-  challengeInfo: { flex: 1 },
-  challengeTitle: { ...TYPOGRAPHY.bodyLarge, color: C.text },
-  challengeCategory: { ...TYPOGRAPHY.caption, color: C.textMuted, marginTop: 2 },
-  intensityTag: { paddingHorizontal: SPACING.sm, paddingVertical: 3, borderRadius: RADIUS.full },
-  intensityText: { ...TYPOGRAPHY.micro, fontWeight: '700', textTransform: 'uppercase' },
-  challengeDesc: { ...TYPOGRAPHY.body, color: C.textMuted, lineHeight: 20 },
-  challengeMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  successRate: { ...TYPOGRAPHY.caption, color: COLORS.success, fontWeight: '600' },
-  startBtn: {
-    backgroundColor: COLORS.primaryMuted,
-    borderRadius: RADIUS.full,
-    borderWidth: 1,
-    borderColor: COLORS.primaryBorder,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  startBtnText: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '700' },
-  figureCardFeatured: {
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: COLORS.primaryBorder,
-    padding: SPACING.lg,
-    gap: SPACING.md,
-  },
-  figureHeaderRow: { flexDirection: 'row', alignItems: 'flex-start', gap: SPACING.md },
-  figureAvatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: COLORS.primaryMuted,
-    borderWidth: 1,
-    borderColor: COLORS.primaryBorder,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  figureAvatarText: { ...TYPOGRAPHY.label, color: COLORS.primary, fontSize: 13 },
-  figureHeaderInfo: { flex: 1 },
-  figureName: { ...TYPOGRAPHY.bodyLarge, color: C.text },
-  figureEra: { ...TYPOGRAPHY.caption, color: COLORS.primary, marginTop: 2 },
-  figureOrigin: { ...TYPOGRAPHY.caption, color: C.textMuted },
-  featuredBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(212,175,55,0.12)',
-    borderRadius: RADIUS.full,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 4,
-  },
-  featuredBadgeText: { ...TYPOGRAPHY.micro, color: COLORS.gold, fontWeight: '600' },
-  quoteWrap: {
-    backgroundColor: C.surfaceElevated,
-    borderRadius: RADIUS.md,
-    padding: SPACING.md,
-    borderLeftWidth: 3,
-    borderLeftColor: COLORS.primary,
-  },
-  quoteText: { ...TYPOGRAPHY.body, color: C.textMuted, fontStyle: 'italic', lineHeight: 21 },
-  verseRow: { gap: 3 },
-  verseRef: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '600' },
-  verseText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontStyle: 'italic' },
-  figureTags: { flexDirection: 'row', gap: SPACING.xs, flexWrap: 'wrap' },
-  figureTag: {
-    backgroundColor: C.surfaceElevated,
-    borderRadius: RADIUS.full,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 3,
-  },
-  figureTagText: { ...TYPOGRAPHY.micro, color: C.textHint },
-  figureCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: C.surface,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: C.border,
-    padding: SPACING.lg,
-    gap: SPACING.md,
-  },
-  figureAvatarSm: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: C.surfaceElevated,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  figureAvatarSmText: { ...TYPOGRAPHY.label, color: C.textMuted, fontSize: 11 },
-  figureCardInfo: { flex: 1, gap: 3 },
-  figureQuoteShort: { ...TYPOGRAPHY.caption, color: C.textHint, lineHeight: 17 },
-});
+function createStyles(C: ReturnType<typeof useThemeColors>) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: C.bg },
+    pageHeader: {
+      paddingHorizontal: SPACING.xl,
+      paddingTop: 56,
+      paddingBottom: SPACING.md,
+    },
+    pageTitle: { ...TYPOGRAPHY.h2, color: C.text },
+    sectionRow: {
+      flexDirection: 'row',
+      paddingHorizontal: SPACING.xl,
+      gap: SPACING.sm,
+      marginBottom: SPACING.lg,
+    },
+    sectionTab: {
+      flex: 1,
+      alignItems: 'center',
+      paddingVertical: 10,
+      borderRadius: RADIUS.md,
+      backgroundColor: C.surface,
+      borderWidth: 1,
+      borderColor: C.border,
+    },
+    sectionTabActive: { backgroundColor: COLORS.primaryMuted, borderColor: COLORS.primaryBorder },
+    sectionTabText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontWeight: '600' },
+    sectionTabTextActive: { color: COLORS.primary, fontWeight: '700' },
+    scroll: { flex: 1 },
+    scrollContent: { paddingHorizontal: SPACING.xl },
+    list: { gap: SPACING.md },
+    courseCard: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      overflow: 'hidden',
+    },
+    courseHero: { height: 100, justifyContent: 'flex-end' },
+    courseHeroOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.3)' },
+    courseHeroContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: SPACING.md,
+    },
+    levelTag: { paddingHorizontal: SPACING.sm, paddingVertical: 3, borderRadius: RADIUS.full },
+    levelTagText: { ...TYPOGRAPHY.micro, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
+    audioBadge: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: COLORS.infoBg,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    courseBody: { padding: SPACING.lg, gap: SPACING.sm },
+    courseTitle: { ...TYPOGRAPHY.h4, color: C.text },
+    courseTeacher: { ...TYPOGRAPHY.caption, color: C.textMuted },
+    courseDesc: { ...TYPOGRAPHY.body, color: C.textMuted, lineHeight: 20 },
+    courseMeta: { flexDirection: 'row', gap: SPACING.md, alignItems: 'center' },
+    metaItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+    metaText: { ...TYPOGRAPHY.caption, color: C.textHint },
+    certBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      backgroundColor: 'rgba(212,175,55,0.1)',
+      borderRadius: RADIUS.full,
+      paddingHorizontal: SPACING.sm,
+      paddingVertical: 4,
+      alignSelf: 'flex-start',
+    },
+    certText: { ...TYPOGRAPHY.micro, color: COLORS.gold, fontWeight: '600' },
+    progressRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },
+    progressBar: { flex: 1, height: 4, backgroundColor: C.surfaceElevated, borderRadius: 2, overflow: 'hidden' },
+    progressFill: { height: '100%', backgroundColor: COLORS.primary, borderRadius: 2 },
+    progressFillPurple: { backgroundColor: COLORS.purple },
+    progressPct: { ...TYPOGRAPHY.micro, color: C.textHint },
+    challengeCard: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      padding: SPACING.lg,
+      gap: SPACING.md,
+    },
+    challengeTop: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md },
+    challengeIconWrap: { width: 44, height: 44, borderRadius: RADIUS.sm, alignItems: 'center', justifyContent: 'center' },
+    challengeInfo: { flex: 1 },
+    challengeTitle: { ...TYPOGRAPHY.bodyLarge, color: C.text },
+    challengeCategory: { ...TYPOGRAPHY.caption, color: C.textMuted, marginTop: 2 },
+    intensityTag: { paddingHorizontal: SPACING.sm, paddingVertical: 3, borderRadius: RADIUS.full },
+    intensityText: { ...TYPOGRAPHY.micro, fontWeight: '700', textTransform: 'uppercase' },
+    challengeDesc: { ...TYPOGRAPHY.body, color: C.textMuted, lineHeight: 20 },
+    challengeMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+    successRate: { ...TYPOGRAPHY.caption, color: COLORS.success, fontWeight: '600' },
+    startBtn: {
+      backgroundColor: COLORS.primaryMuted,
+      borderRadius: RADIUS.full,
+      borderWidth: 1,
+      borderColor: COLORS.primaryBorder,
+      paddingVertical: 10,
+      alignItems: 'center',
+    },
+    startBtnText: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '700' },
+    figureCardFeatured: {
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: COLORS.primaryBorder,
+      padding: SPACING.lg,
+      gap: SPACING.md,
+    },
+    figureHeaderRow: { flexDirection: 'row', alignItems: 'flex-start', gap: SPACING.md },
+    figureAvatar: {
+      width: 52,
+      height: 52,
+      borderRadius: 26,
+      backgroundColor: COLORS.primaryMuted,
+      borderWidth: 1,
+      borderColor: COLORS.primaryBorder,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    figureAvatarText: { ...TYPOGRAPHY.label, color: COLORS.primary, fontSize: 13 },
+    figureHeaderInfo: { flex: 1 },
+    figureName: { ...TYPOGRAPHY.bodyLarge, color: C.text },
+    figureEra: { ...TYPOGRAPHY.caption, color: COLORS.primary, marginTop: 2 },
+    figureOrigin: { ...TYPOGRAPHY.caption, color: C.textMuted },
+    featuredBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      backgroundColor: 'rgba(212,175,55,0.12)',
+      borderRadius: RADIUS.full,
+      paddingHorizontal: SPACING.sm,
+      paddingVertical: 4,
+    },
+    featuredBadgeText: { ...TYPOGRAPHY.micro, color: COLORS.gold, fontWeight: '600' },
+    quoteWrap: {
+      backgroundColor: C.surfaceElevated,
+      borderRadius: RADIUS.md,
+      padding: SPACING.md,
+      borderLeftWidth: 3,
+      borderLeftColor: COLORS.primary,
+    },
+    quoteText: { ...TYPOGRAPHY.body, color: C.textMuted, fontStyle: 'italic', lineHeight: 21 },
+    verseRow: { gap: 3 },
+    verseRef: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '600' },
+    verseText: { ...TYPOGRAPHY.caption, color: C.textMuted, fontStyle: 'italic' },
+    figureTags: { flexDirection: 'row', gap: SPACING.xs, flexWrap: 'wrap' },
+    figureTag: {
+      backgroundColor: C.surfaceElevated,
+      borderRadius: RADIUS.full,
+      paddingHorizontal: SPACING.sm,
+      paddingVertical: 3,
+    },
+    figureTagText: { ...TYPOGRAPHY.micro, color: C.textHint },
+    figureCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: C.surface,
+      borderRadius: RADIUS.card,
+      borderWidth: 1,
+      borderColor: C.border,
+      padding: SPACING.lg,
+      gap: SPACING.md,
+    },
+    figureAvatarSm: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      backgroundColor: C.surfaceElevated,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    figureAvatarSmText: { ...TYPOGRAPHY.label, color: C.textMuted, fontSize: 11 },
+    figureCardInfo: { flex: 1, gap: 3 },
+    figureQuoteShort: { ...TYPOGRAPHY.caption, color: C.textHint, lineHeight: 17 },
+  });
+}
