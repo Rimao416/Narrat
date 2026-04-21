@@ -51,7 +51,7 @@ export class AdminUsersService {
             confessions: true,
             prayerRequests: true,
             courseEnrollments: true,
-            badges: true,
+            userBadges: true,
           },
         },
       },

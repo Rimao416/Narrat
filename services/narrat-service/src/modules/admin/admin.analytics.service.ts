@@ -18,12 +18,12 @@ export class AdminAnalyticsService {
       pendingCourses,
     ] = await Promise.all([
       prisma.user.count(),
-      prisma.user.count({ where: { updatedAt: { gte: dayAgo } } }),
+      prisma.user.count({ where: { lastSeenAt: { gte: dayAgo } } }),
       prisma.user.count({ where: { createdAt: { gte: weekAgo } } }),
       prisma.book.count(),
       prisma.course.count(),
       prisma.confession.count(),
-      prisma.report.count({ where: { status: 'PENDING' } }),
+      prisma.report.count({ where: { isResolved: false } }),
       prisma.book.count({ where: { status: 'REVIEW' } }),
       prisma.course.count({ where: { status: 'REVIEW' } }),
     ]);
@@ -50,14 +50,12 @@ export class AdminAnalyticsService {
       orderBy: { createdAt: 'asc' },
     });
 
-    // Group by date
     const byDate: Record<string, number> = {};
     users.forEach((u) => {
       const key = u.createdAt.toISOString().slice(0, 10);
       byDate[key] = (byDate[key] ?? 0) + 1;
     });
 
-    // Fill all days
     const result = [];
     for (let i = 0; i < days; i++) {
       const date = new Date(from.getTime() + i * 24 * 60 * 60 * 1000);
@@ -69,16 +67,17 @@ export class AdminAnalyticsService {
 
   static async engagementByModule() {
     const events = await prisma.appEvent.groupBy({
-      by: ['eventCategory'],
-      _count: { eventCategory: true },
-      orderBy: { _count: { eventCategory: 'desc' } },
+      by: ['eventName'],
+      _count: { eventName: true },
+      orderBy: { _count: { eventName: 'desc' } },
+      take: 10,
     }).catch(() => []);
 
     if (events.length > 0) {
-      return events.map((e: any) => ({ module: e.eventCategory, count: e._count.eventCategory }));
+      return events.map((e: any) => ({ module: e.eventName, count: e._count.eventName }));
     }
 
-    // Fallback: count content interactions
+    // Fallback: count content interactions across modules
     const [books, courses, confessions, prayers, songs, challenges, quiz] = await Promise.all([
       prisma.readingProgress.count(),
       prisma.courseEnrollment.count(),
@@ -103,11 +102,11 @@ export class AdminAnalyticsService {
   static async topContent(type: string) {
     if (type === 'books') {
       const books = await prisma.book.findMany({
-        orderBy: { readCount: 'desc' },
+        orderBy: { viewCount: 'desc' },
         take: 10,
-        select: { id: true, title: true, readCount: true },
+        select: { id: true, title: true, viewCount: true },
       });
-      return books.map((b) => ({ id: b.id, title: b.title, count: b.readCount }));
+      return books.map((b) => ({ id: b.id, title: b.title, count: b.viewCount }));
     }
     if (type === 'courses') {
       const courses = await prisma.course.findMany({

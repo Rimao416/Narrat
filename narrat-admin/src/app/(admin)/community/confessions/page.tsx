@@ -106,9 +106,9 @@ export default function ConfessionsPage() {
       header: "Statut",
       cell: (row) => (
         <div className="flex items-center gap-1.5">
-          {row.isFlagged && <Badge variant="destructive">Signalé</Badge>}
-          {!row.isApproved && !row.isFlagged && <Badge variant="warning">En attente</Badge>}
-          {row.isApproved && !row.isFlagged && <Badge variant="success">Approuvé</Badge>}
+          {row.hasCrisisFlag && <Badge variant="destructive">Signalé</Badge>}
+          {!row.isActive && !row.hasCrisisFlag && <Badge variant="warning">En attente</Badge>}
+          {row.isActive && !row.hasCrisisFlag && <Badge variant="success">Approuvé</Badge>}
         </div>
       ),
     },
@@ -134,7 +134,7 @@ export default function ConfessionsPage() {
           <Button variant="ghost" size="icon" onClick={() => setSelected(row)}>
             <Eye className="w-3.5 h-3.5" />
           </Button>
-          {!row.isApproved && (
+          {!row.isActive && (
             <Button variant="ghost" size="icon" onClick={() => approve(row.id)}>
               <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
             </Button>
@@ -204,7 +204,7 @@ export default function ConfessionsPage() {
               <p className="text-sm text-foreground leading-relaxed">{selected.content}</p>
             </div>
             <div className="flex gap-2 pt-2">
-              {!selected.isApproved && (
+              {!selected.isActive && (
                 <Button size="sm" variant="secondary" onClick={() => { approve(selected.id); setSelected(null); }}>
                   <CheckCircle className="w-3.5 h-3.5" />
                   Approuver

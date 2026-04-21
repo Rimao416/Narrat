@@ -43,8 +43,8 @@ export default function UsersPage() {
       cell: (row) => (
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 text-primary text-xs font-bold shrink-0">
-            {row.profilePicture ? (
-              <img src={row.profilePicture} alt="" className="w-8 h-8 rounded-full object-cover" />
+            {row.avatarUrl ? (
+              <img src={row.avatarUrl} alt="" className="w-8 h-8 rounded-full object-cover" />
             ) : (
               initials(row.firstName, row.lastName)
             )}
@@ -188,7 +188,7 @@ export default function UsersPage() {
               </div>
               <div className="bg-muted/30 rounded-lg p-3">
                 <p className="text-muted-foreground text-xs">Langue</p>
-                <p className="font-medium">{selected.preferredLanguage}</p>
+                <p className="font-medium">{selected.language}</p>
               </div>
               {selected._count && (
                 <>
@@ -198,7 +198,7 @@ export default function UsersPage() {
                   </div>
                   <div className="bg-muted/30 rounded-lg p-3">
                     <p className="text-muted-foreground text-xs">Formations</p>
-                    <p className="font-medium">{selected._count.enrollments}</p>
+                    <p className="font-medium">{selected._count.courseEnrollments}</p>
                   </div>
                 </>
               )}

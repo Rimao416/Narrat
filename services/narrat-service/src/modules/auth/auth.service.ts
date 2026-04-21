@@ -40,7 +40,7 @@ export class AuthService {
       where: { id: userId },
       include: {
         _count: {
-          select: { confessions: true, prayerRequests: true, enrollments: true },
+          select: { confessions: true, prayerRequests: true, courseEnrollments: true },
         },
       },
     });

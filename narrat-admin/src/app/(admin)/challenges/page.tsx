@@ -61,7 +61,7 @@ export default function ChallengesPage() {
 
   const challenges: Challenge[] = data?.data ?? [];
   const kanbanItems = challenges.map((c) => ({
-    id: c.id, title: c.title, status: c.status, isFeatured: c.isFeatured,
+    id: c.id, title: c.title, status: c.status, isFeatured: false,
     meta: `${CHALLENGE_CATEGORY_LABELS[c.category] ?? c.category} · ${c.durationDays}j · ${c.participantCount} participants`,
   }));
 

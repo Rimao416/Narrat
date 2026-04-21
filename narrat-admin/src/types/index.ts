@@ -4,43 +4,51 @@ export type Language = "FR" | "EN" | "LN" | "SW";
 export type UserRole = "USER" | "MODERATOR" | "EDITOR" | "ADMIN" | "SUPER_ADMIN";
 export type SpiritualLevel = "NEW_BELIEVER" | "BELIEVER" | "ESTABLISHED" | "LEADER" | "PASTOR";
 export type ContentStatus = "DRAFT" | "REVIEW" | "PUBLISHED" | "ARCHIVED" | "REJECTED";
+
 export type BookCategory =
   | "THEOLOGY"
+  | "BIOGRAPHY"
+  | "SPIRITUAL_GROWTH"
   | "PRAYER"
   | "MARRIAGE_FAMILY"
-  | "LEADERSHIP"
-  | "EVANGELISM"
-  | "DEVOTIONAL"
-  | "BIBLICAL_STUDY"
-  | "SPIRITUAL_GROWTH"
-  | "YOUTH"
-  | "PROPHECY"
-  | "HEALING"
-  | "REVIVAL";
+  | "FINANCES"
+  | "SPIRITUAL_WARFARE"
+  | "APOLOGETICS"
+  | "CHURCH_HISTORY"
+  | "ESCHATOLOGY"
+  | "SENSITIVE_TOPICS"
+  | "YOUTH_IDENTITY";
+
 export type CourseLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
+
 export type ChallengeCategory =
   | "PURITY"
   | "MENTAL_HEALTH"
   | "PRAYER"
-  | "FASTING"
   | "BIBLE_READING"
-  | "SERVICE"
+  | "FASTING"
+  | "FORGIVENESS"
+  | "ANGER"
+  | "GRATITUDE"
   | "EVANGELISM"
-  | "WORSHIP"
-  | "COMMUNITY"
-  | "FINANCE";
+  | "FAMILY";
+
+export type ChallengeIntensity = "LIGHT" | "MODERATE" | "INTENSE";
+
 export type ConfessionType =
   | "CONFESSION"
   | "TESTIMONY"
   | "PRAYER_REQUEST"
-  | "PRAISE"
-  | "QUESTION";
-export type ReportReason =
-  | "INAPPROPRIATE_CONTENT"
+  | "SPIRITUAL_QUESTION"
+  | "ENCOURAGEMENT";
+
+export type ModerationReason =
+  | "INAPPROPRIATE"
+  | "HERESY"
   | "SPAM"
-  | "HARASSMENT"
-  | "FAKE_INFO"
-  | "OTHER";
+  | "HARMFUL_CONTENT"
+  | "IMMINENT_DANGER"
+  | "FALSE_INFORMATION";
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
@@ -68,14 +76,17 @@ export interface AdminUser {
   xpTotal: number;
   isActive: boolean;
   isBanned: boolean;
-  preferredLanguage: Language;
-  profilePicture?: string;
+  bannedAt?: string;
+  bannedReason?: string;
+  language: Language;
+  avatarUrl?: string;
   createdAt: string;
   updatedAt: string;
   _count?: {
     confessions: number;
     prayerRequests: number;
-    enrollments: number;
+    courseEnrollments: number;
+    userBadges?: number;
   };
 }
 
@@ -97,13 +108,13 @@ export interface Book {
   audioUrl?: string;
   category: BookCategory;
   status: ContentStatus;
-  isFeatured: boolean;
-  totalPages?: number;
-  author: Author;
   authorId: string;
-  readCount: number;
+  author: Author;
+  viewCount: number;
+  downloadCount: number;
   language: Language;
-  sortOrder: number;
+  hasAudio: boolean;
+  isSensitive: boolean;
   createdAt: string;
   updatedAt: string;
   _count?: { chapters: number };
@@ -116,44 +127,46 @@ export interface Author {
   bio?: string;
   nationality?: string;
   birthYear?: number;
-  photoUrl?: string;
+  avatarUrl?: string;
 }
 
 // ─── Courses ──────────────────────────────────────────────────────────────────
 
 export interface Course {
   id: string;
+  slug: string;
   title: string;
   description: string;
   coverUrl?: string;
   level: CourseLevel;
   status: ContentStatus;
-  isFeatured: boolean;
   moduleCount: number;
   enrollCount: number;
   passingScore: number;
-  estimatedHours?: number;
+  totalDuration?: number;
+  hasCertificate: boolean;
   language: Language;
-  sortOrder: number;
   createdAt: string;
   updatedAt: string;
+  _count?: { modules: number; enrollments: number };
 }
 
 // ─── Songs ────────────────────────────────────────────────────────────────────
 
 export interface Song {
   id: string;
+  slug: string;
   title: string;
   artist: string;
-  albumArt?: string;
+  imageUrl?: string;
   audioUrl?: string;
   style: string;
+  theme: string;
   language: Language;
   status: ContentStatus;
   lyrics?: string;
   spiritualContext?: string;
   playCount: number;
-  sortOrder: number;
   createdAt: string;
 }
 
@@ -163,29 +176,32 @@ export interface Confession {
   id: string;
   type: ConfessionType;
   content: string;
-  visibility: "PUBLIC" | "ANONYMOUS" | "COMMUNITY";
+  visibility: "PUBLIC" | "THEMATIC_GROUP" | "PRIVATE_GROUP" | "ANONYMOUS_PUBLIC";
   prayerCount: number;
   replyCount: number;
-  isApproved: boolean;
-  isFlagged: boolean;
+  isActive: boolean;
+  hasCrisisFlag: boolean;
+  isAnonymous: boolean;
   createdAt: string;
-  user: Pick<AdminUser, "id" | "firstName" | "lastName" | "profilePicture">;
+  user: Pick<AdminUser, "id" | "firstName" | "lastName" | "avatarUrl">;
 }
 
 // ─── Challenges ───────────────────────────────────────────────────────────────
 
 export interface Challenge {
   id: string;
+  slug: string;
   title: string;
   description: string;
   category: ChallengeCategory;
-  intensity: "LIGHT" | "MODERATE" | "INTENSE";
+  intensity: ChallengeIntensity;
   durationDays: number;
   participantCount: number;
+  completionRate: number;
   status: ContentStatus;
-  isFeatured: boolean;
   coverUrl?: string;
-  sortOrder: number;
+  language: Language;
+  isSensitive: boolean;
   createdAt: string;
 }
 
@@ -193,11 +209,12 @@ export interface Challenge {
 
 export interface Report {
   id: string;
-  reason: ReportReason;
+  reason: ModerationReason;
   description?: string;
-  status: "PENDING" | "REVIEWED" | "RESOLVED" | "DISMISSED";
-  reportedAt: string;
-  reporter: Pick<AdminUser, "id" | "firstName" | "lastName">;
+  isResolved: boolean;
+  isCrisis: boolean;
+  createdAt: string;
+  submitter: Pick<AdminUser, "id" | "firstName" | "lastName">;
   reportedUser?: Pick<AdminUser, "id" | "firstName" | "lastName">;
   confession?: Pick<Confession, "id" | "content" | "type">;
 }

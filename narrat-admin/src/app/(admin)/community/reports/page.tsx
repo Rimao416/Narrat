@@ -14,18 +14,12 @@ import { toast } from "sonner";
 import { extractErrorMessage } from "@/services/api";
 
 const REASON_LABELS: Record<string, string> = {
-  INAPPROPRIATE_CONTENT: "Contenu inapproprié",
+  INAPPROPRIATE: "Contenu inapproprié",
+  HERESY: "Hérésie",
   SPAM: "Spam",
-  HARASSMENT: "Harcèlement",
-  FAKE_INFO: "Fausse info",
-  OTHER: "Autre",
-};
-
-const STATUS_VARIANTS: Record<string, "default" | "success" | "secondary" | "warning" | "destructive"> = {
-  PENDING: "warning",
-  REVIEWED: "default",
-  RESOLVED: "success",
-  DISMISSED: "secondary",
+  HARMFUL_CONTENT: "Contenu nuisible",
+  IMMINENT_DANGER: "Danger imminent",
+  FALSE_INFORMATION: "Fausse information",
 };
 
 export default function ReportsPage() {
@@ -64,7 +58,7 @@ export default function ReportsPage() {
       key: "reporter",
       header: "Signalé par",
       cell: (row) => (
-        <span className="text-sm">{row.reporter.firstName} {row.reporter.lastName}</span>
+        <span className="text-sm">{row.submitter.firstName} {row.submitter.lastName}</span>
       ),
     },
     {
@@ -89,13 +83,15 @@ export default function ReportsPage() {
       key: "status",
       header: "Statut",
       cell: (row) => (
-        <Badge variant={STATUS_VARIANTS[row.status] ?? "default"}>{row.status}</Badge>
+        <Badge variant={row.isCrisis ? "destructive" : row.isResolved ? "success" : "warning"}>
+          {row.isCrisis ? "Crise" : row.isResolved ? "Résolu" : "En attente"}
+        </Badge>
       ),
     },
     {
       key: "date",
       header: "Date",
-      cell: (row) => <span className="text-xs text-muted-foreground">{timeAgo(row.reportedAt)}</span>,
+      cell: (row) => <span className="text-xs text-muted-foreground">{timeAgo(row.createdAt)}</span>,
     },
     {
       key: "actions",
@@ -105,7 +101,7 @@ export default function ReportsPage() {
           <Button variant="ghost" size="icon" onClick={() => { setSelected(row); setResolveNotes(""); }}>
             <Eye className="w-3.5 h-3.5" />
           </Button>
-          {row.status === "PENDING" && (
+          {!row.isResolved && (
             <>
               <Button variant="ghost" size="icon" onClick={() => resolve(row.id, "RESOLVED")}>
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
@@ -125,9 +121,9 @@ export default function ReportsPage() {
     <div className="p-6 space-y-4">
       <div className="flex items-center gap-2">
         <span className="text-xs text-muted-foreground">{data?.total ?? 0} signalement{(data?.total ?? 0) !== 1 ? "s" : ""}</span>
-        {(data?.data.filter((r) => r.status === "PENDING").length ?? 0) > 0 && (
+        {(data?.data.filter((r) => !r.isResolved).length ?? 0) > 0 && (
           <Badge variant="destructive">
-            {data?.data.filter((r) => r.status === "PENDING").length} en attente
+            {data?.data.filter((r) => !r.isResolved).length} en attente
           </Badge>
         )}
       </div>
@@ -154,7 +150,7 @@ export default function ReportsPage() {
               </div>
               <div className="bg-muted/30 rounded-lg p-3">
                 <p className="text-xs text-muted-foreground">Statut</p>
-                <p className="font-medium">{selected.status}</p>
+                <p className="font-medium">{selected.isResolved ? "Résolu" : selected.isCrisis ? "Crise" : "En attente"}</p>
               </div>
             </div>
             {selected.description && (
@@ -169,7 +165,7 @@ export default function ReportsPage() {
                 <p className="text-sm">{selected.confession.content}</p>
               </div>
             )}
-            {selected.status === "PENDING" && (
+            {!selected.isResolved && (
               <div className="space-y-2">
                 <label className="text-xs font-medium">Notes de résolution</label>
                 <Input

@@ -34,7 +34,7 @@ export default function BooksPage() {
     id: b.id,
     title: b.title,
     status: b.status,
-    isFeatured: b.isFeatured,
+    isFeatured: false,
     meta: `${CATEGORY_LABELS[b.category] ?? b.category} · ${b.author?.firstName} ${b.author?.lastName}`,
   }));
 
@@ -67,7 +67,7 @@ export default function BooksPage() {
     {
       key: "reads",
       header: "Lectures",
-      cell: (row) => <span className="text-sm font-mono">{row.readCount}</span>,
+      cell: (row) => <span className="text-sm font-mono">{row.viewCount}</span>,
     },
     {
       key: "updatedAt",

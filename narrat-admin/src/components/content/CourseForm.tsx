@@ -44,8 +44,7 @@ export function CourseForm({ open, onClose, onSuccess }: CourseFormProps) {
       await coursesService.create({
         ...data,
         coverUrl: data.coverUrl || undefined,
-        estimatedHours: data.estimatedHours,
-      });
+      } as any);
       toast.success("Formation créée");
       reset();
       onSuccess();

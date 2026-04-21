@@ -22,8 +22,8 @@ export default function SongsPage() {
       cell: (row) => (
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10 text-primary shrink-0">
-            {row.albumArt
-              ? <img src={row.albumArt} alt="" className="w-9 h-9 rounded-lg object-cover" />
+            {row.imageUrl
+              ? <img src={row.imageUrl} alt="" className="w-9 h-9 rounded-lg object-cover" />
               : <Music className="w-4 h-4" />}
           </div>
           <div>

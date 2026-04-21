@@ -33,7 +33,7 @@ export default function CoursesPage() {
     id: c.id,
     title: c.title,
     status: c.status,
-    isFeatured: c.isFeatured,
+    isFeatured: false,
     meta: `${LEVEL_BADGE[c.level]?.label ?? c.level} · ${c.moduleCount} modules · ${c.enrollCount} inscrits`,
   }));
 
@@ -48,7 +48,7 @@ export default function CoursesPage() {
             : <div className="w-10 h-10 rounded bg-muted" />}
           <div>
             <p className="font-medium text-sm">{row.title}</p>
-            <p className="text-xs text-muted-foreground">{row.moduleCount} modules · {row.estimatedHours}h</p>
+            <p className="text-xs text-muted-foreground">{row.moduleCount} modules · {row.totalDuration ? `${Math.round(row.totalDuration / 60)}h` : "—"}</p>
           </div>
         </div>
       ),

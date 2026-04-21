@@ -26,7 +26,7 @@ export class AdminBooksService {
     const [data, total] = await Promise.all([
       prisma.book.findMany({
         where, skip, take,
-        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
+        orderBy: { createdAt: 'desc' },
         include: { author: true, _count: { select: { chapters: true } } },
       }),
       prisma.book.count({ where }),
@@ -41,25 +41,24 @@ export class AdminBooksService {
   }
 
   static async create(data: CreateBookDto) {
-    const count = await prisma.book.count();
+    const { isFeatured, sortOrder, ...rest } = data as any;
     return prisma.book.create({
-      data: { ...data, sortOrder: count + 1, status: 'DRAFT' } as any,
+      data: { ...rest, status: 'DRAFT' as any },
       include: { author: true },
     });
   }
 
   static async update(id: string, data: UpdateBookDto) {
-    return prisma.book.update({ where: { id }, data: data as any, include: { author: true } });
+    const { isFeatured, sortOrder, ...rest } = data as any;
+    return prisma.book.update({ where: { id }, data: rest as any, include: { author: true } });
   }
 
   static async updateStatus(id: string, status: string) {
     return prisma.book.update({ where: { id }, data: { status: status as any } });
   }
 
-  static async reorder(ids: string[]) {
-    await Promise.all(
-      ids.map((id, index) => prisma.book.update({ where: { id }, data: { sortOrder: index } }))
-    );
+  static async reorder(_ids: string[]) {
+    // Book has no sortOrder field — ordering is handled via createdAt
   }
 
   static async delete(id: string) {
@@ -80,7 +79,7 @@ export class AdminCoursesService {
     const [data, total] = await Promise.all([
       prisma.course.findMany({
         where, skip, take,
-        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
+        orderBy: { createdAt: 'desc' },
         include: { _count: { select: { modules: true, enrollments: true } } },
       }),
       prisma.course.count({ where }),
@@ -98,22 +97,26 @@ export class AdminCoursesService {
   }
 
   static async create(data: CreateCourseDto) {
-    const count = await prisma.course.count();
-    return prisma.course.create({ data: { ...data, sortOrder: count + 1, status: 'DRAFT' } as any });
+    const { isFeatured, estimatedHours, ...rest } = data as any;
+    const slug = `course-${Date.now()}-${rest.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 30) ?? 'new'}`;
+    return prisma.course.create({
+      data: { ...rest, slug, totalDuration: estimatedHours ? estimatedHours * 60 : undefined, status: 'DRAFT' } as any,
+    });
   }
 
   static async update(id: string, data: UpdateCourseDto) {
-    return prisma.course.update({ where: { id }, data: data as any });
+    const { isFeatured, estimatedHours, ...rest } = data as any;
+    const update: any = { ...rest };
+    if (estimatedHours !== undefined) update.totalDuration = estimatedHours * 60;
+    return prisma.course.update({ where: { id }, data: update });
   }
 
   static async updateStatus(id: string, status: string) {
     return prisma.course.update({ where: { id }, data: { status: status as any } });
   }
 
-  static async reorder(ids: string[]) {
-    await Promise.all(
-      ids.map((id, index) => prisma.course.update({ where: { id }, data: { sortOrder: index } }))
-    );
+  static async reorder(_ids: string[]) {
+    // Course has no sortOrder field
   }
 
   static async delete(id: string) {
@@ -136,19 +139,25 @@ export class AdminSongsService {
     if (params.status) where.status = params.status;
 
     const [data, total] = await Promise.all([
-      prisma.song.findMany({ where, skip, take, orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }] }),
+      prisma.song.findMany({ where, skip, take, orderBy: { createdAt: 'desc' } }),
       prisma.song.count({ where }),
     ]);
     return paginatedResponse(data, total, params.page, params.pageSize);
   }
 
   static async create(data: CreateSongDto) {
-    const count = await prisma.song.count();
-    return prisma.song.create({ data: { ...data, sortOrder: count + 1, status: 'DRAFT' } as any });
+    const { albumArt, ...rest } = data as any;
+    const slug = `${rest.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40) ?? 'song'}-${Date.now()}`;
+    return prisma.song.create({
+      data: { ...rest, slug, imageUrl: albumArt, theme: rest.title ?? 'Adoration', status: 'DRAFT' } as any,
+    });
   }
 
   static async update(id: string, data: UpdateSongDto) {
-    return prisma.song.update({ where: { id }, data: data as any });
+    const { albumArt, ...rest } = data as any;
+    const update: any = { ...rest };
+    if (albumArt !== undefined) update.imageUrl = albumArt;
+    return prisma.song.update({ where: { id }, data: update });
   }
 
   static async updateStatus(id: string, status: string) {
@@ -170,10 +179,7 @@ export class AdminChallengesService {
     if (params.status) where.status = params.status;
 
     const [data, total] = await Promise.all([
-      prisma.challenge.findMany({
-        where, skip, take,
-        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
-      }),
+      prisma.challenge.findMany({ where, skip, take, orderBy: { createdAt: 'desc' } }),
       prisma.challenge.count({ where }),
     ]);
     return paginatedResponse(data, total, params.page, params.pageSize);
@@ -189,22 +195,21 @@ export class AdminChallengesService {
   }
 
   static async create(data: CreateChallengeDto) {
-    const count = await prisma.challenge.count();
-    return prisma.challenge.create({ data: { ...data, sortOrder: count + 1, status: 'DRAFT' } as any });
+    const { isFeatured, sortOrder, ...rest } = data as any;
+    return prisma.challenge.create({ data: { ...rest, status: 'DRAFT' as any } });
   }
 
   static async update(id: string, data: UpdateChallengeDto) {
-    return prisma.challenge.update({ where: { id }, data: data as any });
+    const { isFeatured, sortOrder, ...rest } = data as any;
+    return prisma.challenge.update({ where: { id }, data: rest as any });
   }
 
   static async updateStatus(id: string, status: string) {
     return prisma.challenge.update({ where: { id }, data: { status: status as any } });
   }
 
-  static async reorder(ids: string[]) {
-    await Promise.all(
-      ids.map((id, index) => prisma.challenge.update({ where: { id }, data: { sortOrder: index } }))
-    );
+  static async reorder(_ids: string[]) {
+    // Challenge has no sortOrder field
   }
 
   static async delete(id: string) {

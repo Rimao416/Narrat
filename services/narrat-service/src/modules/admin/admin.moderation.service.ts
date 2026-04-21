@@ -6,14 +6,14 @@ export class AdminConfessionsService {
   static async list(params: {
     page?: number;
     pageSize?: number;
-    isFlagged?: string;
-    isApproved?: string;
+    hasCrisisFlag?: string;
+    isActive?: string;
     type?: string;
   }) {
     const { skip, take } = paginate(params.page, params.pageSize);
     const where: any = {};
-    if (params.isFlagged !== undefined) where.isFlagged = params.isFlagged === 'true';
-    if (params.isApproved !== undefined) where.isApproved = params.isApproved === 'true';
+    if (params.hasCrisisFlag !== undefined) where.hasCrisisFlag = params.hasCrisisFlag === 'true';
+    if (params.isActive !== undefined) where.isActive = params.isActive === 'true';
     if (params.type) where.type = params.type;
 
     const [data, total] = await Promise.all([
@@ -21,7 +21,7 @@ export class AdminConfessionsService {
         where, skip, take,
         orderBy: { createdAt: 'desc' },
         include: {
-          user: { select: { id: true, firstName: true, lastName: true, profilePicture: true } },
+          user: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } },
         },
       }),
       prisma.confession.count({ where }),
@@ -32,10 +32,10 @@ export class AdminConfessionsService {
   static async approve(id: string, moderatorId: string) {
     const confession = await prisma.confession.update({
       where: { id },
-      data: { isApproved: true, isFlagged: false },
+      data: { isActive: true, hasCrisisFlag: false },
     });
     await prisma.moderationLog.create({
-      data: { moderatorId, action: 'APPROVE', targetType: 'CONFESSION', targetId: id } as any,
+      data: { moderatorId, confessionId: id, action: 'APPROVED', reason: 'Confession approuvée' },
     }).catch(() => {});
     return confession;
   }
@@ -43,19 +43,19 @@ export class AdminConfessionsService {
   static async flag(id: string, moderatorId: string) {
     const confession = await prisma.confession.update({
       where: { id },
-      data: { isFlagged: true, isApproved: false },
+      data: { hasCrisisFlag: true },
     });
     await prisma.moderationLog.create({
-      data: { moderatorId, action: 'FLAG', targetType: 'CONFESSION', targetId: id } as any,
+      data: { moderatorId, confessionId: id, action: 'WARNING_SENT', reason: 'Confession signalée pour crise' },
     }).catch(() => {});
     return confession;
   }
 
   static async delete(id: string, moderatorId: string) {
-    await prisma.confession.delete({ where: { id } });
     await prisma.moderationLog.create({
-      data: { moderatorId, action: 'DELETE', targetType: 'CONFESSION', targetId: id } as any,
+      data: { moderatorId, confessionId: id, action: 'REJECTED', reason: 'Confession supprimée par modérateur' },
     }).catch(() => {});
+    await prisma.confession.delete({ where: { id } });
   }
 }
 
@@ -63,14 +63,16 @@ export class AdminReportsService {
   static async list(params: { page?: number; pageSize?: number; status?: string }) {
     const { skip, take } = paginate(params.page, params.pageSize);
     const where: any = {};
-    if (params.status) where.status = params.status;
+    if (params.status === 'PENDING') where.isResolved = false;
+    else if (params.status === 'RESOLVED') where.isResolved = true;
+    else if (params.status === 'CRISIS') where.isCrisis = true;
 
     const [data, total] = await Promise.all([
       prisma.report.findMany({
         where, skip, take,
-        orderBy: { reportedAt: 'desc' },
+        orderBy: { createdAt: 'desc' },
         include: {
-          reporter: { select: { id: true, firstName: true, lastName: true } },
+          submitter: { select: { id: true, firstName: true, lastName: true } },
           reportedUser: { select: { id: true, firstName: true, lastName: true } },
           confession: { select: { id: true, content: true, type: true } },
         },
@@ -84,7 +86,7 @@ export class AdminReportsService {
     const report = await prisma.report.findUnique({
       where: { id },
       include: {
-        reporter: { select: { id: true, firstName: true, lastName: true, email: true } },
+        submitter: { select: { id: true, firstName: true, lastName: true, email: true } },
         reportedUser: { select: { id: true, firstName: true, lastName: true, email: true } },
         confession: true,
       },
@@ -97,15 +99,12 @@ export class AdminReportsService {
     const report = await prisma.report.findUnique({ where: { id } });
     if (!report) throw new Error('Signalement introuvable');
 
-    await prisma.report.update({
-      where: { id },
-      data: { status: 'RESOLVED' } as any,
-    });
+    await prisma.report.update({ where: { id }, data: { isResolved: true } });
 
     if (dto.action === 'BAN_USER' && report.reportedUserId) {
       await prisma.user.update({
         where: { id: report.reportedUserId },
-        data: { isBanned: true },
+        data: { isBanned: true, bannedAt: new Date(), bannedReason: dto.notes ?? 'Banni suite à signalement' },
       });
     }
     if (dto.action === 'DELETE_CONTENT' && report.confessionId) {
@@ -113,20 +112,14 @@ export class AdminReportsService {
     }
 
     await prisma.moderationLog.create({
-      data: {
-        moderatorId,
-        action: `REPORT_RESOLVED:${dto.action}`,
-        targetType: 'REPORT',
-        targetId: id,
-        reason: dto.notes ?? dto.action,
-      } as any,
+      data: { moderatorId, reportId: id, action: 'APPROVED', reason: dto.notes ?? dto.action },
     }).catch(() => {});
   }
 
   static async dismiss(id: string, moderatorId: string) {
-    await prisma.report.update({ where: { id }, data: { status: 'DISMISSED' } as any });
+    await prisma.report.update({ where: { id }, data: { isResolved: true } });
     await prisma.moderationLog.create({
-      data: { moderatorId, action: 'REPORT_DISMISSED', targetType: 'REPORT', targetId: id } as any,
+      data: { moderatorId, reportId: id, action: 'REJECTED', reason: 'Signalement rejeté' },
     }).catch(() => {});
   }
 }
@@ -140,7 +133,7 @@ export class AdminCrisisService {
         skip, take,
         orderBy: { updatedAt: 'desc' },
         include: {
-          user: { select: { id: true, firstName: true, lastName: true, email: true, profilePicture: true } },
+          user: { select: { id: true, firstName: true, lastName: true, email: true, avatarUrl: true } },
           messages: { orderBy: { createdAt: 'desc' }, take: 3 },
         },
       }),
@@ -150,12 +143,9 @@ export class AdminCrisisService {
   }
 
   static async review(id: string, moderatorId: string) {
-    await prisma.aIConversation.update({
-      where: { id },
-      data: { hasCrisisFlag: false } as any,
-    });
+    await prisma.aIConversation.update({ where: { id }, data: { hasCrisisFlag: false } });
     await prisma.moderationLog.create({
-      data: { moderatorId, action: 'CRISIS_REVIEWED', targetType: 'AI_CONVERSATION', targetId: id } as any,
+      data: { moderatorId, action: 'APPROVED', reason: 'Conversation de crise examinée et résolue' },
     }).catch(() => {});
   }
 }
