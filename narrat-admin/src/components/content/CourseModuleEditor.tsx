@@ -11,6 +11,7 @@ import {
   Video, Headphones, BookOpen, Lock, Unlock, Plus, HelpCircle, X,
 } from "lucide-react";
 import { FileUpload } from "@/components/ui/file-upload";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 interface CourseModuleEditorProps {
   module: CourseModuleItem;
@@ -121,12 +122,10 @@ export function CourseModuleEditor({
           {/* Content */}
           <div>
             <label className="block text-xs font-medium mb-1.5">Contenu *</label>
-            <textarea
-              value={content}
-              onChange={(e) => { setContent(e.target.value); markDirty(); }}
-              rows={8}
-              className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-y font-mono leading-relaxed"
-              placeholder="Le contenu de la leçon..."
+            <RichTextEditor
+              content={content}
+              onChange={(html) => { setContent(html); markDirty(); }}
+              placeholder="Le contenu détaillé de la leçon..."
             />
           </div>
 
