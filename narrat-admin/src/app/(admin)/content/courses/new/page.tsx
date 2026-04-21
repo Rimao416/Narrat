@@ -17,6 +17,7 @@ import {
   ArrowLeft, Save, GraduationCap, User, Target, Image, FileText,
   Plus, X, Award, Globe, BarChart,
 } from "lucide-react";
+import { FileUpload } from "@/components/ui/file-upload";
 
 const schema = z.object({
   title: z.string().min(1, "Le titre est requis"),
@@ -44,7 +45,7 @@ export default function NewCoursePage() {
   const [newObjective, setNewObjective] = useState("");
 
   const {
-    register, handleSubmit,
+    register, handleSubmit, watch, setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -222,13 +223,12 @@ export default function NewCoursePage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="aspect-video rounded-lg border-2 border-dashed border-border bg-muted/30 flex items-center justify-center mb-3">
-                  <div className="text-center text-muted-foreground">
-                    <Image className="w-8 h-8 mx-auto mb-1 opacity-40" />
-                    <p className="text-xs">Ajoutez une URL d&apos;image</p>
-                  </div>
-                </div>
-                <Input {...register("coverUrl")} placeholder="https://..." />
+                <FileUpload
+                  value={watch("coverUrl")}
+                  onChange={(url) => setValue("coverUrl", url, { shouldValidate: true })}
+                  accept="image/*"
+                  folder="courses/covers"
+                />
                 {errors.coverUrl && <p className="text-xs text-destructive mt-1">{errors.coverUrl.message}</p>}
               </CardContent>
             </Card>

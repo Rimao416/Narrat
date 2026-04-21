@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import multer from 'multer';
 import { asyncHandler } from '../../shared/middlewares/async-handler';
 import { authenticate } from '../../shared/middlewares/auth.middleware';
 import { requireAdmin, requireModerator, requireSuperAdmin } from '../../shared/middlewares/authorize.middleware';
@@ -14,8 +15,10 @@ import {
   AdminAnalyticsController,
   AdminConfigController,
 } from './admin.controller';
+import { AdminUploadController } from './admin.upload.controller';
 
 const router = Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 // All admin routes require authentication + at least ADMIN role
 router.use(authenticate);
@@ -113,5 +116,8 @@ router.post('/notifications/broadcast', requireAdmin, asyncHandler(AdminConfigCo
 router.get('/notifications/verses', requireAdmin, asyncHandler(AdminConfigController.getDailyVerses));
 router.post('/notifications/verses', requireAdmin, asyncHandler(AdminConfigController.addDailyVerse));
 router.delete('/notifications/verses/:key', requireAdmin, asyncHandler(AdminConfigController.removeDailyVerse));
+
+// ─── Uploads ──────────────────────────────────────────────────────────────────
+router.post('/upload', requireModerator, upload.single('file'), asyncHandler(AdminUploadController.upload));
 
 export default router;

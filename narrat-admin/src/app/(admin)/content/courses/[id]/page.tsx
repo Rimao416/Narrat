@@ -17,6 +17,7 @@ import {
   ArrowLeft, Save, Plus, GraduationCap, Target, User, FileText,
   BookOpen, BarChart3, Layers, Trash2, X, Globe, Award, Image,
 } from "lucide-react";
+import { FileUpload } from "@/components/ui/file-upload";
 
 const STATUS_OPTIONS: ContentStatus[] = ["DRAFT", "REVIEW", "PUBLISHED", "ARCHIVED", "REJECTED"];
 const LANGUAGE_LABELS: Record<string, string> = { FR: "Français", EN: "English", LN: "Lingala", SW: "Kiswahili" };
@@ -307,19 +308,12 @@ export default function CourseDetailPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {coverUrl ? (
-                    <div className="relative aspect-video rounded-lg overflow-hidden border border-border mb-3">
-                      <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
-                    </div>
-                  ) : (
-                    <div className="aspect-video rounded-lg border-2 border-dashed border-border bg-muted/30 flex items-center justify-center mb-3">
-                      <div className="text-center text-muted-foreground">
-                        <Image className="w-8 h-8 mx-auto mb-1 opacity-40" />
-                        <p className="text-xs">Pas de couverture</p>
-                      </div>
-                    </div>
-                  )}
-                  <Input value={coverUrl} onChange={(e) => { setCoverUrl(e.target.value); markDirty(); }} placeholder="URL de l'image..." />
+                  <FileUpload
+                    value={coverUrl}
+                    onChange={(url) => { setCoverUrl(url); markDirty(); }}
+                    accept="image/*"
+                    folder="courses/covers"
+                  />
                 </CardContent>
               </Card>
 

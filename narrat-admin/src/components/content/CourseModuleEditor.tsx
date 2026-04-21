@@ -10,6 +10,7 @@ import {
   ChevronDown, ChevronUp, GripVertical, Trash2, Save,
   Video, Headphones, BookOpen, Lock, Unlock, Plus, HelpCircle, X,
 } from "lucide-react";
+import { FileUpload } from "@/components/ui/file-upload";
 
 interface CourseModuleEditorProps {
   module: CourseModuleItem;
@@ -144,16 +145,22 @@ export function CourseModuleEditor({
           {/* Media */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium mb-1.5">
-                <Headphones className="w-3 h-3 inline mr-1" />URL Audio
-              </label>
-              <Input value={audioUrl} onChange={(e) => { setAudioUrl(e.target.value); markDirty(); }} placeholder="https://..." />
+              <FileUpload
+                value={audioUrl}
+                onChange={(url) => { setAudioUrl(url); markDirty(); }}
+                accept="audio/*"
+                label="URL Audio"
+                folder="courses/audio"
+              />
             </div>
             <div>
-              <label className="block text-xs font-medium mb-1.5">
-                <Video className="w-3 h-3 inline mr-1" />URL Vidéo
-              </label>
-              <Input value={videoUrl} onChange={(e) => { setVideoUrl(e.target.value); markDirty(); }} placeholder="https://..." />
+              <FileUpload
+                value={videoUrl}
+                onChange={(url) => { setVideoUrl(url); markDirty(); }}
+                accept="video/*"
+                label="URL Vidéo"
+                folder="courses/video"
+              />
             </div>
           </div>
 
