@@ -18,15 +18,15 @@ Le projet est conçu comme un monorepo contenant le backend et les applications 
 
 ```text
 narrat/
-├── services/
-│   └── narrat-service/  # Backend (Node.js, Express, Prisma)
-├── mobile/              # Application Mobile (À initialiser)
+├── narrat-service/  # Backend (Node.js, Express, Prisma)
+├── narrat-admin/    # Application Admin (Next.js)
+├── mobile/          # Application Mobile (À initialiser)
 └── README.md
 ```
 
 ### 🔙 Backend (Narrat Service)
 ```text
-services/narrat-service/
+narrat-service/
 ├── src/
 │   ├── config/          # Configurations (Base de données, Env)
 │   ├── modules/         # Modules fonctionnels (Auth, Library, etc.)
@@ -73,7 +73,7 @@ Le système est composé de 13 modules principaux :
 1. **Cloner le projet**
    ```bash
    git clone <repository-url>
-   cd narrat/services/narrat-service
+   cd narrat-service
    ```
 
 2. **Installer les dépendances**

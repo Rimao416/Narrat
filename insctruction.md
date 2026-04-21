@@ -1,3 +1,3 @@
 Maintenant on va implementer la partie Admin, tu vas faire ce que tu veux, tu vas créer projet NextJs, on va utiliser Zustand, des hooks, des services, donc tu vas initialiser le projet avec tout cela 
 
-On veut une partie Admin assez senior, similaire à Notion, avec tout ce qu'il lfaut, utilise des drag & drop (et d'autres trucs de composants senior en fonction des cas nécessaires), le services et déjà dans services/narrat-service (donc tu dois aller là-bas pour avoioir accès aux services, aussi, tu vas lire le schema pour bien comprendre l'application)
+On veut une partie Admin assez senior, similaire à Notion, avec tout ce qu'il lfaut, utilise des drag & drop (et d'autres trucs de composants senior en fonction des cas nécessaires), le services et déjà dans narrat-service (donc tu dois aller là-bas pour avoioir accès aux services, aussi, tu vas lire le schema pour bien comprendre l'application)
