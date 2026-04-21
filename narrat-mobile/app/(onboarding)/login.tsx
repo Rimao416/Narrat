@@ -1,21 +1,19 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { useState, useMemo, useEffect } from 'react';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withSequence } from 'react-native-reanimated';
-import { ArrowLeft, Eye, EyeOff, User, Mail, Lock } from 'lucide-react-native';
+import { ArrowLeft, Eye, EyeOff, Mail, Lock } from 'lucide-react-native';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
 import { useThemeColors } from '../../hooks/useThemeColors';
-import { useOnboardingStore } from '../../store/onboardingStore';
-import * as Google from 'expo-auth-session/providers/google';
 import { useAuthStore } from '../../store/authStore';
+import * as Google from 'expo-auth-session/providers/google';
 
-export default function Signup() {
+export default function Login() {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
-  const { setSignupCredentials } = useOnboardingStore();
+  const { login, loginWithGoogle, isLoading, error, clearError } = useAuthStore();
 
-  const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -24,7 +22,7 @@ export default function Signup() {
   const shakeX = useSharedValue(0);
   const shakeStyle = useAnimatedStyle(() => ({ transform: [{ translateX: shakeX.value }] }));
 
-  const { loginWithGoogle } = useAuthStore();
+  // Google Auth config (IDs to be filled in .env later)
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_ID || 'dummy',
     iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_ID || 'dummy',
@@ -36,14 +34,14 @@ export default function Signup() {
       const { id_token } = response.params;
       if (id_token) {
         loginWithGoogle(id_token).then(() => {
-          router.push('/(onboarding)/level');
+          router.replace('/(tabs)');
         });
       }
     }
   }, [response]);
 
-  const handleContinue = () => {
-    if (!firstName.trim() || !email.trim() || !password.trim()) {
+  const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
       shakeX.value = withSequence(
         withTiming(-8, { duration: 60 }),
         withTiming(8, { duration: 60 }),
@@ -53,52 +51,33 @@ export default function Signup() {
       );
       return;
     }
-    setSignupCredentials(firstName.trim(), email.trim(), password);
-    router.push('/(onboarding)/level');
+    try {
+      await login(email.trim(), password);
+      router.replace('/(tabs)');
+    } catch (e) {
+      // Error is handled in store and displayed below
+    }
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
             <ArrowLeft size={20} color={C.textMuted} />
           </TouchableOpacity>
-          <View style={styles.stepIndicator}>
-            {[1, 2, 3, 4, 5].map((s) => (
-              <View key={s} style={[styles.stepDot, s === 1 && styles.stepDotActive]} />
-            ))}
-          </View>
         </View>
 
         {/* Title */}
         <View style={styles.titleSection}>
-          <Text style={styles.title}>Creer votre compte</Text>
-          <Text style={styles.subtitle}>Rejoignez des milliers de croyants en croissance</Text>
+          <Text style={styles.title}>Heureux de vous revoir</Text>
+          <Text style={styles.subtitle}>Connectez-vous pour continuer votre croissance spirituelle.</Text>
         </View>
 
         {/* Form */}
         <Animated.View style={[styles.form, shakeStyle]}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Prenom</Text>
-            <View style={[styles.inputWrap, focused === 'name' && styles.inputWrapFocused]}>
-              <User size={16} color={focused === 'name' ? COLORS.primary : C.textHint} />
-              <TextInput
-                style={styles.input}
-                placeholder="Jean-Kevin"
-                placeholderTextColor={C.textHint}
-                value={firstName}
-                onChangeText={setFirstName}
-                onFocus={() => setFocused('name')}
-                onBlur={() => setFocused(null)}
-                autoCapitalize="words"
-              />
-            </View>
-          </View>
+          {error && <Text style={styles.errorText}>{error}</Text>}
 
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Adresse email</Text>
@@ -109,7 +88,7 @@ export default function Signup() {
                 placeholder="jean@exemple.com"
                 placeholderTextColor={C.textHint}
                 value={email}
-                onChangeText={setEmail}
+                onChangeText={(t) => { setEmail(t); clearError(); }}
                 onFocus={() => setFocused('email')}
                 onBlur={() => setFocused(null)}
                 keyboardType="email-address"
@@ -125,10 +104,10 @@ export default function Signup() {
               <Lock size={16} color={focused === 'password' ? COLORS.primary : C.textHint} />
               <TextInput
                 style={[styles.input, { flex: 1 }]}
-                placeholder="Minimum 8 caracteres"
+                placeholder="Votre mot de passe"
                 placeholderTextColor={C.textHint}
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={(t) => { setPassword(t); clearError(); }}
                 onFocus={() => setFocused('password')}
                 onBlur={() => setFocused(null)}
                 secureTextEntry={!showPassword}
@@ -144,15 +123,16 @@ export default function Signup() {
           </View>
         </Animated.View>
 
-        <Text style={styles.terms}>
-          En continuant, vous acceptez nos{' '}
-          <Text style={styles.termsLink}>Conditions d'utilisation</Text>
-          {' '}et notre{' '}
-          <Text style={styles.termsLink}>Politique de confidentialite</Text>
-        </Text>
+        <TouchableOpacity style={styles.forgotBtn} onPress={() => router.push('/(onboarding)/forgot-password')}>
+          <Text style={styles.forgotText}>Mot de passe oublié ?</Text>
+        </TouchableOpacity>
 
-        <TouchableOpacity style={styles.continueButton} onPress={handleContinue} activeOpacity={0.85}>
-          <Text style={styles.continueButtonText}>Continuer</Text>
+        <TouchableOpacity style={styles.continueButton} onPress={handleLogin} activeOpacity={0.85} disabled={isLoading}>
+          {isLoading ? (
+            <ActivityIndicator color="#FFF" />
+          ) : (
+            <Text style={styles.continueButtonText}>Se connecter</Text>
+          )}
         </TouchableOpacity>
 
         <View style={styles.divider}>
@@ -167,8 +147,9 @@ export default function Signup() {
           activeOpacity={0.8}
         >
           <View style={styles.googleIconPlaceholder} />
-          <Text style={styles.googleButtonText}>S'inscrire avec Google</Text>
+          <Text style={styles.googleButtonText}>Continuer avec Google</Text>
         </TouchableOpacity>
+
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -176,111 +157,24 @@ export default function Signup() {
 
 function createStyles(C: ReturnType<typeof useThemeColors>) {
   return StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: C.bg,
-    },
-    scroll: {
-      flexGrow: 1,
-      paddingHorizontal: SPACING.xl,
-      paddingTop: 60,
-      paddingBottom: 40,
-    },
-    header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      marginBottom: SPACING.xxxl,
-    },
-    backBtn: {
-      width: 40,
-      height: 40,
-      borderRadius: RADIUS.full,
-      backgroundColor: C.surface,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    stepIndicator: {
-      flexDirection: 'row',
-      gap: SPACING.xs,
-    },
-    stepDot: {
-      width: 24,
-      height: 4,
-      borderRadius: 2,
-      backgroundColor: C.border2,
-    },
-    stepDotActive: {
-      backgroundColor: COLORS.primary,
-      width: 32,
-    },
-    titleSection: {
-      marginBottom: SPACING.xxxl,
-    },
-    title: {
-      ...TYPOGRAPHY.h2,
-      color: C.text,
-      marginBottom: SPACING.xs,
-    },
-    subtitle: {
-      ...TYPOGRAPHY.body,
-      color: C.textMuted,
-    },
-    form: {
-      gap: SPACING.lg,
-      marginBottom: SPACING.xl,
-    },
-    inputGroup: {
-      gap: SPACING.xs,
-    },
-    inputLabel: {
-      ...TYPOGRAPHY.label,
-      color: C.textMuted,
-      marginLeft: SPACING.xs,
-    },
-    inputWrap: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: C.surface,
-      borderRadius: RADIUS.md,
-      borderWidth: 1,
-      borderColor: C.border,
-      paddingHorizontal: SPACING.md,
-      height: 52,
-      gap: SPACING.sm,
-    },
-    inputWrapFocused: {
-      borderColor: COLORS.primaryBorder,
-      backgroundColor: COLORS.primaryMuted,
-    },
-    input: {
-      flex: 1,
-      ...TYPOGRAPHY.body,
-      color: C.text,
-      height: '100%',
-    },
-    terms: {
-      ...TYPOGRAPHY.caption,
-      color: C.textHint,
-      textAlign: 'center',
-      lineHeight: 18,
-      marginBottom: SPACING.xl,
-    },
-    termsLink: {
-      color: COLORS.primary,
-    },
-    continueButton: {
-      height: 54,
-      backgroundColor: COLORS.primary,
-      borderRadius: RADIUS.full,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    continueButtonText: {
-      ...TYPOGRAPHY.bodyLarge,
-      color: '#FFFFFF',
-      fontWeight: '700',
-    },
+    container: { flex: 1, backgroundColor: C.bg },
+    scroll: { flexGrow: 1, paddingHorizontal: SPACING.xl, paddingTop: 60, paddingBottom: 40 },
+    header: { marginBottom: SPACING.xxxl },
+    backBtn: { width: 40, height: 40, borderRadius: RADIUS.full, backgroundColor: C.surface, alignItems: 'center', justifyContent: 'center' },
+    titleSection: { marginBottom: SPACING.xxxl },
+    title: { ...TYPOGRAPHY.h2, color: C.text, marginBottom: SPACING.xs },
+    subtitle: { ...TYPOGRAPHY.body, color: C.textMuted },
+    form: { gap: SPACING.lg, marginBottom: SPACING.md },
+    inputGroup: { gap: SPACING.xs },
+    inputLabel: { ...TYPOGRAPHY.label, color: C.textMuted, marginLeft: SPACING.xs },
+    inputWrap: { flexDirection: 'row', alignItems: 'center', backgroundColor: C.surface, borderRadius: RADIUS.md, borderWidth: 1, borderColor: C.border, paddingHorizontal: SPACING.md, height: 52, gap: SPACING.sm },
+    inputWrapFocused: { borderColor: COLORS.primaryBorder, backgroundColor: COLORS.primaryMuted },
+    input: { flex: 1, ...TYPOGRAPHY.body, color: C.text, height: '100%' },
+    errorText: { color: COLORS.error, fontSize: 13, textAlign: 'center', marginBottom: SPACING.sm },
+    forgotBtn: { alignSelf: 'flex-end', marginBottom: SPACING.xl },
+    forgotText: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '600' },
+    continueButton: { height: 54, backgroundColor: COLORS.primary, borderRadius: RADIUS.full, alignItems: 'center', justifyContent: 'center' },
+    continueButtonText: { ...TYPOGRAPHY.bodyLarge, color: '#FFFFFF', fontWeight: '700' },
     divider: { flexDirection: 'row', alignItems: 'center', marginVertical: SPACING.xl, gap: SPACING.md },
     line: { flex: 1, height: 1 },
     dividerText: { fontSize: 12, fontWeight: '600' },

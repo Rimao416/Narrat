@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
-import { registerSchema, loginSchema } from './auth.dto';
+import { registerSchema, loginSchema, googleSchema, forgotPasswordSchema, resetPasswordSchema } from './auth.dto';
 
 export class AuthController {
   static async register(req: Request, res: Response) {
@@ -25,6 +25,24 @@ export class AuthController {
     const { refreshToken } = req.body;
     if (!refreshToken) return res.status(400).json({ message: 'refreshToken requis' });
     const result = await AuthService.refresh(refreshToken);
+    res.status(200).json(result);
+  }
+
+  static async googleAuth(req: Request, res: Response) {
+    const data = googleSchema.parse(req.body);
+    const result = await AuthService.googleAuth(data);
+    res.status(200).json(result);
+  }
+
+  static async forgotPassword(req: Request, res: Response) {
+    const data = forgotPasswordSchema.parse(req.body);
+    const result = await AuthService.forgotPassword(data);
+    res.status(200).json(result);
+  }
+
+  static async resetPassword(req: Request, res: Response) {
+    const data = resetPasswordSchema.parse(req.body);
+    const result = await AuthService.resetPassword(data);
     res.status(200).json(result);
   }
 }

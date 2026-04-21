@@ -7,6 +7,9 @@ const router = Router();
 
 router.post('/register', asyncHandler(AuthController.register));
 router.post('/login', asyncHandler(AuthController.login));
+router.post('/google', asyncHandler(AuthController.googleAuth));
+router.post('/forgot-password', asyncHandler(AuthController.forgotPassword));
+router.post('/reset-password', asyncHandler(AuthController.resetPassword));
 router.get('/me', authenticate, asyncHandler(AuthController.me));
 router.post('/refresh', asyncHandler(AuthController.refresh));
 

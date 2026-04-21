@@ -125,7 +125,7 @@ export default function OnboardingIndex() {
 
         <TouchableOpacity
           style={styles.googleButton}
-          onPress={() => router.push('/(onboarding)/signup')}
+          onPress={() => router.push('/(onboarding)/login')}
           activeOpacity={0.8}
         >
           <View style={styles.googleIconPlaceholder} />
@@ -134,7 +134,7 @@ export default function OnboardingIndex() {
 
         <TouchableOpacity
           style={styles.loginLink}
-          onPress={() => router.push('/(onboarding)/signup')}
+          onPress={() => router.push('/(onboarding)/login')}
           activeOpacity={0.7}
         >
           <Text style={styles.loginLinkText}>

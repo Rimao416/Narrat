@@ -36,6 +36,9 @@ interface AuthState {
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (firstName: string, email: string, password: string) => Promise<void>;
+  loginWithGoogle: (idToken: string) => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (token: string, newPassword: string) => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
 }
@@ -66,6 +69,40 @@ export const useAuthStore = create<AuthState>()(
           const { data } = await api.post('/auth/register', { firstName, email, password });
           await setToken(data.token);
           set({ user: data.user, isAuthenticated: true, isLoading: false });
+        } catch (e: any) {
+          set({ isLoading: false, error: e.message });
+          throw e;
+        }
+      },
+
+      loginWithGoogle: async (idToken) => {
+        set({ isLoading: true, error: null });
+        try {
+          const { data } = await api.post('/auth/google', { idToken });
+          await setToken(data.token);
+          set({ user: data.user, isAuthenticated: true, isLoading: false });
+        } catch (e: any) {
+          set({ isLoading: false, error: e.message });
+          throw e;
+        }
+      },
+
+      forgotPassword: async (email) => {
+        set({ isLoading: true, error: null });
+        try {
+          await api.post('/auth/forgot-password', { email });
+          set({ isLoading: false });
+        } catch (e: any) {
+          set({ isLoading: false, error: e.message });
+          throw e;
+        }
+      },
+
+      resetPassword: async (token, newPassword) => {
+        set({ isLoading: true, error: null });
+        try {
+          await api.post('/auth/reset-password', { token, newPassword });
+          set({ isLoading: false });
         } catch (e: any) {
           set({ isLoading: false, error: e.message });
           throw e;
