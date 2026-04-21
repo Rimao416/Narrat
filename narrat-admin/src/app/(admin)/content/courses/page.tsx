@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useCourses } from "@/hooks/useContent";
 import { ContentKanban } from "@/components/content/ContentKanban";
-import { CourseForm } from "@/components/content/CourseForm";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -23,11 +23,11 @@ const LEVEL_BADGE: Record<string, { label: string; variant: "default" | "warning
 const STATUS_OPTIONS: ContentStatus[] = ["DRAFT", "REVIEW", "PUBLISHED", "ARCHIVED", "REJECTED"];
 
 export default function CoursesPage() {
+  const router = useRouter();
   const { courses, total, totalPages, loading, page, search, statusFilter,
     setPage, setSearch, setStatusFilter, updateStatus, reorder, deleteCourse, refresh } = useCourses();
 
   const [viewMode, setViewMode] = useState<"list" | "kanban">("list");
-  const [showForm, setShowForm] = useState(false);
 
   const kanbanItems = courses.map((c) => ({
     id: c.id,
@@ -42,15 +42,18 @@ export default function CoursesPage() {
       key: "title",
       header: "Formation",
       cell: (row) => (
-        <div className="flex items-center gap-3">
+        <button
+          onClick={() => router.push(`/content/courses/${row.id}`)}
+          className="flex items-center gap-3 text-left hover:opacity-80 transition-opacity"
+        >
           {row.coverUrl
             ? <img src={row.coverUrl} alt="" className="w-10 h-10 rounded object-cover bg-muted" />
-            : <div className="w-10 h-10 rounded bg-muted" />}
+            : <div className="w-10 h-10 rounded bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-primary text-xs font-bold">{row.title[0]}</div>}
           <div>
-            <p className="font-medium text-sm">{row.title}</p>
+            <p className="font-medium text-sm hover:underline">{row.title}</p>
             <p className="text-xs text-muted-foreground">{row.moduleCount} modules · {row.totalDuration ? `${Math.round(row.totalDuration / 60)}h` : "—"}</p>
           </div>
-        </div>
+        </button>
       ),
     },
     {
@@ -94,7 +97,7 @@ export default function CoursesPage() {
             <LayoutGrid className="w-3.5 h-3.5" />
           </button>
         </div>
-        <Button size="sm" onClick={() => setShowForm(true)}><Plus className="w-3.5 h-3.5" />Nouvelle formation</Button>
+        <Button size="sm" onClick={() => router.push("/content/courses/new")}><Plus className="w-3.5 h-3.5" />Nouvelle formation</Button>
       </div>
 
       <p className="text-xs text-muted-foreground">{total} formation{total !== 1 ? "s" : ""}</p>
@@ -104,8 +107,6 @@ export default function CoursesPage() {
       ) : (
         <ContentKanban items={kanbanItems} loading={loading} onStatusChange={updateStatus} onReorder={reorder} onDelete={deleteCourse} />
       )}
-
-      <CourseForm open={showForm} onClose={() => setShowForm(false)} onSuccess={refresh} />
     </div>
   );
 }

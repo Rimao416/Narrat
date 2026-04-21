@@ -3,6 +3,9 @@ import { paginate, paginatedResponse } from '../../shared/utils/pagination';
 import type {
   CreateBookDto, UpdateBookDto,
   CreateCourseDto, UpdateCourseDto,
+  CreateModuleDto, UpdateModuleDto,
+  CreateQuizDto, UpdateQuizDto,
+  CreateQuizQuestionDto, UpdateQuizQuestionDto,
   CreateChallengeDto, UpdateChallengeDto,
   CreateSongDto, UpdateSongDto,
 } from './admin.dto';
@@ -90,25 +93,67 @@ export class AdminCoursesService {
   static async get(id: string) {
     const course = await prisma.course.findUnique({
       where: { id },
-      include: { modules: { orderBy: { moduleIndex: 'asc' } }, _count: { select: { enrollments: true } } },
+      include: {
+        modules: {
+          orderBy: { moduleIndex: 'asc' },
+          include: {
+            quiz: {
+              include: {
+                questions: {
+                  orderBy: { sortOrder: 'asc' },
+                  include: { answers: { orderBy: { sortOrder: 'asc' } } },
+                },
+              },
+            },
+            _count: { select: { completions: true } },
+          },
+        },
+        tags: { include: { tag: true } },
+        _count: { select: { enrollments: true, modules: true } },
+      },
     });
     if (!course) throw new Error('Formation introuvable');
     return course;
   }
 
   static async create(data: CreateCourseDto) {
-    const { isFeatured, estimatedHours, ...rest } = data as any;
+    const { estimatedHours, ...rest } = data as any;
     const slug = `course-${Date.now()}-${rest.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 30) ?? 'new'}`;
     return prisma.course.create({
-      data: { ...rest, slug, totalDuration: estimatedHours ? estimatedHours * 60 : undefined, status: 'DRAFT' } as any,
+      data: {
+        ...rest,
+        slug,
+        totalDuration: estimatedHours ? estimatedHours * 60 : undefined,
+        status: 'DRAFT',
+      } as any,
+      include: { _count: { select: { modules: true, enrollments: true } } },
     });
   }
 
   static async update(id: string, data: UpdateCourseDto) {
-    const { isFeatured, estimatedHours, ...rest } = data as any;
+    const { estimatedHours, ...rest } = data as any;
     const update: any = { ...rest };
     if (estimatedHours !== undefined) update.totalDuration = estimatedHours * 60;
-    return prisma.course.update({ where: { id }, data: update });
+    return prisma.course.update({
+      where: { id },
+      data: update,
+      include: {
+        modules: {
+          orderBy: { moduleIndex: 'asc' },
+          include: {
+            quiz: {
+              include: {
+                questions: {
+                  orderBy: { sortOrder: 'asc' },
+                  include: { answers: { orderBy: { sortOrder: 'asc' } } },
+                },
+              },
+            },
+          },
+        },
+        _count: { select: { enrollments: true, modules: true } },
+      },
+    });
   }
 
   static async updateStatus(id: string, status: string) {
@@ -121,6 +166,207 @@ export class AdminCoursesService {
 
   static async delete(id: string) {
     await prisma.course.delete({ where: { id } });
+  }
+
+  // ─── Modules ──────────────────────────────────────────────────────────────
+
+  static async createModule(courseId: string, data: any) {
+    // Auto-calculate moduleIndex
+    const lastModule = await prisma.courseModule.findFirst({
+      where: { courseId },
+      orderBy: { moduleIndex: 'desc' },
+    });
+    const moduleIndex = (lastModule?.moduleIndex ?? -1) + 1;
+
+    const mod = await prisma.courseModule.create({
+      data: {
+        ...data,
+        courseId,
+        moduleIndex,
+        audioUrl: data.audioUrl || null,
+        videoUrl: data.videoUrl || null,
+      },
+      include: {
+        quiz: { include: { questions: { include: { answers: true } } } },
+        _count: { select: { completions: true } },
+      },
+    });
+
+    // Update course moduleCount
+    const count = await prisma.courseModule.count({ where: { courseId } });
+    await prisma.course.update({ where: { id: courseId }, data: { moduleCount: count } });
+
+    return mod;
+  }
+
+  static async updateModule(courseId: string, moduleId: string, data: any) {
+    const updateData = { ...data };
+    if (data.audioUrl === '') updateData.audioUrl = null;
+    if (data.videoUrl === '') updateData.videoUrl = null;
+
+    return prisma.courseModule.update({
+      where: { id: moduleId },
+      data: updateData,
+      include: {
+        quiz: { include: { questions: { include: { answers: true } } } },
+        _count: { select: { completions: true } },
+      },
+    });
+  }
+
+  static async deleteModule(courseId: string, moduleId: string) {
+    await prisma.courseModule.delete({ where: { id: moduleId } });
+
+    // Re-index remaining modules
+    const remaining = await prisma.courseModule.findMany({
+      where: { courseId },
+      orderBy: { moduleIndex: 'asc' },
+    });
+    for (let i = 0; i < remaining.length; i++) {
+      if (remaining[i].moduleIndex !== i) {
+        await prisma.courseModule.update({ where: { id: remaining[i].id }, data: { moduleIndex: i } });
+      }
+    }
+
+    // Update course moduleCount
+    await prisma.course.update({ where: { id: courseId }, data: { moduleCount: remaining.length } });
+  }
+
+  static async reorderModules(courseId: string, moduleIds: string[]) {
+    for (let i = 0; i < moduleIds.length; i++) {
+      await prisma.courseModule.update({
+        where: { id: moduleIds[i] },
+        data: { moduleIndex: i },
+      });
+    }
+  }
+
+  // ─── Quiz ─────────────────────────────────────────────────────────────────
+
+  static async createQuiz(moduleId: string, data: any) {
+    return prisma.courseQuiz.create({
+      data: { ...data, moduleId },
+      include: { questions: { include: { answers: true } } },
+    });
+  }
+
+  static async updateQuiz(quizId: string, data: any) {
+    return prisma.courseQuiz.update({
+      where: { id: quizId },
+      data,
+      include: { questions: { include: { answers: true } } },
+    });
+  }
+
+  static async deleteQuiz(quizId: string) {
+    await prisma.courseQuiz.delete({ where: { id: quizId } });
+  }
+
+  // ─── Quiz Questions ───────────────────────────────────────────────────────
+
+  static async addQuizQuestion(quizId: string, data: any) {
+    const { answers, ...questionData } = data;
+    return prisma.quizQuestion.create({
+      data: {
+        ...questionData,
+        quizId,
+        answers: {
+          create: answers.map((a: any, i: number) => ({
+            text: a.text,
+            isCorrect: a.isCorrect ?? false,
+            sortOrder: i,
+          })),
+        },
+      },
+      include: { answers: { orderBy: { sortOrder: 'asc' } } },
+    });
+  }
+
+  static async updateQuizQuestion(questionId: string, data: any) {
+    const { answers, ...questionData } = data;
+
+    // Update question fields
+    if (Object.keys(questionData).length > 0) {
+      await prisma.quizQuestion.update({ where: { id: questionId }, data: questionData });
+    }
+
+    // If answers provided, replace them
+    if (answers) {
+      await prisma.quizAnswer.deleteMany({ where: { questionId } });
+      await prisma.quizAnswer.createMany({
+        data: answers.map((a: any, i: number) => ({
+          questionId,
+          text: a.text,
+          isCorrect: a.isCorrect ?? false,
+          sortOrder: i,
+        })),
+      });
+    }
+
+    return prisma.quizQuestion.findUnique({
+      where: { id: questionId },
+      include: { answers: { orderBy: { sortOrder: 'asc' } } },
+    });
+  }
+
+  static async deleteQuizQuestion(questionId: string) {
+    await prisma.quizQuestion.delete({ where: { id: questionId } });
+  }
+
+  // ─── Stats ────────────────────────────────────────────────────────────────
+
+  static async getStats(courseId: string) {
+    const [course, enrollments, completions] = await Promise.all([
+      prisma.course.findUnique({
+        where: { id: courseId },
+        include: {
+          modules: {
+            include: { _count: { select: { completions: true } } },
+            orderBy: { moduleIndex: 'asc' },
+          },
+          _count: { select: { enrollments: true, modules: true } },
+        },
+      }),
+      prisma.courseEnrollment.findMany({
+        where: { courseId },
+        select: { progressPercent: true, isCompleted: true },
+      }),
+      prisma.quizAttempt.findMany({
+        where: { quiz: { module: { courseId } } },
+        select: { score: true, isPassed: true },
+      }),
+    ]);
+
+    if (!course) throw new Error('Formation introuvable');
+
+    const totalEnrolled = enrollments.length;
+    const completedCount = enrollments.filter(e => e.isCompleted).length;
+    const avgProgress = totalEnrolled > 0
+      ? enrollments.reduce((sum, e) => sum + e.progressPercent, 0) / totalEnrolled
+      : 0;
+    const avgQuizScore = completions.length > 0
+      ? completions.reduce((sum, c) => sum + c.score, 0) / completions.length
+      : 0;
+    const quizPassRate = completions.length > 0
+      ? (completions.filter(c => c.isPassed).length / completions.length) * 100
+      : 0;
+
+    const moduleStats = course.modules.map(m => ({
+      id: m.id,
+      title: m.title,
+      moduleIndex: m.moduleIndex,
+      completions: m._count.completions,
+    }));
+
+    return {
+      totalEnrolled,
+      completedCount,
+      completionRate: totalEnrolled > 0 ? (completedCount / totalEnrolled) * 100 : 0,
+      avgProgress: Math.round(avgProgress * 100) / 100,
+      avgQuizScore: Math.round(avgQuizScore * 100) / 100,
+      quizPassRate: Math.round(quizPassRate * 100) / 100,
+      moduleStats,
+    };
   }
 }
 

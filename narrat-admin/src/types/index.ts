@@ -136,7 +136,11 @@ export interface Course {
   id: string;
   slug: string;
   title: string;
+  subtitle?: string;
   description: string;
+  objectives: string[];
+  teacherName?: string;
+  teacherBio?: string;
   coverUrl?: string;
   level: CourseLevel;
   status: ContentStatus;
@@ -145,10 +149,79 @@ export interface Course {
   passingScore: number;
   totalDuration?: number;
   hasCertificate: boolean;
+  hasAudio: boolean;
+  hasVideo: boolean;
   language: Language;
   createdAt: string;
   updatedAt: string;
   _count?: { modules: number; enrollments: number };
+}
+
+export interface CourseDetail extends Course {
+  modules: CourseModuleItem[];
+  tags?: { tag: { id: string; name: string; slug: string; color?: string } }[];
+}
+
+export interface CourseModuleItem {
+  id: string;
+  courseId: string;
+  moduleIndex: number;
+  title: string;
+  content: string;
+  summary?: string;
+  audioUrl?: string;
+  audioDuration?: number;
+  videoUrl?: string;
+  videoDuration?: number;
+  readTime?: number;
+  verseRefs: string[];
+  quotes: { text: string; author: string }[];
+  isLocked: boolean;
+  quiz?: CourseQuizItem;
+  _count?: { completions: number };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CourseQuizItem {
+  id: string;
+  moduleId: string;
+  passingScore: number;
+  maxAttempts: number;
+  shuffleQuestions: boolean;
+  questions: QuizQuestionItem[];
+}
+
+export interface QuizQuestionItem {
+  id: string;
+  type: "MCQ" | "TRUE_FALSE" | "MATCHING" | "FILL_BLANK";
+  question: string;
+  explanation?: string;
+  verseRef?: string;
+  sortOrder: number;
+  answers: QuizAnswerItem[];
+}
+
+export interface QuizAnswerItem {
+  id: string;
+  text: string;
+  isCorrect: boolean;
+  sortOrder: number;
+}
+
+export interface CourseStats {
+  totalEnrolled: number;
+  completedCount: number;
+  completionRate: number;
+  avgProgress: number;
+  avgQuizScore: number;
+  quizPassRate: number;
+  moduleStats: {
+    id: string;
+    title: string;
+    moduleIndex: number;
+    completions: number;
+  }[];
 }
 
 // ─── Songs ────────────────────────────────────────────────────────────────────

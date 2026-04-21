@@ -46,6 +46,23 @@ router.post('/courses', requireAdmin, asyncHandler(AdminCoursesController.create
 router.patch('/courses/:id', requireAdmin, asyncHandler(AdminCoursesController.update));
 router.patch('/courses/:id/status', requireModerator, asyncHandler(AdminCoursesController.updateStatus));
 router.delete('/courses/:id', requireAdmin, asyncHandler(AdminCoursesController.delete));
+router.get('/courses/:id/stats', requireModerator, asyncHandler(AdminCoursesController.stats));
+
+// ─── Course Modules ───────────────────────────────────────────────────────────
+router.post('/courses/:id/modules', requireAdmin, asyncHandler(AdminCoursesController.createModule));
+router.patch('/courses/:id/modules/:mid', requireAdmin, asyncHandler(AdminCoursesController.updateModule));
+router.delete('/courses/:id/modules/:mid', requireAdmin, asyncHandler(AdminCoursesController.deleteModule));
+router.post('/courses/:id/modules/reorder', requireAdmin, asyncHandler(AdminCoursesController.reorderModules));
+
+// ─── Course Quiz ──────────────────────────────────────────────────────────────
+router.post('/courses/:id/modules/:mid/quiz', requireAdmin, asyncHandler(AdminCoursesController.createQuiz));
+router.patch('/courses/:id/modules/:mid/quiz/:qid', requireAdmin, asyncHandler(AdminCoursesController.updateQuiz));
+router.delete('/courses/:id/modules/:mid/quiz/:qid', requireAdmin, asyncHandler(AdminCoursesController.deleteQuiz));
+
+// ─── Quiz Questions ───────────────────────────────────────────────────────────
+router.post('/courses/:id/modules/:mid/quiz/:qid/questions', requireAdmin, asyncHandler(AdminCoursesController.addQuizQuestion));
+router.patch('/courses/:id/modules/:mid/quiz/:qid/questions/:questionId', requireAdmin, asyncHandler(AdminCoursesController.updateQuizQuestion));
+router.delete('/courses/:id/modules/:mid/quiz/:qid/questions/:questionId', requireAdmin, asyncHandler(AdminCoursesController.deleteQuizQuestion));
 
 // ─── Songs (EDITOR+) ──────────────────────────────────────────────────────────
 router.get('/songs', requireModerator, asyncHandler(AdminSongsController.list));

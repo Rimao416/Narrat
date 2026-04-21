@@ -33,16 +33,68 @@ export const updateBookSchema = createBookSchema.partial();
 
 export const createCourseSchema = z.object({
   title: z.string().min(1),
+  subtitle: z.string().optional(),
   description: z.string().min(1),
+  objectives: z.array(z.string()).default([]),
+  teacherName: z.string().optional(),
+  teacherBio: z.string().optional(),
   coverUrl: z.string().url().optional(),
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']),
   language: z.enum(['FR', 'EN', 'LN', 'SW']).default('FR'),
-  isFeatured: z.boolean().default(false),
+  hasCertificate: z.boolean().default(true),
+  hasAudio: z.boolean().default(false),
+  hasVideo: z.boolean().default(false),
   passingScore: z.number().int().min(0).max(100).default(70),
   estimatedHours: z.number().positive().optional(),
 });
 
 export const updateCourseSchema = createCourseSchema.partial();
+
+// ─── Course Modules ───────────────────────────────────────────────────────────
+
+export const createModuleSchema = z.object({
+  title: z.string().min(1),
+  content: z.string().min(1),
+  summary: z.string().optional(),
+  audioUrl: z.string().url().optional().or(z.literal('')),
+  audioDuration: z.number().int().optional(),
+  videoUrl: z.string().url().optional().or(z.literal('')),
+  videoDuration: z.number().int().optional(),
+  readTime: z.number().int().optional(),
+  verseRefs: z.array(z.string()).default([]),
+  quotes: z.array(z.object({ text: z.string(), author: z.string() })).default([]),
+  isLocked: z.boolean().default(true),
+});
+
+export const updateModuleSchema = createModuleSchema.partial();
+
+export const reorderModulesSchema = z.object({
+  moduleIds: z.array(z.string()).min(1),
+});
+
+// ─── Course Quiz ──────────────────────────────────────────────────────────────
+
+export const createQuizSchema = z.object({
+  passingScore: z.number().int().min(0).max(100).default(70),
+  maxAttempts: z.number().int().min(0).default(0),
+  shuffleQuestions: z.boolean().default(true),
+});
+
+export const updateQuizSchema = createQuizSchema.partial();
+
+export const createQuizQuestionSchema = z.object({
+  type: z.enum(['MCQ', 'TRUE_FALSE', 'MATCHING', 'FILL_BLANK']),
+  question: z.string().min(1),
+  explanation: z.string().optional(),
+  verseRef: z.string().optional(),
+  sortOrder: z.number().int().default(0),
+  answers: z.array(z.object({
+    text: z.string().min(1),
+    isCorrect: z.boolean().default(false),
+  })).min(1),
+});
+
+export const updateQuizQuestionSchema = createQuizQuestionSchema.partial();
 
 export const createChallengeSchema = z.object({
   title: z.string().min(1),
@@ -106,6 +158,13 @@ export type CreateBookDto = z.infer<typeof createBookSchema>;
 export type UpdateBookDto = z.infer<typeof updateBookSchema>;
 export type CreateCourseDto = z.infer<typeof createCourseSchema>;
 export type UpdateCourseDto = z.infer<typeof updateCourseSchema>;
+export type CreateModuleDto = z.infer<typeof createModuleSchema>;
+export type UpdateModuleDto = z.infer<typeof updateModuleSchema>;
+export type ReorderModulesDto = z.infer<typeof reorderModulesSchema>;
+export type CreateQuizDto = z.infer<typeof createQuizSchema>;
+export type UpdateQuizDto = z.infer<typeof updateQuizSchema>;
+export type CreateQuizQuestionDto = z.infer<typeof createQuizQuestionSchema>;
+export type UpdateQuizQuestionDto = z.infer<typeof updateQuizQuestionSchema>;
 export type CreateChallengeDto = z.infer<typeof createChallengeSchema>;
 export type UpdateChallengeDto = z.infer<typeof updateChallengeSchema>;
 export type CreateSongDto = z.infer<typeof createSongSchema>;

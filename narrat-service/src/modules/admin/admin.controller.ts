@@ -8,6 +8,9 @@ import {
   banUserSchema, changeRoleSchema, updateStatusSchema, reorderSchema,
   createBookSchema, updateBookSchema,
   createCourseSchema, updateCourseSchema,
+  createModuleSchema, updateModuleSchema, reorderModulesSchema,
+  createQuizSchema, updateQuizSchema,
+  createQuizQuestionSchema, updateQuizQuestionSchema,
   createChallengeSchema, updateChallengeSchema,
   createSongSchema, updateSongSchema,
   resolveReportSchema, broadcastNotificationSchema,
@@ -110,6 +113,54 @@ export class AdminCoursesController {
   static async delete(req: Request, res: Response) {
     await AdminCoursesService.delete(req.params.id);
     res.json({ message: 'Formation supprimée' });
+  }
+  // ─── Modules ──────────────────────────────────────────────────────────
+  static async createModule(req: Request, res: Response) {
+    const data = createModuleSchema.parse(req.body);
+    res.status(201).json(await AdminCoursesService.createModule(req.params.id, data));
+  }
+  static async updateModule(req: Request, res: Response) {
+    const data = updateModuleSchema.parse(req.body);
+    res.json(await AdminCoursesService.updateModule(req.params.id, req.params.mid, data));
+  }
+  static async deleteModule(req: Request, res: Response) {
+    await AdminCoursesService.deleteModule(req.params.id, req.params.mid);
+    res.json({ message: 'Module supprimé' });
+  }
+  static async reorderModules(req: Request, res: Response) {
+    const { moduleIds } = reorderModulesSchema.parse(req.body);
+    await AdminCoursesService.reorderModules(req.params.id, moduleIds);
+    res.json({ message: 'Modules réordonnés' });
+  }
+  // ─── Quiz ─────────────────────────────────────────────────────────────
+  static async createQuiz(req: Request, res: Response) {
+    const data = createQuizSchema.parse(req.body);
+    res.status(201).json(await AdminCoursesService.createQuiz(req.params.mid, data));
+  }
+  static async updateQuiz(req: Request, res: Response) {
+    const data = updateQuizSchema.parse(req.body);
+    res.json(await AdminCoursesService.updateQuiz(req.params.qid, data));
+  }
+  static async deleteQuiz(req: Request, res: Response) {
+    await AdminCoursesService.deleteQuiz(req.params.qid);
+    res.json({ message: 'Quiz supprimé' });
+  }
+  // ─── Quiz Questions ───────────────────────────────────────────────────
+  static async addQuizQuestion(req: Request, res: Response) {
+    const data = createQuizQuestionSchema.parse(req.body);
+    res.status(201).json(await AdminCoursesService.addQuizQuestion(req.params.qid, data));
+  }
+  static async updateQuizQuestion(req: Request, res: Response) {
+    const data = updateQuizQuestionSchema.parse(req.body);
+    res.json(await AdminCoursesService.updateQuizQuestion(req.params.questionId, data));
+  }
+  static async deleteQuizQuestion(req: Request, res: Response) {
+    await AdminCoursesService.deleteQuizQuestion(req.params.questionId);
+    res.json({ message: 'Question supprimée' });
+  }
+  // ─── Stats ────────────────────────────────────────────────────────────
+  static async stats(req: Request, res: Response) {
+    res.json(await AdminCoursesService.getStats(req.params.id));
   }
 }
 

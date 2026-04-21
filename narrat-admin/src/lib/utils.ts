@@ -89,3 +89,16 @@ export const CHALLENGE_CATEGORY_LABELS: Record<string, string> = {
   EVANGELISM: "Évangélisation",
   FAMILY: "Famille",
 };
+
+export const COURSE_LEVEL_LABELS: Record<string, string> = {
+  BEGINNER: "Débutant",
+  INTERMEDIATE: "Intermédiaire",
+  ADVANCED: "Avancé",
+};
+
+export const QUIZ_QUESTION_TYPE_LABELS: Record<string, string> = {
+  MCQ: "QCM",
+  TRUE_FALSE: "Vrai / Faux",
+  MATCHING: "Correspondance",
+  FILL_BLANK: "Texte à trou",
+};

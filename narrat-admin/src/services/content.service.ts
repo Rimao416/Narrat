@@ -1,5 +1,5 @@
 import { api } from "./api";
-import type { Book, Course, Song, ContentStatus, PaginatedResponse, PaginationParams } from "@/types";
+import type { Book, Course, CourseDetail, CourseModuleItem, CourseStats, Song, ContentStatus, PaginatedResponse, PaginationParams } from "@/types";
 
 // ─── Books ────────────────────────────────────────────────────────────────────
 
@@ -46,7 +46,7 @@ export const coursesService = {
     return data;
   },
 
-  async get(id: string): Promise<Course> {
+  async get(id: string): Promise<CourseDetail> {
     const { data } = await api.get(`/admin/courses/${id}`);
     return data;
   },
@@ -56,7 +56,7 @@ export const coursesService = {
     return data;
   },
 
-  async update(id: string, payload: Partial<Course>): Promise<Course> {
+  async update(id: string, payload: Partial<Course>): Promise<CourseDetail> {
     const { data } = await api.patch(`/admin/courses/${id}`, payload);
     return data;
   },
@@ -72,6 +72,65 @@ export const coursesService = {
 
   async delete(id: string): Promise<void> {
     await api.delete(`/admin/courses/${id}`);
+  },
+
+  // ─── Modules ──────────────────────────────────────────────────────────────
+
+  async createModule(courseId: string, payload: any): Promise<CourseModuleItem> {
+    const { data } = await api.post(`/admin/courses/${courseId}/modules`, payload);
+    return data;
+  },
+
+  async updateModule(courseId: string, moduleId: string, payload: any): Promise<CourseModuleItem> {
+    const { data } = await api.patch(`/admin/courses/${courseId}/modules/${moduleId}`, payload);
+    return data;
+  },
+
+  async deleteModule(courseId: string, moduleId: string): Promise<void> {
+    await api.delete(`/admin/courses/${courseId}/modules/${moduleId}`);
+  },
+
+  async reorderModules(courseId: string, moduleIds: string[]): Promise<void> {
+    await api.post(`/admin/courses/${courseId}/modules/reorder`, { moduleIds });
+  },
+
+  // ─── Quiz ─────────────────────────────────────────────────────────────────
+
+  async createQuiz(courseId: string, moduleId: string, payload: any): Promise<any> {
+    const { data } = await api.post(`/admin/courses/${courseId}/modules/${moduleId}/quiz`, payload);
+    return data;
+  },
+
+  async updateQuiz(courseId: string, moduleId: string, quizId: string, payload: any): Promise<any> {
+    const { data } = await api.patch(`/admin/courses/${courseId}/modules/${moduleId}/quiz/${quizId}`, payload);
+    return data;
+  },
+
+  async deleteQuiz(courseId: string, moduleId: string, quizId: string): Promise<void> {
+    await api.delete(`/admin/courses/${courseId}/modules/${moduleId}/quiz/${quizId}`);
+  },
+
+  // ─── Quiz Questions ───────────────────────────────────────────────────────
+
+  async addQuizQuestion(courseId: string, moduleId: string, quizId: string, payload: any): Promise<any> {
+    const { data } = await api.post(`/admin/courses/${courseId}/modules/${moduleId}/quiz/${quizId}/questions`, payload);
+    return data;
+  },
+
+  async updateQuizQuestion(courseId: string, moduleId: string, quizId: string, questionId: string, payload: any): Promise<any> {
+    const { data } = await api.patch(`/admin/courses/${courseId}/modules/${moduleId}/quiz/${quizId}/questions/${questionId}`, payload);
+    return data;
+  },
+
+  async deleteQuizQuestion(courseId: string, moduleId: string, quizId: string, questionId: string): Promise<void> {
+    await api.delete(`/admin/courses/${courseId}/modules/${moduleId}/quiz/${quizId}/questions/${questionId}`);
+  },
+
+  // ─── Stats ────────────────────────────────────────────────────────────────
+
+  async getStats(courseId: string): Promise<CourseStats> {
+    const { data } = await api.get(`/admin/courses/${courseId}/stats`);
+    return data;
   },
 };
 
