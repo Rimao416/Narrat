@@ -17,6 +17,20 @@ export async function seedUsers(prisma: PrismaClient) {
     passwordHash: 'dummy_hash', // Dans une vraie app on utiliserait bcrypt
   });
 
+  // 5 Utilisateurs standards (fixes pour tests)
+  for (let i = 1; i <= 5; i++) {
+    usersToCreate.push({
+      email: `user${i}@narrat.app`,
+      firstName: `User${i}`,
+      lastName: `Narrat`,
+      username: `user_${i}`,
+      role: UserRole.USER,
+      spiritualLevel: faker.helpers.arrayElement(Object.values(SpiritualLevel)),
+      language: Language.FR,
+      passwordHash: 'dummy_hash', // On mettra un vrai hash dans 99_admin ou ailleurs si besoin
+    });
+  }
+
   // Moderateurs
   for (let i = 0; i < 5; i++) {
     usersToCreate.push({

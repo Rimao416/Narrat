@@ -4,6 +4,7 @@ import { seedLibrary } from './01_library';
 import { seedCommunity } from './02_community';
 import { seedEducation } from './03_education';
 import { seedChallenges } from './05_challenges';
+import { seedRichUsers } from './06_rich_users';
 import { seedAdmin } from './99_admin';
 
 const prisma = new PrismaClient();
@@ -58,6 +59,9 @@ async function main() {
 
   // STEP 5: Challenges (Module 5)
   await seedChallenges(prisma, users);
+
+  // STEP 6: Rich users with relations
+  await seedRichUsers(prisma);
 
   // STEP 99: Admin users + feature flags + app config
   await seedAdmin(prisma);

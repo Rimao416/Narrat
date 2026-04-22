@@ -8,7 +8,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.narrat.app"
+    },
+    "android": {
+      "package": "com.narrat.app"
     },
     "plugins": [
       "expo-router",

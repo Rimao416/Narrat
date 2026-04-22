@@ -19,7 +19,12 @@ api.interceptors.request.use(async (config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message = error.response?.data?.message ?? 'Une erreur est survenue';
-    return Promise.reject(new Error(message));
+    if (error.response?.data?.message) {
+      return Promise.reject(new Error(error.response.data.message));
+    }
+    if (error.message === 'Network Error') {
+      return Promise.reject(new Error('Impossible de contacter le serveur. (Network Error)'));
+    }
+    return Promise.reject(new Error(error.message || 'Une erreur est survenue'));
   }
 );

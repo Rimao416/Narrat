@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../lib/api';
 import { setToken, removeToken } from '../lib/tokenStorage';
@@ -118,7 +118,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'narrat-auth-storage',
-      storage: safeStorage,
+      storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
     }
   )
