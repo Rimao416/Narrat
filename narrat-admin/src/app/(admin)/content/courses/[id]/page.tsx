@@ -18,6 +18,7 @@ import {
   BookOpen, BarChart3, Layers, Trash2, X, Globe, Award, Image,
 } from "lucide-react";
 import { FileUpload } from "@/components/ui/file-upload";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 const STATUS_OPTIONS: ContentStatus[] = ["DRAFT", "REVIEW", "PUBLISHED", "ARCHIVED", "REJECTED"];
 const LANGUAGE_LABELS: Record<string, string> = { FR: "Français", EN: "English", LN: "Lingala", SW: "Kiswahili" };
@@ -39,6 +40,11 @@ export default function CourseDetailPage() {
 
   const [activeTab, setActiveTab] = useState<TabKey>("content");
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
+
+  // ─── All-in-One Mode State ──────────────────────────────────────────────────
+  const [isAllInOneMode, setIsAllInOneMode] = useState(false);
+  const [allInOneText, setAllInOneText] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // ─── Local form state ───────────────────────────────────────────────────────
   const [title, setTitle] = useState("");
@@ -110,6 +116,68 @@ export default function CourseDetailPage() {
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
+  };
+
+  const handleGenerateAllInOne = async () => {
+    if (!allInOneText.trim()) {
+      toast.error("Veuillez coller votre contenu Markdown d'abord.");
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      // 1. Découpage par séparateur "---" (en gérant les retours à la ligne éventuels)
+      const rawBlocks = allInOneText.split(/^---$/gm);
+      
+      let createdCount = 0;
+      for (const block of rawBlocks) {
+        const trimmed = block.trim();
+        if (!trimmed) continue;
+
+        // 2. Extraction du titre "### Titre"
+        const titleMatch = trimmed.match(/^###\s+(.*)$/m);
+        const title = titleMatch ? titleMatch[1].trim() : `Module ${(course?.modules.length ?? 0) + createdCount + 1}`;
+
+        // 3. Extraction du contenu (tout ce qui n'est pas le titre)
+        let rawContent = trimmed;
+        if (titleMatch) {
+          rawContent = trimmed.replace(titleMatch[0], "").trim();
+        }
+
+        // 4. Conversion Markdown basique vers HTML pour Tiptap
+        let htmlContent = rawContent
+          // Gérer le gras **texte**
+          .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+          // Gérer l'italique *texte*
+          .replace(/\*(.*?)\*/g, "<em>$1</em>")
+          // Convertir les paragraphes (blocs séparés par des doubles sauts de ligne)
+          .split(/\n\s*\n/)
+          .map(p => {
+            const pTrimmed = p.trim();
+            // Si le paragraphe commence déjà par une balise HTML basique ou est vide
+            if (!pTrimmed || pTrimmed.startsWith("<")) return pTrimmed;
+            return `<p>${pTrimmed.replace(/\n/g, "<br>")}</p>`;
+          })
+          .join("\n");
+
+        // 5. Création du module
+        await createModule({
+          title,
+          content: htmlContent || "<p></p>",
+        } as any);
+
+        createdCount++;
+      }
+
+      toast.success(`${createdCount} module(s) généré(s) avec succès !`);
+      setAllInOneText(""); // On vide après succès
+      setIsAllInOneMode(false); // On repasse en vue liste
+    } catch (error) {
+      console.error("Erreur génération:", error);
+      toast.error("Une erreur est survenue lors de la génération.");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const addObjective = () => {
@@ -224,11 +292,10 @@ export default function CourseDetailPage() {
                   </div>
                   <div>
                     <label className="block text-xs font-medium mb-1.5">Description *</label>
-                    <textarea
-                      value={description}
-                      onChange={(e) => { setDescription(e.target.value); markDirty(); }}
-                      rows={6}
-                      className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-y leading-relaxed"
+                    <RichTextEditor
+                      content={description}
+                      onChange={(val) => { setDescription(val); markDirty(); }}
+                      placeholder="Décrivez la formation en détail : contenu, public cible, prérequis..."
                     />
                   </div>
                 </CardContent>
@@ -286,11 +353,10 @@ export default function CourseDetailPage() {
                   </div>
                   <div>
                     <label className="block text-xs font-medium mb-1.5">Biographie</label>
-                    <textarea
-                      value={teacherBio}
-                      onChange={(e) => { setTeacherBio(e.target.value); markDirty(); }}
-                      rows={3}
-                      className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
+                    <RichTextEditor
+                      content={teacherBio}
+                      onChange={(val) => { setTeacherBio(val); markDirty(); }}
+                      placeholder="Brève biographie de l'enseignant..."
                     />
                   </div>
                 </CardContent>
@@ -387,21 +453,62 @@ export default function CourseDetailPage() {
                 <h2 className="text-sm font-semibold">Modules de la formation</h2>
                 <p className="text-xs text-muted-foreground">{course.modules.length} module{course.modules.length !== 1 ? "s" : ""} · Glissez pour réordonner</p>
               </div>
-              <Button size="sm" onClick={handleAddModule}>
-                <Plus className="w-3.5 h-3.5" /> Nouveau module
-              </Button>
+              <div className="flex gap-2">
+                {isAllInOneMode ? (
+                  <Button size="sm" variant="outline" onClick={() => setIsAllInOneMode(false)}>
+                    Annuler
+                  </Button>
+                ) : (
+                  <>
+                    <Button size="sm" variant="secondary" onClick={() => setIsAllInOneMode(true)}>
+                      <Layers className="w-3.5 h-3.5 mr-1" /> Mode Tout-en-un
+                    </Button>
+                    <Button size="sm" onClick={handleAddModule}>
+                      <Plus className="w-3.5 h-3.5 mr-1" /> Nouveau module
+                    </Button>
+                  </>
+                )}
+              </div>
             </div>
 
-            {course.modules.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
+            {isAllInOneMode ? (
+              <Card className="border-primary/20 bg-primary/5">
+                <CardHeader>
+                  <CardTitle className="text-sm">Génération par lot (Markdown)</CardTitle>
+                  <p className="text-xs text-muted-foreground">
+                    Collez votre texte complet. Utilisez <code className="bg-muted px-1 rounded">### Titre du module</code> pour nommer un module, et séparez chaque module avec <code className="bg-muted px-1 rounded">---</code>.
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <textarea
+                    value={allInOneText}
+                    onChange={(e) => setAllInOneText(e.target.value)}
+                    placeholder="### Module 1 : Introduction&#10;Contenu du module 1...&#10;&#10;---&#10;&#10;### Module 2 : La suite&#10;Contenu du module 2..."
+                    rows={15}
+                    className="w-full font-mono text-sm p-4 rounded-md border border-input bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  />
+                  <div className="flex justify-end">
+                    <Button onClick={handleGenerateAllInOne} loading={isGenerating}>
+                      Générer les modules
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : course.modules.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed rounded-lg">
                 <Layers className="w-12 h-12 text-muted-foreground/20 mb-3" />
                 <h3 className="text-sm font-medium mb-1">Aucun module</h3>
                 <p className="text-xs text-muted-foreground mb-4 max-w-sm">
                   Les modules sont les leçons de votre formation. Ajoutez votre premier module pour commencer à structurer le contenu.
                 </p>
-                <Button size="sm" onClick={handleAddModule}>
-                  <Plus className="w-3.5 h-3.5" /> Créer le premier module
-                </Button>
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={handleAddModule}>
+                    <Plus className="w-3.5 h-3.5 mr-1" /> Créer manuellement
+                  </Button>
+                  <Button size="sm" variant="secondary" onClick={() => setIsAllInOneMode(true)}>
+                    Coller un script
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="space-y-3">

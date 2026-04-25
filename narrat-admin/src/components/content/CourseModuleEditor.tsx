@@ -132,11 +132,9 @@ export function CourseModuleEditor({
           {/* Summary */}
           <div>
             <label className="block text-xs font-medium mb-1.5">Résumé</label>
-            <textarea
-              value={summary}
-              onChange={(e) => { setSummary(e.target.value); markDirty(); }}
-              rows={2}
-              className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
+            <RichTextEditor
+              content={summary}
+              onChange={(val) => { setSummary(val); markDirty(); }}
               placeholder="Un résumé court de la leçon..."
             />
           </div>

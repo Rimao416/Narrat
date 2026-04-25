@@ -5,7 +5,7 @@ import path from "path";
 export class SupabaseService {
   private static instance: SupabaseService;
   private client: SupabaseClient;
-  private readonly BUCKET_NAME = "media";
+  private readonly BUCKET_NAME = process.env.SUPABASE_BUCKET || "media";
 
   private constructor() {
     const supabaseUrl = process.env.SUPABASE_URL;
