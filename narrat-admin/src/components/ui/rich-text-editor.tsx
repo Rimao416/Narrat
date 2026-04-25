@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { useRef, useState } from "react";
 import {
   Bold, Italic, Strikethrough, Heading1, Heading2, Heading3,
-  List, ListOrdered, Quote, Undo, Redo, Image as ImageIcon, Loader2
+  List, ListOrdered, Quote, Undo, Redo, Image as ImageIcon, Loader2, Maximize, Minimize
 } from "lucide-react";
 
 interface RichTextEditorProps {
@@ -22,6 +22,7 @@ interface RichTextEditorProps {
 
 export function RichTextEditor({ content, onChange, placeholder = "Écrivez ici..." }: RichTextEditorProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
@@ -44,7 +45,7 @@ export function RichTextEditor({ content, onChange, placeholder = "Écrivez ici.
     },
     editorProps: {
       attributes: {
-        class: "prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[200px] px-4 py-3",
+        class: "prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[200px] h-full px-4 py-3",
       },
     },
   });
@@ -92,9 +93,9 @@ export function RichTextEditor({ content, onChange, placeholder = "Écrivez ici.
   );
 
   return (
-    <div className="border border-input rounded-md overflow-hidden bg-background">
+    <div className={`border border-input overflow-hidden bg-background flex flex-col ${isFullscreen ? "fixed inset-0 z-50 rounded-none" : "rounded-md"}`}>
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-1 p-1 border-b border-input bg-muted/20">
+      <div className="flex flex-wrap items-center gap-1 p-1 border-b border-input bg-muted/20 shrink-0">
         <div className="flex items-center gap-0.5">
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -202,10 +203,22 @@ export function RichTextEditor({ content, onChange, placeholder = "Écrivez ici.
             title="Rétablir"
           />
         </div>
+
+        <div className="w-px h-5 bg-border mx-1 ml-auto" />
+
+        <div className="flex items-center gap-0.5">
+          <ToolbarButton
+            onClick={() => setIsFullscreen(!isFullscreen)}
+            icon={isFullscreen ? Minimize : Maximize}
+            title={isFullscreen ? "Quitter le plein écran" : "Plein écran"}
+          />
+        </div>
       </div>
 
       {/* Editor Content */}
-      <EditorContent editor={editor} />
+      <div className={`overflow-y-auto ${isFullscreen ? "flex-1" : ""}`}>
+        <EditorContent editor={editor} />
+      </div>
       
       {/* Placeholder custom CSS using global tailwind class, but we add style here for simplicity if needed, or rely on tailwind. We use CSS below. */}
       <style jsx global>{`

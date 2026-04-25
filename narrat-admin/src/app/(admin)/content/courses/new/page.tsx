@@ -18,6 +18,7 @@ import {
   Plus, X, Award, Globe, BarChart,
 } from "lucide-react";
 import { FileUpload } from "@/components/ui/file-upload";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 const schema = z.object({
   title: z.string().min(1, "Le titre est requis"),
@@ -133,10 +134,9 @@ export default function NewCoursePage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1.5">Description *</label>
-                  <textarea
-                    {...register("description")}
-                    rows={5}
-                    className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-y leading-relaxed"
+                  <RichTextEditor
+                    content={watch("description") || ""}
+                    onChange={(val) => setValue("description", val, { shouldValidate: true })}
                     placeholder="Décrivez la formation en détail : contenu, public cible, prérequis..."
                   />
                   {errors.description && <p className="text-xs text-destructive mt-1">{errors.description.message}</p>}
@@ -201,10 +201,9 @@ export default function NewCoursePage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1.5">Biographie</label>
-                  <textarea
-                    {...register("teacherBio")}
-                    rows={3}
-                    className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
+                  <RichTextEditor
+                    content={watch("teacherBio") || ""}
+                    onChange={(val) => setValue("teacherBio", val, { shouldValidate: true })}
                     placeholder="Brève biographie de l'enseignant..."
                   />
                 </div>
