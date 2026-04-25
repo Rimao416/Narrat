@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { GraduationCap, Sword, Star, Headphones, Users, ChevronRight, Award } from 'lucide-react-native';
 import { useEffect, useMemo, useState } from 'react';
 import { router } from 'expo-router';
@@ -101,11 +101,19 @@ export default function DiscoverScreen() {
 function FormationSection({ courses }: { courses: DiscoverCourse[] }) {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
   return (
     <View style={styles.list}>
       {courses.map((course) => (
         <TouchableOpacity key={course.id} style={styles.courseCard} activeOpacity={0.85} onPress={() => router.push(`/course/${course.id}`)}>
           <View style={[styles.courseHero, { backgroundColor: course.heroGradient[0] }]}>
+            {!!course.coverUrl && !failedImages[course.id] && (
+              <ImageBackground
+                source={{ uri: course.coverUrl }}
+                style={styles.courseHeroImage}
+                onError={() => setFailedImages((prev) => ({ ...prev, [course.id]: true }))}
+              />
+            )}
             <View style={styles.courseHeroOverlay} />
             <View style={styles.courseHeroContent}>
               <View style={[styles.levelTag, { backgroundColor: `${INTENSITY_COLORS[course.level] || COLORS.primary}18` }]}>
@@ -300,6 +308,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       overflow: 'hidden',
     },
     courseHero: { height: 100, justifyContent: 'flex-end' },
+    courseHeroImage: { ...StyleSheet.absoluteFillObject },
     courseHeroOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.3)' },
     courseHeroContent: {
       flexDirection: 'row',

@@ -19,6 +19,7 @@ export interface DiscoverCourse {
   progress: number;
   currentModule?: number;
   heroGradient: [string, string];
+  coverUrl?: string;
   tags: string[];
   objectives?: string[];
   hasAudio: boolean;
@@ -45,6 +46,17 @@ function minutesToHuman(min?: number | null): string | undefined {
   return `${h}h${m.toString().padStart(2, '0')}`;
 }
 
+function resolveMediaUrl(url?: string | null): string | undefined {
+  if (!url) return undefined;
+  if (/^https?:\/\//i.test(url)) return url;
+
+  const baseUrl = api.defaults.baseURL;
+  if (!baseUrl) return undefined;
+  const origin = baseUrl.replace(/\/api\/?$/, '');
+  const normalizedPath = url.startsWith('/') ? url : `/${url}`;
+  return `${origin}${normalizedPath}`;
+}
+
 function transformCourse(raw: any): DiscoverCourse {
   const level = raw.level ?? 'INTERMEDIATE';
   const tags = (raw.tags ?? []).map((t: any) => t?.tag?.name).filter(Boolean);
@@ -62,6 +74,7 @@ function transformCourse(raw: any): DiscoverCourse {
     progress: 0,
     currentModule: 0,
     heroGradient: gradientForLevel(level),
+    coverUrl: resolveMediaUrl(raw.coverUrl),
     tags,
     objectives: raw.objectives ?? [],
     hasAudio: raw.hasAudio ?? false,

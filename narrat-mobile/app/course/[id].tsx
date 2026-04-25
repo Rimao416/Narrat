@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { ArrowLeft, Users, Star, Clock, BookOpen, Lock, ChevronRight } from 'lucide-react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withDelay, Easing } from 'react-native-reanimated';
@@ -20,6 +20,7 @@ export default function CourseDetailScreen() {
   const styles = useMemo(() => createStyles(C), [C]);
   const { id } = useLocalSearchParams<{ id: string }>();
   const [course, setCourse] = useState<CourseDetail | null>(null);
+  const [heroImageFailed, setHeroImageFailed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,6 +50,7 @@ export default function CourseDetailScreen() {
         const data = await formationService.getCourseById(id);
         if (!isMounted) return;
         setCourse(data);
+        setHeroImageFailed(false);
         progressW.value = withDelay(
           500,
           withTiming(data.progress ?? 0, { duration: 700, easing: Easing.out(Easing.cubic) })
@@ -105,6 +107,13 @@ export default function CourseDetailScreen() {
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Hero */}
         <Animated.View style={[styles.hero, { backgroundColor: course.heroGradient[0] }, headerStyle]}>
+          {!!course.coverUrl && !heroImageFailed && (
+            <ImageBackground
+              source={{ uri: course.coverUrl }}
+              style={styles.heroImage}
+              onError={() => setHeroImageFailed(true)}
+            />
+          )}
           <View style={styles.heroOverlay} />
           <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.8}>
             <ArrowLeft size={18} color="#FFF" />
@@ -243,6 +252,7 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
     scroll: { flex: 1 },
     scrollContent: {},
     hero: { height: 270, justifyContent: 'flex-end', paddingBottom: SPACING.xl },
+    heroImage: { ...StyleSheet.absoluteFillObject },
     heroOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.5)' },
     backBtn: {
       position: 'absolute',
