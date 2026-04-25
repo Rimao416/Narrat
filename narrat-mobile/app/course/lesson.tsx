@@ -1,18 +1,20 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, ChevronLeft, ChevronRight, Headphones } from 'lucide-react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
-import { MOCK_LESSON_CONTENT } from '../../data/mockData';
 import { useThemeColors } from '../../hooks/useThemeColors';
-
-const lesson = MOCK_LESSON_CONTENT;
+import { formationService, type LessonContent } from '../../services/formationService';
 
 export default function LessonScreen() {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
+  const { lessonId } = useLocalSearchParams<{ lessonId: string }>();
+  const [lesson, setLesson] = useState<LessonContent | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const contentOp = useSharedValue(0);
   const contentStyle = useAnimatedStyle(() => ({
     opacity: contentOp.value,
@@ -23,15 +25,62 @@ export default function LessonScreen() {
     contentOp.value = withTiming(1, { duration: 350 });
   }, []);
 
-  const progressPct = (lesson.moduleNum / lesson.totalModules) * 100;
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        if (!lessonId) return;
+        setLoading(true);
+        setError(null);
+        const data = await formationService.getLesson(lessonId);
+        if (!isMounted) return;
+        setLesson(data);
+      } catch (e: any) {
+        if (!isMounted) return;
+        setError(e?.message ?? 'Une erreur est survenue');
+      } finally {
+        if (!isMounted) return;
+        setLoading(false);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [lessonId]);
+
+  if (loading) {
+    return (
+      <View style={styles.root}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.8}>
+            <ArrowLeft size={18} color={C.text} />
+          </TouchableOpacity>
+          <View style={styles.headerCenter}>
+            <Text style={styles.headerTitle} numberOfLines={1}>Chargement…</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  if (error || !lesson) {
+    return (
+      <View style={styles.root}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.8}>
+            <ArrowLeft size={18} color={C.text} />
+          </TouchableOpacity>
+          <View style={styles.headerCenter}>
+            <Text style={styles.headerTitle} numberOfLines={2}>Impossible de charger</Text>
+            <Text style={styles.courseLabel}>{error ?? 'Leçon introuvable'}</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.root}>
-      {/* Progress bar */}
-      <View style={styles.progressTrack}>
-        <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
-      </View>
-
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.8}>
@@ -39,9 +88,9 @@ export default function LessonScreen() {
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           <View style={styles.moduleBadge}>
-            <Text style={styles.moduleBadgeText}>Module {lesson.moduleNum}/{lesson.totalModules}</Text>
+            <Text style={styles.moduleBadgeText}>Module {lesson.moduleIndex + 1}</Text>
           </View>
-          <Text style={styles.headerTitle} numberOfLines={1}>{lesson.moduleTitle}</Text>
+          <Text style={styles.headerTitle} numberOfLines={1}>{lesson.title}</Text>
         </View>
         <TouchableOpacity style={styles.audioBtn} activeOpacity={0.8} onPress={() => router.push('/audio/player')}>
           <Headphones size={16} color={COLORS.primary} />
@@ -50,38 +99,8 @@ export default function LessonScreen() {
 
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <Animated.View style={contentStyle}>
-          <Text style={styles.courseLabel}>{lesson.courseTitle}</Text>
-          <Text style={styles.lessonTitle}>{lesson.moduleTitle}</Text>
-
-          {/* Body content */}
-          {lesson.body.map((item, i) => {
-            if (typeof item === 'string') {
-              return <Text key={i} style={styles.bodyText}>{item}</Text>;
-            }
-            if (item.type === 'verse') {
-              return (
-                <View key={i} style={styles.verseBlock}>
-                  <Text style={styles.verseText}>{item.text}</Text>
-                  <Text style={styles.verseRef}>{item.ref}</Text>
-                </View>
-              );
-            }
-            return null;
-          })}
-
-          {/* Key verse */}
-          <View style={styles.keyVerseCard}>
-            <Text style={styles.keyVerseLabel}>Verset cle</Text>
-            <Text style={styles.keyVerseText}>{lesson.keyVerse.text}</Text>
-            <Text style={styles.keyVerseRef}>{lesson.keyVerse.ref}</Text>
-          </View>
-
-          {/* Quote */}
-          <View style={styles.quoteBlock}>
-            <View style={styles.quoteLine} />
-            <Text style={styles.quoteText}>{lesson.quote.text}</Text>
-            <Text style={styles.quoteAuthor}>— {lesson.quote.author}</Text>
-          </View>
+          <Text style={styles.lessonTitle}>{lesson.title}</Text>
+          <Text style={styles.bodyText}>{lesson.content}</Text>
 
           <View style={{ height: 100 }} />
         </Animated.View>
@@ -112,8 +131,6 @@ export default function LessonScreen() {
 function createStyles(C: ReturnType<typeof useThemeColors>) {
   return StyleSheet.create({
     root: { flex: 1, backgroundColor: C.bg },
-    progressTrack: { height: 2, backgroundColor: C.surfaceElevated },
-    progressFill: { height: '100%', backgroundColor: COLORS.primary },
     header: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -158,36 +175,6 @@ function createStyles(C: ReturnType<typeof useThemeColors>) {
       lineHeight: 26,
       marginBottom: SPACING.lg,
     },
-    verseBlock: {
-      backgroundColor: C.surface,
-      borderRadius: RADIUS.md,
-      borderLeftWidth: 3,
-      borderLeftColor: COLORS.primary,
-      padding: SPACING.lg,
-      marginVertical: SPACING.lg,
-      gap: 6,
-    },
-    verseText: { ...TYPOGRAPHY.body, color: C.text, fontStyle: 'italic', lineHeight: 24 },
-    verseRef: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '600' },
-    keyVerseCard: {
-      backgroundColor: COLORS.primaryMuted,
-      borderRadius: RADIUS.card,
-      padding: SPACING.lg,
-      gap: SPACING.sm,
-      marginVertical: SPACING.lg,
-    },
-    keyVerseLabel: { ...TYPOGRAPHY.micro, color: COLORS.primary, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
-    keyVerseText: { ...TYPOGRAPHY.body, color: C.text, fontStyle: 'italic', lineHeight: 24 },
-    keyVerseRef: { ...TYPOGRAPHY.caption, color: COLORS.primary, fontWeight: '600' },
-    quoteBlock: {
-      paddingHorizontal: SPACING.lg,
-      paddingVertical: SPACING.md,
-      gap: SPACING.sm,
-      marginVertical: SPACING.md,
-    },
-    quoteLine: { width: 3, height: 40, backgroundColor: COLORS.gold, position: 'absolute', left: 0, top: SPACING.md },
-    quoteText: { ...TYPOGRAPHY.body, color: C.text, fontStyle: 'italic', lineHeight: 24 },
-    quoteAuthor: { ...TYPOGRAPHY.caption, color: COLORS.gold, fontWeight: '600' },
     navBar: {
       flexDirection: 'row',
       alignItems: 'center',

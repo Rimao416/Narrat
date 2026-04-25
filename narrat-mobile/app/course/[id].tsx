@@ -1,16 +1,16 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
-import { ArrowLeft, Users, Star, Clock, BookOpen, CheckCircle, Lock, Play } from 'lucide-react-native';
+import { ArrowLeft, Users, Star, Clock, BookOpen, Lock, ChevronRight } from 'lucide-react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withDelay, Easing } from 'react-native-reanimated';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
-import { MOCK_COURSES, MOCK_COURSE_MODULES } from '../../data/mockData';
 import { useThemeColors } from '../../hooks/useThemeColors';
+import { formationService, type CourseDetail } from '../../services/formationService';
 
-const OBJECTIVES = [
-  'Identifier les strategies de l\'ennemi dans votre vie quotidienne',
-  'Utiliser les armes spirituelles avec autorite et precision',
+const DEFAULT_OBJECTIVES = [
+  "Identifier les stratégies de l'ennemi dans votre vie quotidienne",
+  'Utiliser les armes spirituelles avec autorité et précision',
   'Prier avec puissance et persistance pour vous et votre entourage',
   'Marcher dans une victoire spirituelle durable',
 ];
@@ -19,8 +19,9 @@ export default function CourseDetailScreen() {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
   const { id } = useLocalSearchParams<{ id: string }>();
-  const course = MOCK_COURSES.find((c) => c.id === id) ?? MOCK_COURSES[0];
-  const modules = MOCK_COURSE_MODULES.filter((m) => m.courseId === (id ?? '1'));
+  const [course, setCourse] = useState<CourseDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const headerOp = useSharedValue(0);
   const contentOp = useSharedValue(0);
@@ -36,8 +37,68 @@ export default function CourseDetailScreen() {
   useEffect(() => {
     headerOp.value = withTiming(1, { duration: 400 });
     contentOp.value = withDelay(150, withTiming(1, { duration: 400 }));
-    progressW.value = withDelay(500, withTiming(course.progress, { duration: 700, easing: Easing.out(Easing.cubic) }));
   }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        if (!id) return;
+        setLoading(true);
+        setError(null);
+        const data = await formationService.getCourseById(id);
+        if (!isMounted) return;
+        setCourse(data);
+        progressW.value = withDelay(
+          500,
+          withTiming(data.progress ?? 0, { duration: 700, easing: Easing.out(Easing.cubic) })
+        );
+      } catch (e: any) {
+        if (!isMounted) return;
+        setError(e?.message ?? 'Une erreur est survenue');
+      } finally {
+        if (!isMounted) return;
+        setLoading(false);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [id, progressW]);
+
+  if (loading) {
+    return (
+      <View style={styles.root}>
+        <View style={[styles.hero, { backgroundColor: COLORS.primary }]}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.8}>
+            <ArrowLeft size={18} color="#FFF" />
+          </TouchableOpacity>
+          <View style={styles.heroContent}>
+            <Text style={styles.heroTitle}>Chargement…</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  if (error || !course) {
+    return (
+      <View style={styles.root}>
+        <View style={[styles.hero, { backgroundColor: COLORS.primary }]}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.8}>
+            <ArrowLeft size={18} color="#FFF" />
+          </TouchableOpacity>
+          <View style={styles.heroContent}>
+            <Text style={styles.heroTitle}>Impossible de charger</Text>
+            <Text style={styles.heroTeacher}>{error ?? 'Formation introuvable'}</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  const objectives = (course.objectives?.length ? course.objectives : DEFAULT_OBJECTIVES) as string[];
+  const modules = course.modulesList ?? [];
 
   return (
     <View style={styles.root}>
@@ -53,7 +114,7 @@ export default function CourseDetailScreen() {
               <Text style={styles.levelBadgeText}>{course.level}</Text>
             </View>
             <Text style={styles.heroTitle}>{course.title}</Text>
-            <Text style={styles.heroTeacher}>{course.teacher} · {course.teacherLocation}</Text>
+          <Text style={styles.heroTeacher}>{course.teacher}{course.teacherLocation ? ` · ${course.teacherLocation}` : ''}</Text>
           </View>
         </Animated.View>
 
@@ -74,7 +135,7 @@ export default function CourseDetailScreen() {
             <View style={styles.divider} />
             <View style={styles.statItem}>
               <Clock size={15} color={COLORS.purple} />
-              <Text style={styles.statVal}>{course.duration}</Text>
+              <Text style={styles.statVal}>{course.duration ?? '—'}</Text>
               <Text style={styles.statLbl}>Duree</Text>
             </View>
             <View style={styles.divider} />
@@ -95,7 +156,7 @@ export default function CourseDetailScreen() {
               <View style={styles.progressTrack}>
                 <Animated.View style={[styles.progressFill, progressStyle]} />
               </View>
-              <Text style={styles.progressSub}>Module {course.currentModule}/{course.modules}</Text>
+            <Text style={styles.progressSub}>Module {course.currentModule ?? 0}/{course.modules}</Text>
             </View>
           )}
 
@@ -109,7 +170,7 @@ export default function CourseDetailScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Ce que vous apprendrez</Text>
             <View style={styles.objectivesList}>
-              {OBJECTIVES.map((obj, i) => (
+            {objectives.map((obj, i) => (
                 <View key={i} style={styles.objectiveRow}>
                   <View style={styles.objectiveNum}>
                     <Text style={styles.objectiveNumText}>{i + 1}</Text>
@@ -125,10 +186,13 @@ export default function CourseDetailScreen() {
             <TouchableOpacity
               style={styles.ctaPrimary}
               activeOpacity={0.85}
-              onPress={() => router.push('/course/lesson')}
+            onPress={() => {
+              const first = modules.find((m) => !m.isLocked) ?? modules[0];
+              if (first?.id) router.push(`/course/lesson?lessonId=${first.id}`);
+            }}
             >
               <Text style={styles.ctaPrimaryText}>
-                {course.progress > 0 ? `Continuer — Module ${course.currentModule}` : 'Commencer la formation'}
+              {course.progress > 0 ? `Continuer — Module ${course.currentModule ?? 1}` : 'Commencer la formation'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -140,36 +204,27 @@ export default function CourseDetailScreen() {
               {modules.map((mod) => (
                 <TouchableOpacity
                   key={mod.id}
-                  style={[styles.moduleRow, mod.current && styles.moduleRowActive, mod.locked && styles.moduleRowLocked]}
-                  activeOpacity={mod.locked ? 1 : 0.85}
-                  onPress={() => !mod.locked && router.push('/course/lesson')}
+                  style={[styles.moduleRow, mod.isLocked && styles.moduleRowLocked]}
+                  activeOpacity={mod.isLocked ? 1 : 0.85}
+                  onPress={() => !mod.isLocked && router.push(`/course/lesson?lessonId=${mod.id}`)}
                 >
                   <View style={[
                     styles.moduleState,
-                    mod.done && styles.moduleStateDone,
-                    mod.current && styles.moduleStateCurrent,
+                    styles.moduleStateCurrent,
                   ]}>
-                    {mod.done ? (
-                      <CheckCircle size={16} color={COLORS.success} />
-                    ) : mod.current ? (
-                      <Play size={10} color={COLORS.primary} fill={COLORS.primary} />
-                    ) : mod.locked ? (
+                    {mod.isLocked ? (
                       <Lock size={12} color={C.textHint} />
                     ) : (
-                      <Text style={styles.moduleNumText}>{mod.num}</Text>
+                      <Text style={styles.moduleNumText}>{mod.moduleIndex + 1}</Text>
                     )}
                   </View>
                   <View style={styles.moduleInfo}>
-                    <Text style={[styles.moduleTitle, mod.locked && styles.moduleTitleLocked]}>
-                      {mod.num}. {mod.title}
+                    <Text style={[styles.moduleTitle, mod.isLocked && styles.moduleTitleLocked]}>
+                      {mod.moduleIndex + 1}. {mod.title}
                     </Text>
-                    <Text style={styles.moduleDuration}>{mod.duration}</Text>
+                    <Text style={styles.moduleDuration}>{mod.readTime ? `${mod.readTime} min` : '—'}</Text>
                   </View>
-                  {mod.current && (
-                    <View style={styles.currentBadge}>
-                      <Text style={styles.currentBadgeText}>En cours</Text>
-                    </View>
-                  )}
+                  {!mod.isLocked && <ChevronRight size={16} color={C.textHint} />}
                 </TouchableOpacity>
               ))}
             </View>

@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { FileUpload } from "@/components/ui/file-upload";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { toast } from "sonner";
 
 const STATUS_OPTIONS: ContentStatus[] = ["DRAFT", "REVIEW", "PUBLISHED", "ARCHIVED", "REJECTED"];
 const LANGUAGE_LABELS: Record<string, string> = { FR: "Français", EN: "English", LN: "Lingala", SW: "Kiswahili" };

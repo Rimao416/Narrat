@@ -1,25 +1,61 @@
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { GraduationCap, Sword, Star, Headphones, Users, ChevronRight, Award } from 'lucide-react-native';
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { router } from 'expo-router';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY, FONTS } from '../../constants/theme';
-import { MOCK_COURSES, MOCK_CHALLENGES, MOCK_REVIVAL_FIGURES } from '../../data/mockData';
 import { useThemeColors } from '../../hooks/useThemeColors';
+import { formationService, type DiscoverCourse } from '../../services/formationService';
+import { challengeService, type Challenge } from '../../services/challengeService';
+import { revivalService, type DiscoverRevivalFigure } from '../../services/revivalService';
 
-const { width } = Dimensions.get('window');
 const SECTIONS = ['Formation', 'Defis', 'Reveil'];
 
 const INTENSITY_COLORS: Record<string, string> = {
   Intense: COLORS.primary,
   Modere: COLORS.warning,
+  'Modéré': COLORS.warning,
   Debutant: COLORS.success,
+  'Débutant': COLORS.success,
 };
 
 export default function DiscoverScreen() {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
   const [activeSection, setActiveSection] = useState('Formation');
+  const [courses, setCourses] = useState<DiscoverCourse[]>([]);
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const [figures, setFigures] = useState<DiscoverRevivalFigure[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const [coursesData, challengesData, figuresData] = await Promise.all([
+          formationService.getCourses(),
+          challengeService.getAll(),
+          revivalService.getFigures(),
+        ]);
+        if (!isMounted) return;
+        setCourses(coursesData);
+        setChallenges(challengesData);
+        setFigures(figuresData);
+      } catch (e: any) {
+        if (!isMounted) return;
+        setError(e?.message ?? 'Une erreur est survenue');
+      } finally {
+        if (!isMounted) return;
+        setLoading(false);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -43,21 +79,31 @@ export default function DiscoverScreen() {
       </View>
 
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {activeSection === 'Formation' && <FormationSection />}
-        {activeSection === 'Defis' && <DefisSection />}
-        {activeSection === 'Reveil' && <ReveilSection />}
+        {loading && (
+          <View style={{ paddingVertical: SPACING.lg }}>
+            <Text style={{ ...TYPOGRAPHY.body, color: C.textMuted }}>Chargement…</Text>
+          </View>
+        )}
+        {!loading && error && (
+          <View style={{ paddingVertical: SPACING.lg }}>
+            <Text style={{ ...TYPOGRAPHY.body, color: C.textMuted }}>{error}</Text>
+          </View>
+        )}
+        {!loading && !error && activeSection === 'Formation' && <FormationSection courses={courses} />}
+        {!loading && !error && activeSection === 'Defis' && <DefisSection challenges={challenges} />}
+        {!loading && !error && activeSection === 'Reveil' && <ReveilSection figures={figures} />}
         <View style={{ height: 80 }} />
       </ScrollView>
     </View>
   );
 }
 
-function FormationSection() {
+function FormationSection({ courses }: { courses: DiscoverCourse[] }) {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
   return (
     <View style={styles.list}>
-      {MOCK_COURSES.map((course) => (
+      {courses.map((course) => (
         <TouchableOpacity key={course.id} style={styles.courseCard} activeOpacity={0.85} onPress={() => router.push(`/course/${course.id}`)}>
           <View style={[styles.courseHero, { backgroundColor: course.heroGradient[0] }]}>
             <View style={styles.courseHeroOverlay} />
@@ -74,7 +120,7 @@ function FormationSection() {
           </View>
           <View style={styles.courseBody}>
             <Text style={styles.courseTitle}>{course.title}</Text>
-            <Text style={styles.courseTeacher}>{course.teacher} · {course.teacherLocation}</Text>
+            <Text style={styles.courseTeacher}>{course.teacher}{course.teacherLocation ? ` · ${course.teacherLocation}` : ''}</Text>
             <Text style={styles.courseDesc} numberOfLines={2}>{course.description}</Text>
             <View style={styles.courseMeta}>
               <View style={styles.metaItem}>
@@ -111,15 +157,15 @@ function FormationSection() {
   );
 }
 
-function DefisSection() {
+function DefisSection({ challenges }: { challenges: Challenge[] }) {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
   return (
     <View style={styles.list}>
-      {MOCK_CHALLENGES.map((challenge) => (
+      {challenges.map((challenge) => (
         <TouchableOpacity key={challenge.id} style={styles.challengeCard} activeOpacity={0.85} onPress={() => router.push(`/challenge/${challenge.id}`)}>
           <View style={styles.challengeTop}>
-            <View style={[styles.challengeIconWrap, { backgroundColor: challenge.iconBg }]}>
+            <View style={[styles.challengeIconWrap, { backgroundColor: 'rgba(120, 60, 180, 0.12)' }]}>
               <Sword size={20} color={COLORS.purple} />
             </View>
             <View style={styles.challengeInfo}>
@@ -156,11 +202,11 @@ function DefisSection() {
   );
 }
 
-function ReveilSection() {
+function ReveilSection({ figures }: { figures: DiscoverRevivalFigure[] }) {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
-  const featured = MOCK_REVIVAL_FIGURES.find((f) => f.featured);
-  const rest = MOCK_REVIVAL_FIGURES.filter((f) => !f.featured);
+  const featured = figures[0];
+  const rest = figures.slice(1);
 
   return (
     <View style={styles.list}>
@@ -185,8 +231,8 @@ function ReveilSection() {
             <Text style={styles.quoteText}>{featured.quote}</Text>
           </View>
           <View style={styles.verseRow}>
-            <Text style={styles.verseRef}>{featured.lifeVerse}</Text>
-            <Text style={styles.verseText}>{featured.lifeVerseText}</Text>
+            {!!featured.lifeVerse && <Text style={styles.verseRef}>{featured.lifeVerse}</Text>}
+            {!!featured.lifeVerseText && <Text style={styles.verseText}>{featured.lifeVerseText}</Text>}
           </View>
           <View style={styles.figureTags}>
             {featured.tags.map((tag) => (
