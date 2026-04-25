@@ -34,6 +34,12 @@ export class FormationController {
     res.status(200).json(lesson);
   }
 
+  static async getLessonQuiz(req: Request, res: Response) {
+    const quiz = await FormationService.getLessonQuiz(req.params.lessonId);
+    if (!quiz) return res.status(404).json({ message: 'Quiz not found' });
+    res.status(200).json(quiz);
+  }
+
   static async completeLesson(req: Request, res: Response) {
     const userId = (req as any).user.id;
     const result = await FormationService.completeLesson(userId, req.params.lessonId);

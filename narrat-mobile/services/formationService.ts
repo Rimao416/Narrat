@@ -95,6 +95,18 @@ export interface LessonContent {
   audioDuration?: number | null;
 }
 
+export interface LessonQuiz {
+  id: string;
+  module: { id: string; title: string; moduleIndex: number; courseId: string };
+  questions: Array<{
+    id: string;
+    question: string;
+    verseRef?: string | null;
+    explanation?: string | null;
+    answers: Array<{ id: string; text: string; isCorrect: boolean }>;
+  }>;
+}
+
 export const formationService = {
   getCourses: async (language?: string): Promise<DiscoverCourse[]> => {
     const params = language ? { language } : {};
@@ -133,6 +145,11 @@ export const formationService = {
       audioUrl: data.audioUrl ?? null,
       audioDuration: data.audioDuration ?? null,
     };
+  },
+
+  getLessonQuiz: async (lessonId: string): Promise<LessonQuiz> => {
+    const { data } = await api.get(`/formation/lessons/${lessonId}/quiz`);
+    return data as LessonQuiz;
   },
 };
 

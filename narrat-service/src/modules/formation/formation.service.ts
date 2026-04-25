@@ -41,6 +41,19 @@ export class FormationService {
     return prisma.courseModule.findUnique({ where: { id: lessonId } });
   }
 
+  static async getLessonQuiz(lessonId: string) {
+    return prisma.courseQuiz.findUnique({
+      where: { moduleId: lessonId },
+      include: {
+        questions: {
+          include: { answers: { orderBy: { sortOrder: 'asc' } } },
+          orderBy: { sortOrder: 'asc' },
+        },
+        module: { select: { id: true, title: true, moduleIndex: true, courseId: true } },
+      },
+    });
+  }
+
   static async completeLesson(userId: string, lessonId: string) {
     return prisma.moduleCompletion.upsert({
       where: { enrollmentId_moduleId: { enrollmentId: userId, moduleId: lessonId } } as any,

@@ -1,23 +1,86 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withSpring } from 'react-native-reanimated';
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { COLORS } from '../../constants/Colors';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/theme';
-import { MOCK_QUIZ } from '../../data/mockData';
 import { useThemeColors } from '../../hooks/useThemeColors';
+import { formationService, type LessonQuiz } from '../../services/formationService';
+
+function toChoiceLetter(idx: number) {
+  return String.fromCharCode(65 + idx);
+}
 
 export default function QuizScreen() {
   const C = useThemeColors();
   const styles = useMemo(() => createStyles(C), [C]);
+  const { lessonId } = useLocalSearchParams<{ lessonId: string }>();
+  const [quiz, setQuiz] = useState<LessonQuiz | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
 
-  const question = MOCK_QUIZ.questions[currentIdx];
-  const isCorrect = selectedId === question.correctId;
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        if (!lessonId) return;
+        setLoading(true);
+        setError(null);
+        const data = await formationService.getLessonQuiz(lessonId);
+        if (!isMounted) return;
+        setQuiz(data);
+      } catch (e: any) {
+        if (!isMounted) return;
+        setError(e?.message ?? 'Une erreur est survenue');
+      } finally {
+        if (!isMounted) return;
+        setLoading(false);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [lessonId]);
+
+  if (loading) {
+    return (
+      <View style={styles.root}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.8}>
+            <ArrowLeft size={18} color={C.text} />
+          </TouchableOpacity>
+          <View style={styles.headerCenter}>
+            <Text style={styles.headerLabel}>Chargement…</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  if (error || !quiz || !quiz.questions?.length) {
+    return (
+      <View style={styles.root}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.8}>
+            <ArrowLeft size={18} color={C.text} />
+          </TouchableOpacity>
+          <View style={styles.headerCenter}>
+            <Text style={styles.headerLabel}>Quiz indisponible</Text>
+            <Text style={styles.headerSub}>{error ?? 'Aucune question trouvée'}</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  const question = quiz.questions[currentIdx];
+  const correctAnswerId = question.answers.find((a) => a.isCorrect)?.id;
+  const isCorrect = !!selectedId && selectedId === correctAnswerId;
 
   const slideOp = useSharedValue(1);
   const slideStyle = useAnimatedStyle(() => ({
@@ -28,11 +91,11 @@ export default function QuizScreen() {
   const handleSelect = (id: string) => {
     if (selectedId) return;
     setSelectedId(id);
-    if (id === question.correctId) setScore((s) => s + 1);
+    if (id === correctAnswerId) setScore((s) => s + 1);
   };
 
   const handleNext = () => {
-    if (currentIdx < MOCK_QUIZ.questions.length - 1) {
+    if (currentIdx < quiz.questions.length - 1) {
       slideOp.value = withTiming(0, { duration: 200 }, () => {
         setCurrentIdx((i) => i + 1);
         setSelectedId(null);
@@ -44,20 +107,20 @@ export default function QuizScreen() {
   };
 
   if (showResult) {
-    return <QuizResult score={score} total={MOCK_QUIZ.questions.length} />;
+    return <QuizResult score={score} total={quiz.questions.length} />;
   }
 
   const getOptionStyle = (id: string) => {
     if (!selectedId) return styles.option;
-    if (id === question.correctId) return [styles.option, styles.optionCorrect];
-    if (id === selectedId && id !== question.correctId) return [styles.option, styles.optionWrong];
+    if (id === correctAnswerId) return [styles.option, styles.optionCorrect];
+    if (id === selectedId && id !== correctAnswerId) return [styles.option, styles.optionWrong];
     return [styles.option, styles.optionDimmed];
   };
 
   const getOptionTextStyle = (id: string) => {
     if (!selectedId) return styles.optionText;
-    if (id === question.correctId) return [styles.optionText, styles.optionTextCorrect];
-    if (id === selectedId && id !== question.correctId) return [styles.optionText, styles.optionTextWrong];
+    if (id === correctAnswerId) return [styles.optionText, styles.optionTextCorrect];
+    if (id === selectedId && id !== correctAnswerId) return [styles.optionText, styles.optionTextWrong];
     return [styles.optionText, styles.optionTextDimmed];
   };
 
@@ -69,43 +132,45 @@ export default function QuizScreen() {
           <ArrowLeft size={18} color={C.text} />
         </TouchableOpacity>
         <View style={styles.headerCenter}>
-          <Text style={styles.headerLabel}>{MOCK_QUIZ.moduleTitle}</Text>
-          <Text style={styles.headerSub}>{MOCK_QUIZ.courseId === '1' ? 'Guerre Spirituelle' : ''}</Text>
+          <Text style={styles.headerLabel}>{quiz.module.title}</Text>
+          <Text style={styles.headerSub}>Module {quiz.module.moduleIndex + 1}</Text>
         </View>
       </View>
 
       {/* Progress dots */}
       <View style={styles.dotsRow}>
-        {MOCK_QUIZ.questions.map((_, i) => (
+        {quiz.questions.map((_, i) => (
           <View key={i} style={[styles.dot, i === currentIdx && styles.dotActive, i < currentIdx && styles.dotDone]} />
         ))}
       </View>
 
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <Animated.View style={slideStyle}>
-          <Text style={styles.questionNum}>Question {question.num} / {question.total}</Text>
+          <Text style={styles.questionNum}>Question {currentIdx + 1} / {quiz.questions.length}</Text>
           <Text style={styles.questionText}>{question.question}</Text>
 
           {/* Verse context */}
-          <View style={styles.verseContext}>
-            <Text style={styles.verseContextText}>{question.verse}</Text>
-          </View>
+          {!!question.verseRef && (
+            <View style={styles.verseContext}>
+              <Text style={styles.verseContextText}>{question.verseRef}</Text>
+            </View>
+          )}
 
           {/* Options */}
           <View style={styles.optionsList}>
-            {question.options.map((opt) => (
+            {question.answers.map((opt, idx) => (
               <TouchableOpacity
                 key={opt.id}
                 style={getOptionStyle(opt.id)}
                 onPress={() => handleSelect(opt.id)}
                 activeOpacity={selectedId ? 1 : 0.85}
               >
-                <View style={[styles.optionLetter, selectedId && opt.id === question.correctId && styles.optionLetterCorrect, selectedId && opt.id === selectedId && opt.id !== question.correctId && styles.optionLetterWrong]}>
-                  <Text style={styles.optionLetterText}>{opt.id.toUpperCase()}</Text>
+                <View style={[styles.optionLetter, selectedId && opt.id === correctAnswerId && styles.optionLetterCorrect, selectedId && opt.id === selectedId && opt.id !== correctAnswerId && styles.optionLetterWrong]}>
+                  <Text style={styles.optionLetterText}>{toChoiceLetter(idx)}</Text>
                 </View>
                 <Text style={getOptionTextStyle(opt.id)}>{opt.text}</Text>
-                {selectedId && opt.id === question.correctId && <CheckCircle size={16} color={COLORS.success} />}
-                {selectedId && opt.id === selectedId && opt.id !== question.correctId && <XCircle size={16} color={COLORS.primary} />}
+                {selectedId && opt.id === correctAnswerId && <CheckCircle size={16} color={COLORS.success} />}
+                {selectedId && opt.id === selectedId && opt.id !== correctAnswerId && <XCircle size={16} color={COLORS.primary} />}
               </TouchableOpacity>
             ))}
           </View>
@@ -117,9 +182,7 @@ export default function QuizScreen() {
                 {isCorrect ? 'Bonne reponse !' : 'Pas tout a fait...'}
               </Text>
               <Text style={styles.explanationText}>
-                {isCorrect
-                  ? 'La ceinture de verite est en effet la premiere piece mentionnee par Paul, car la verite est le fondement de toute l\'armure spirituelle.'
-                  : 'La bonne reponse est la ceinture de la verite (Eph. 6:14). Elle est la premiere car elle stabilise toutes les autres pieces de l\'armure.'}
+                {question.explanation ?? ' '}
               </Text>
             </Animated.View>
           )}
@@ -137,7 +200,7 @@ export default function QuizScreen() {
           onPress={() => selectedId && handleNext()}
         >
           <Text style={styles.nextBtnText}>
-            {currentIdx < MOCK_QUIZ.questions.length - 1 ? 'Question suivante' : 'Terminer'}
+            {currentIdx < quiz.questions.length - 1 ? 'Question suivante' : 'Terminer'}
           </Text>
         </TouchableOpacity>
       </View>

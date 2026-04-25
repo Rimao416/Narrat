@@ -79,6 +79,8 @@ export default function LessonScreen() {
     );
   }
 
+  const currentLessonId = lessonId;
+
   return (
     <View style={styles.root}>
       {/* Header */}
@@ -115,7 +117,7 @@ export default function LessonScreen() {
         <TouchableOpacity
           style={styles.quizBtn}
           activeOpacity={0.85}
-          onPress={() => router.push('/course/quiz')}
+          onPress={() => router.push(`/course/quiz?lessonId=${currentLessonId}`)}
         >
           <Text style={styles.quizBtnText}>Quiz →</Text>
         </TouchableOpacity>
