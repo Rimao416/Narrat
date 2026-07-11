@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -v \"^@$\")",
+      "Bash(netstat -ano)",
+      "Bash(tasklist //FI \"PID eq 25524\")",
+      "Bash(tasklist //FI \"PID eq 29536\")",
+      "Bash(taskkill //PID 25524 //F)",
+      "Bash(echo \"EXIT_CODE=$?\")",
+      "Bash(echo \"TSC_EXIT=$?\")",
+      "Bash(npx eslint *)",
+      "PowerShell(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\")",
+      "Bash(npx ts-node *)",
+      "Bash(node -e \"require\\('ts-node'\\).register\\({transpileOnly:true}\\); require\\('./prisma/seeds/15_mandatory_courses_demo.ts'\\); console.log\\('OK - parsed and loaded successfully'\\);\")",
+      "Bash(node -e \"require\\('ts-node'\\).register\\({transpileOnly:true}\\); require\\('./scripts/seed-mandatory-courses-demo.ts'\\);\")",
+      "Bash(grep -rl \"badge\\\\|Badge\" services)",
+      "Bash(grep -rn \"badge\" -i \"app/\\(admin\\)\" -l)",
+      "Skill(artifact-design)",
+      "Skill(artifact-design:*)"
+    ]
+  }
+}
